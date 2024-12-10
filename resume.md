@@ -4,7 +4,7 @@
 
 Photo      | Future
 -----------|--------------
-![](https://raw.github.com/rhiokim/resume/master/photos/rhiokim.jpg) | ![](https://raw.github.com/rhiokim/resume/master/photos/picasso.jpg) + ![](https://raw.github.com/rhiokim/resume/master/photos/beethoven.jpg)
+![](https://github.com/beanteacher/resume/blob/main/images/profile.jpg) | ![](https://raw.github.com/rhiokim/resume/master/photos/picasso.jpg) + ![](https://raw.github.com/rhiokim/resume/master/photos/beethoven.jpg)
 Name       | 홍길동
  - Chinese | 金良洹 
  - English | Rhio Kim
