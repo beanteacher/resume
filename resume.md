@@ -2,35 +2,31 @@
 
 ###### 기본정보  
 
-Photo      | Future
------------|--------------
-![](https://raw.github.com/rhiokim/resume/master/photos/rhiokim.jpg) | ![](https://raw.github.com/rhiokim/resume/master/photos/picasso.jpg) + ![](https://raw.github.com/rhiokim/resume/master/photos/beethoven.jpg)
-Name       | 홍길동
- - Chinese | 金良洹 
- - English | Rhio Kim
-Age        | 20 
-Birth Day  | YYYY.MM.DD
-Email      | my.email@gmail.com
-Mobile     | xxx-xxxx-xxxx
+ 항목                                                                      | 설명
+-------------------------------------------------------------------------|--------------
+프로필 사진 | ![](https://github.com/beanteacher/resume/blob/main/images/profile.jpg)
+ 이름 | 오민성
+ 나이(만) | 27세 
+ 생년월일 | 1997.11.13
+ 이메일 | dh65432@naver.com
+ 핸드폰 번호 | 010-4111-3455
 
 
 ###### 신상정보
 
-Profile    | Content
+항목    | 내용
 -----------|--------------------------------------
-Address    | 서울 강남구 역삼동 123-12 아파트 304층 3041호
-Mobile     | xxx-xxxx-xxxx
-Married    | 기혼 or 미혼
-Family     | 1남 2녀
-Blood type | RH+ A
-Religion   | 없음
+주소 | 서울 성북구 장월로 105-8 해담채 403호
+결혼여부 | 미혼
   
 ###### 학력정보
 
-Level       | School Name    | Major            | Start   | End     | Status    | 최종학력
-------------|----------------|------------------|---------|---------|-----------|--------
-University  | xx University  | Computer Science | YYYY.MM | YYYY.MM | graduated | 최종
-High School | xx High School |                  | YYYY.MM | YYYY.MM | graduated |
+학교명   | 전공        | 입학일자    | 졸업일자    | 졸업여부 | 최종학력
+----------------|-----------|---------|---------|------|--------
+서일 대학교  | 컴퓨터전자 공학과 | 2016.03 | 2022.02 | 졸업   | 최종
+석관 고등학교 | 이과계열      | 2013.03 | 2015.02 | 졸업   |
+남대문 중학교 |           | 2011.03 | 2013.02 | 졸업   |
+장곡 초등학교 |           | 2006.03  | 2011.02 | 졸업   |
 
 ### 직장이력
 Period            | Company      | Part > Team                    
