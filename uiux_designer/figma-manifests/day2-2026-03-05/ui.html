@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Day2 Hi-fi Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #080812;
+      color: #f0f0ff;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      color: #7c3aed;
+    }
+
+    p {
+      margin: 0 0 14px;
+      font-size: 12px;
+      color: #8b8ba7;
+    }
+
+    .section {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #8b8ba7;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .secondary {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border: 1px solid #2a2a3e;
+    }
+
+    .ghost {
+      background: transparent;
+      color: #8b8ba7;
+      border: 1px solid #2a2a3e;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resume Day2 Hi-fi Generator</h1>
+  <p>Sprint 2 메인 페이지 Hi-fi 프레임 생성</p>
+
+  <button class="primary" onclick="send('build-all')">전체 프레임 생성 (14개)</button>
+
+  <div class="section">섹션별 생성</div>
+  <button class="secondary" onclick="send('build-hero')">
+    <span class="dot" style="background:#7c3aed"></span>Hero (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-about')">
+    <span class="dot" style="background:#3b82f6"></span>About (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-philosophy')">
+    <span class="dot" style="background:#06b6d4"></span>Philosophy (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-experience')">
+    <span class="dot" style="background:#4338ca"></span>Experience (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-skills')">
+    <span class="dot" style="background:#9933cc"></span>Skills (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-projects')">
+    <span class="dot" style="background:#2563eb"></span>Projects (PC + Mobile)
+  </button>
+  <button class="secondary" onclick="send('build-contact')">
+    <span class="dot" style="background:#10b981"></span>Contact (PC + Mobile)
+  </button>
+
+  <div class="section">Plugin</div>
+  <button class="ghost" onclick="send('close')">닫기</button>
+
+  <script>
+    function send(type) {
+      parent.postMessage({ pluginMessage: { type: type } }, "*");
+    }
+  </script>
+</body>
+</html>
