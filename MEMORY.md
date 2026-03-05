@@ -97,10 +97,26 @@ Hero → About → **Philosophy** → Experience → Skills → Projects → Con
 ### UI/UX
 - 매 일차 작업 후 `uiux_designer/figma-manifests/dayN-YYYY-MM-DD/` 아카이브 필수
 - Figma manifest 덮어쓰기 금지 — 일자별 불변 저장
+- **Figma 로드 필수 4파일 구조** (하나라도 없으면 Figma가 플러그인 인식 불가):
+  ```
+  dayN-YYYY-MM-DD/
+  ├── manifest.json              ← { name, api:"1.0.0", id, main:"code.js", ui:"ui.html", editorType:["figma"] }
+  ├── manifest.import-data.json  ← frames 배열 + designTokens
+  ├── code.js                    ← figma.showUI + FRAME_SPECS + CATEGORY_COLOR + loadFontSafe()
+  └── ui.html                    ← 버튼 → parent.postMessage({ pluginMessage: { type } }, "*")
+  ```
+- id 패턴: `{project-slug}-day{N}-{YYYY-MM-DD}`
+- CATEGORY_COLOR (hex→{r,g,b} 0~1): `hero(#7C3AED)` `about(#3B82F6)` `philosophy(#06B6D4)` `experience(#4338CA)` `skills(#9933CC)` `projects(#2563EB)` `contact(#10B981)`
 
 ### PM
 - 계획 문서 없이 실행 금지
 - 완료 보고: "가장 중요한 작업 1개 + 실제 파일 경로"
+
+### 전체 공통 — MEMORY.md 업데이트 규칙
+- **작업 종료 시 반드시 `MEMORY.md` 업데이트** (프로젝트 루트: `resume/MEMORY.md`)
+- 업데이트 항목: 완료된 작업 체크박스, 새로 확인된 패턴/규칙, 변경된 파일 경로
+- MEMORY.md는 **프로젝트 폴더 하위에만 위치** (`resume/MEMORY.md`) — 다른 경로 금지
+- 업데이트 없이 커밋/종료 금지
 
 ---
 
@@ -120,6 +136,24 @@ types/index.ts                — ApiResponse<T>, SkillsByCategory
 uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 .omc/plans/                   — MASTER_PLAN, WBS, SPRINT1_PLAN, SPRINT2_PLAN
 ```
+
+---
+
+## Sprint 2 진행 상태
+
+- [x] **D1 UI/UX (2026-03-05)**: Hi-fi 시안 Day2 Figma 아카이브 생성
+  - `uiux_designer/figma-manifests/day2-2026-03-05/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
+  - 14개 프레임: Hero·About·Philosophy·Experience·Skills·Projects·Contact 각 PC+Mobile
+  - commit: `a6c2a8b`
+- [ ] **D2~D4 FE**: Hero 섹션 애니메이션 강화 (Tailwind keyframes stagger + 스크롤 다운 인디케이터)
+- [ ] **D4~D5 FE**: About 섹션 (`/api/profile` 연동)
+- [ ] **D5~D7 FE**: Experience 섹션 (버티컬 타임라인 + `/api/companies` 연동)
+- [ ] **D7~D9 FE**: Projects 섹션 (cursor 기반 무한 스크롤 + 카드 그리드)
+- [ ] **D9~D11 FE**: 프로젝트 상세 `/projects/[id]` (동적 라우팅 + SEO meta)
+- [ ] **D8~D10 FE**: Skills 섹션 (카테고리 탭 + 숙련도 시각화)
+- [ ] **D10~D11 FE**: Contact 섹션 (링크 카드)
+- [ ] **D3~D5 UI/UX**: Hi-fi 시안 Day3 (프로젝트 상세 + Skills)
+- [ ] **D12 PM**: Sprint 2 통합 검증 (`tsc --noEmit` 0건 + `npm run build` 성공)
 
 ---
 
