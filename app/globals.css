@@ -1,26 +1,153 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
 @import "tailwindcss";
 
+@theme {
+  /* ── Colors: Dark Mode Base ── */
+  --color-bg-base: #080812;
+  --color-bg-surface: #111120;
+  --color-bg-elevated: #1A1A2E;
+  --color-border: #2A2A3E;
+  --color-text-primary: #F0F0FF;
+  --color-text-secondary: #8B8BA7;
+
+  /* ── Colors: Brand ── */
+  --color-brand-purple: #7C3AED;
+  --color-brand-blue: #3B82F6;
+  --color-brand-cyan: #06B6D4;
+
+  /* ── Colors: Light Mode ── */
+  --color-bg-base-light: #FAFAFA;
+  --color-bg-surface-light: #F5F5F7;
+  --color-bg-elevated-light: #ECECF0;
+  --color-border-light: #E2E2EA;
+  --color-text-primary-light: #0A0A1A;
+  --color-text-secondary-light: #6B6B85;
+
+  /* ── Colors: Semantic ── */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+
+  /* ── Typography ── */
+  --font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --font-size-display: 3.5rem;
+  --font-size-h1: 2.5rem;
+  --font-size-h2: 2rem;
+  --font-size-h3: 1.5rem;
+  --font-size-body1: 1.125rem;
+  --font-size-body2: 1rem;
+  --font-size-caption: 0.875rem;
+  --font-size-small: 0.75rem;
+
+  --font-weight-display: 800;
+  --font-weight-heading: 700;
+  --font-weight-subheading: 600;
+  --font-weight-body: 400;
+
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+
+  /* ── Spacing (8px grid) ── */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+
+  /* ── Border Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px rgba(124, 58, 237, 0.4);
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  /* ── Gradients ── */
+  --gradient-hero: linear-gradient(135deg, #7C3AED, #3B82F6, #06B6D4);
+  --gradient-cta: linear-gradient(135deg, #7C3AED, #3B82F6);
+  --gradient-subtle: linear-gradient(135deg, rgba(124,58,237,0.13), rgba(59,130,246,0.13));
+  --gradient-border: linear-gradient(135deg, #7C3AED, #06B6D4);
+
+  /* ── Keyframes ── */
+  --animate-fade-in: fade-in 0.3s ease both;
+  --animate-fade-up: fade-up 0.4s ease both;
+  --animate-slide-down: slide-down 0.2s ease both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Dark Mode (기본값) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --bg: var(--color-bg-base);
+  --surface: var(--color-bg-surface);
+  --elevated: var(--color-bg-elevated);
+  --border-color: var(--color-border);
+  --text: var(--color-text-primary);
+  --text-muted: var(--color-text-secondary);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Light Mode ── */
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: var(--color-bg-base-light);
+  --surface: var(--color-bg-surface-light);
+  --elevated: var(--color-bg-elevated-light);
+  --border-color: var(--color-border-light);
+  --text: var(--color-text-primary-light);
+  --text-muted: var(--color-text-secondary-light);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base Styles ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body2);
+  line-height: var(--line-height-relaxed);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

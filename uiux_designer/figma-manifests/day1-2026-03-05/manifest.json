@@ -1,0 +1,8 @@
+{
+  "name": "Resume Portfolio Design System Day1",
+  "api": "1.0.0",
+  "id": "resume-portfolio-day1-2026-03-05",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"]
+}

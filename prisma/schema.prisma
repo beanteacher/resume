@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  name      String
+  title     String
+  bio       String
+  email     String
+  phone     String?
+  location  String
+  github    String
+  linkedin  String?
+  blog      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id          Int       @id @default(autoincrement())
+  name        String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  description String
+  logoUrl     String?
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  techStack    String
+  achievements String
+  thumbnailUrl String?
+  githubUrl    String?
+  demoUrl      String?
+  companyId    Int?
+  company      Company? @relation(fields: [companyId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Skill {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  proficiency Int
+  iconUrl     String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

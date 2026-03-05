@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Day1 Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1220;
+      color: #f8fafc;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #60a5fa;
+    }
+
+    p {
+      margin: 0 0 14px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .section {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+
+    .ghost {
+      background: transparent;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resume Day1 Generator</h1>
+  <p>이전 스펙 기반 프레임 생성</p>
+
+  <button class="primary" onclick="send('build-all')">전체 프레임 생성 (13개)</button>
+
+  <div class="section">Category</div>
+  <button class="secondary" onclick="send('build-foundation')">Foundation 생성 (4개)</button>
+  <button class="secondary" onclick="send('build-component')">Component 생성 (2개)</button>
+  <button class="secondary" onclick="send('build-wireframe')">Wireframe 생성 (7개)</button>
+
+  <div class="section">Plugin</div>
+  <button class="ghost" onclick="send('close')">닫기</button>
+
+  <script>
+    function send(type) {
+      parent.postMessage({ pluginMessage: { type: type } }, "*");
+    }
+  </script>
+</body>
+</html>

@@ -45,6 +45,12 @@ next-env.d.ts
 
 # OMC (AI 작업 디렉토리) - plans만 GitHub에 보관, 나머지 무시
 .omc/state/
+.omc/sessions/
 .omc/original/
 .omc/notepad.md
 .omc/project-memory.json
+
+# Prisma
+/app/generated/prisma
+*.db
+*.db-journal
