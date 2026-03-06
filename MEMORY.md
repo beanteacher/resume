@@ -199,7 +199,7 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 
 ## Vercel 배포 현황
 
-- **배포 URL**: https://resume-beanteacher.vercel.app (또는 Vercel 자동 생성 URL)
+- **배포 URL**: https://resume-nine-gold.vercel.app
 - **DB**: Neon PostgreSQL (ap-southeast-1) — `prisma/schema.prisma` provider: `postgresql`
 - **빌드 스크립트**: `prisma generate && next build`
 - **환경변수 (Vercel)**: `DATABASE_URL` (pgbouncer 풀링), `DIRECT_URL` (직접 연결)
