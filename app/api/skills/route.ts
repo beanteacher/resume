@@ -1,6 +1,32 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse, SkillsByCategory } from '@/types'
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json() as {
+      name: string
+      category: string
+      proficiency: number
+    }
+
+    const skill = await prisma.skill.create({
+      data: {
+        name: body.name,
+        category: body.category,
+        proficiency: body.proficiency,
+      },
+    })
+
+    return NextResponse.json<ApiResponse<typeof skill>>({ data: skill })
+  } catch {
+    return NextResponse.json<ApiResponse<null>>(
+      { data: null, error: '스킬을 생성할 수 없습니다.' },
+      { status: 500 }
+    )
+  }
+}
 
 export async function GET() {
   try {

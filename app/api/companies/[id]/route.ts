@@ -9,20 +9,20 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const project = await prisma.project.findUnique({
-      where: { id: Number(id) },
-      include: { company: true },
+    const company = await prisma.company.findUnique({
+      where: { id: parseInt(id) },
+      include: { projects: true },
     })
-    if (!project) {
+    if (!company) {
       return NextResponse.json<ApiResponse<null>>(
-        { data: null, error: '프로젝트를 찾을 수 없습니다.' },
+        { data: null, error: '회사를 찾을 수 없습니다.' },
         { status: 404 }
       )
     }
-    return NextResponse.json<ApiResponse<typeof project>>({ data: project })
+    return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
-      { data: null, error: '프로젝트를 불러올 수 없습니다.' },
+      { data: null, error: '회사 정보를 불러올 수 없습니다.' },
       { status: 500 }
     )
   }
@@ -35,32 +35,30 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json() as {
-      title: string
+      name: string
+      role: string
       description: string
-      techStack: string[]
-      achievements: string[]
-      companyId?: number
-      githubUrl?: string
-      demoUrl?: string
+      startDate: string
+      endDate?: string
+      isCurrent: boolean
     }
 
-    const project = await prisma.project.update({
+    const company = await prisma.company.update({
       where: { id: parseInt(id) },
       data: {
-        title: body.title,
+        name: body.name,
+        role: body.role,
         description: body.description,
-        techStack: JSON.stringify(body.techStack),
-        achievements: JSON.stringify(body.achievements),
-        companyId: body.companyId ?? null,
-        githubUrl: body.githubUrl ?? null,
-        demoUrl: body.demoUrl ?? null,
+        startDate: new Date(body.startDate),
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        isCurrent: body.isCurrent,
       },
     })
 
-    return NextResponse.json<ApiResponse<typeof project>>({ data: project })
+    return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
-      { data: null, error: '프로젝트를 수정할 수 없습니다.' },
+      { data: null, error: '회사 정보를 수정할 수 없습니다.' },
       { status: 500 }
     )
   }
@@ -72,11 +70,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    await prisma.project.delete({ where: { id: parseInt(id) } })
+    await prisma.company.delete({ where: { id: parseInt(id) } })
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
-      { data: null, error: '프로젝트를 삭제할 수 없습니다.' },
+      { data: null, error: '회사 정보를 삭제할 수 없습니다.' },
       { status: 500 }
     )
   }

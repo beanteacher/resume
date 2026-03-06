@@ -212,6 +212,15 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 
 ## Sprint 3 진행 상태
 
+- [x] **D1 BE (2026-03-06)**: Admin 인증 미들웨어 + CRUD API Routes
+  - `middleware.ts` — /admin/:path* 쿠키 검증, /admin/login whitelisted
+  - `app/api/admin/login/route.ts` — POST, 비밀번호 검증 + admin_token 쿠키 설정
+  - `app/api/admin/logout/route.ts` — POST, admin_token 쿠키 삭제
+  - `app/api/companies/route.ts` — POST 추가 / `app/api/companies/[id]/route.ts` — GET/PUT/DELETE 신규
+  - `app/api/projects/route.ts` — POST 추가 / `app/api/projects/[id]/route.ts` — PUT/DELETE 추가
+  - `app/api/skills/route.ts` — POST 추가 / `app/api/skills/[id]/route.ts` — GET/PUT/DELETE 신규
+  - `.env` — ADMIN_PASSWORD, ADMIN_SECRET 추가 (커밋 제외)
+  - `npx tsc --noEmit` 에러 0건
 - [x] **D1 UI/UX (2026-03-06)**: Admin 페이지 전체 화면 설계 Figma 아카이브 day4 생성
   - `uiux_designer/figma-manifests/day4-2026-03-06/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
   - 10개 Admin 프레임: Login(PC·Mobile), Dashboard(PC·Mobile), Company List/Form, Project List/Form, Skill List/Form

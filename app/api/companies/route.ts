@@ -1,6 +1,39 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json() as {
+      name: string
+      role: string
+      description: string
+      startDate: string
+      endDate?: string
+      isCurrent: boolean
+      techStack: string[]
+    }
+
+    const company = await prisma.company.create({
+      data: {
+        name: body.name,
+        role: body.role,
+        description: body.description,
+        startDate: new Date(body.startDate),
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        isCurrent: body.isCurrent,
+      },
+    })
+
+    return NextResponse.json<ApiResponse<typeof company>>({ data: company })
+  } catch {
+    return NextResponse.json<ApiResponse<null>>(
+      { data: null, error: '회사 정보를 생성할 수 없습니다.' },
+      { status: 500 }
+    )
+  }
+}
 
 export async function GET() {
   try {
