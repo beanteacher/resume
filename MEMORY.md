@@ -208,8 +208,20 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 
 ---
 
+---
+
+## Sprint 3 진행 상태
+
+- [x] **D1 UI/UX (2026-03-06)**: Admin 페이지 전체 화면 설계 Figma 아카이브 day4 생성
+  - `uiux_designer/figma-manifests/day4-2026-03-06/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
+  - 10개 Admin 프레임: Login(PC·Mobile), Dashboard(PC·Mobile), Company List/Form, Project List/Form, Skill List/Form
+  - CATEGORY_COLOR에 admin 색상 추가: `{r:0.961, g:0.620, b:0.043}` (#F59E0B)
+  - commit: `docs: Sprint 3 D1 UI/UX Admin 설계 Figma 아카이브 day4`
+
+---
+
 ## Open Questions (미결)
 
 - 무한 스크롤 범위: Projects 섹션만 확정
 - 커스텀 도메인 결정 (Sprint 3)
-- Admin 인증 방식: 비밀번호 vs GitHub OAuth
+- Admin 인증 방식: 비밀번호 단순 환경변수 비교 (Sprint 3 D1 결정)
