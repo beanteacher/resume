@@ -130,8 +130,10 @@ app/page.tsx                  — 메인 페이지 (Philosophy 섹션 포함)
 app/globals.css               — Tailwind v4 @theme 디자인 토큰
 app/api/                      — GET /profile /companies /projects /projects/[id] /skills
 components/layout/            — Header(스크롤 감지/다크모드/Philosophy 링크), Footer, Layout
-components/ui/                — Button(variant), Card(hover)
+components/ui/                — Button(variant), Card(hover), ScrollIndicator(스크롤 감지 fade-out)
+components/sections/          — AboutSection(서버), AboutContent(클라이언트+useInView)
 components/common/            — LoadingState, EmptyState
+lib/hooks/useInView.ts        — IntersectionObserver 훅 (threshold 0.15, 진입 후 unobserve)
 types/index.ts                — ApiResponse<T>, SkillsByCategory
 uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 .omc/plans/                   — MASTER_PLAN, WBS, SPRINT1_PLAN, SPRINT2_PLAN
@@ -145,14 +147,21 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
   - `uiux_designer/figma-manifests/day2-2026-03-05/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
   - 14개 프레임: Hero·About·Philosophy·Experience·Skills·Projects·Contact 각 PC+Mobile
   - commit: `a6c2a8b`
-- [ ] **D2~D4 FE**: Hero 섹션 애니메이션 강화 (Tailwind keyframes stagger + 스크롤 다운 인디케이터)
-- [ ] **D4~D5 FE**: About 섹션 (`/api/profile` 연동)
+- [x] **D2~D4 FE**: Hero 섹션 애니메이션 강화 (Tailwind keyframes stagger + 스크롤 다운 인디케이터)
+  - `components/ui/ScrollIndicator.tsx` — scroll 감지 fade-out + animate-bounce 화살표
+  - `lib/hooks/useInView.ts` — IntersectionObserver 기반 한번 진입 후 유지
+  - `app/page.tsx` — 각 자식 요소 개별 fade-up + stagger delay (0s~0.4s)
+- [x] **D4~D5 FE**: About 섹션 (`/api/profile` 연동) — 부분 완료 (D2에 시작)
+  - `components/sections/AboutSection.tsx` — 서버 컴포넌트 (Prisma 직접 사용)
+  - `components/sections/AboutContent.tsx` — 클라이언트 래퍼 (useInView 스크롤 애니메이션 + 소셜 링크 카드)
 - [ ] **D5~D7 FE**: Experience 섹션 (버티컬 타임라인 + `/api/companies` 연동)
 - [ ] **D7~D9 FE**: Projects 섹션 (cursor 기반 무한 스크롤 + 카드 그리드)
 - [ ] **D9~D11 FE**: 프로젝트 상세 `/projects/[id]` (동적 라우팅 + SEO meta)
 - [ ] **D8~D10 FE**: Skills 섹션 (카테고리 탭 + 숙련도 시각화)
 - [ ] **D10~D11 FE**: Contact 섹션 (링크 카드)
-- [ ] **D3~D5 UI/UX**: Hi-fi 시안 Day3 (프로젝트 상세 + Skills)
+- [x] **D3 UI/UX (2026-03-06)**: Hi-fi 시안 Day3 Figma 아카이브 생성
+  - `uiux_designer/figma-manifests/day3-2026-03-06/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
+  - 4개 프레임: ProjectDetail-PC/Mobile, Skills-PC/Mobile
 - [ ] **D12 PM**: Sprint 2 통합 검증 (`tsc --noEmit` 0건 + `npm run build` 성공)
 
 ---

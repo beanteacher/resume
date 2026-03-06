@@ -1,5 +1,7 @@
 import { Layout } from '@/components/layout/Layout'
 import { Section } from '@/components/sections/Section'
+import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
+import { AboutSection } from '@/components/sections/AboutSection'
 
 const PHILOSOPHY_ITEMS = [
   {
@@ -28,24 +30,39 @@ export default function Home() {
   return (
     <Layout>
       {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="min-h-screen flex items-center justify-center px-6 pt-16">
-        <div className="max-w-4xl mx-auto text-center animate-[fade-up_0.6s_ease_both]">
-          <p className="text-[var(--text-muted)] text-[var(--font-size-body1)] mb-4">
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <p
+            className="text-[var(--text-muted)] text-[var(--font-size-body1)] mb-4 animate-[fade-up_0.6s_ease_both]"
+            style={{ animationDelay: '0s' }}
+          >
             안녕하세요 👋
           </p>
-          <h1 className="text-[var(--font-size-display)] font-[var(--font-weight-display)] leading-[var(--line-height-tight)] mb-6">
+          <h1
+            className="text-[var(--font-size-display)] font-[var(--font-weight-display)] leading-[var(--line-height-tight)] mb-6 animate-[fade-up_0.6s_ease_both]"
+            style={{ animationDelay: '0.08s' }}
+          >
             <span className="bg-gradient-to-r from-[var(--color-brand-purple)] via-[var(--color-brand-blue)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent">
               오민성
             </span>
             입니다
           </h1>
-          <p className="text-[var(--font-size-h3)] text-[var(--text-muted)] mb-4">
+          <p
+            className="text-[var(--font-size-h3)] text-[var(--text-muted)] mb-4 animate-[fade-up_0.6s_ease_both]"
+            style={{ animationDelay: '0.16s' }}
+          >
             Backend Developer
           </p>
-          <p className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto">
+          <p
+            className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto animate-[fade-up_0.6s_ease_both]"
+            style={{ animationDelay: '0.24s' }}
+          >
             데이터의 안정성과 품질 보장, 그리고 AI 협업으로 혼자서도 팀처럼 일합니다.
           </p>
-          <div className="flex items-center justify-center gap-4">
+          <div
+            className="flex items-center justify-center gap-4 animate-[fade-up_0.6s_ease_both]"
+            style={{ animationDelay: '0.32s' }}
+          >
             <a
               href="#projects"
               className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-blue)] text-white font-medium rounded-[var(--radius-md)] hover:brightness-110 transition-all duration-[var(--transition-base)] shadow-[var(--shadow-glow)]"
@@ -60,11 +77,17 @@ export default function Home() {
             </a>
           </div>
         </div>
+        <div
+          className="mt-16 animate-[fade-up_0.6s_ease_both]"
+          style={{ animationDelay: '0.4s' }}
+        >
+          <ScrollIndicator />
+        </div>
       </section>
 
       {/* ── About ──────────────────────────────────────────────── */}
       <Section id="about" title="About" subtitle="저에 대해 소개합니다">
-        <p className="text-center text-[var(--text-muted)]">Coming in Sprint 2</p>
+        <AboutSection />
       </Section>
 
       {/* ── Philosophy ─────────────────────────────────────────── */}
