@@ -2,6 +2,10 @@ import { Layout } from '@/components/layout/Layout'
 import { Section } from '@/components/sections/Section'
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { AboutSection } from '@/components/sections/AboutSection'
+import { ExperienceSection } from '@/components/sections/ExperienceSection'
+import { SkillsSection } from '@/components/sections/SkillsSection'
+import { ProjectsSection } from '@/components/sections/ProjectsSection'
+import { ContactSection } from '@/components/sections/ContactSection'
 
 const PHILOSOPHY_ITEMS = [
   {
@@ -122,22 +126,22 @@ export default function Home() {
 
       {/* ── Experience ─────────────────────────────────────────── */}
       <Section id="experience" title="Experience" subtitle="경력 사항">
-        <p className="text-center text-[var(--text-muted)]">Coming in Sprint 2</p>
+        <ExperienceSection />
       </Section>
 
       {/* ── Skills ─────────────────────────────────────────────── */}
       <Section id="skills" title="Skills" subtitle="기술 스택">
-        <p className="text-center text-[var(--text-muted)]">Coming in Sprint 2</p>
+        <SkillsSection />
       </Section>
 
       {/* ── Projects ───────────────────────────────────────────── */}
       <Section id="projects" title="Projects" subtitle="프로젝트">
-        <p className="text-center text-[var(--text-muted)]">Coming in Sprint 2</p>
+        <ProjectsSection />
       </Section>
 
       {/* ── Contact ────────────────────────────────────────────── */}
-      <Section id="contact" title="Contact" subtitle="연락처">
-        <p className="text-center text-[var(--text-muted)]">Coming in Sprint 2</p>
+      <Section id="contact" title="Contact" subtitle="연락하기">
+        <ContactSection />
       </Section>
     </Layout>
   )

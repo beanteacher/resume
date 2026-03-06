@@ -1,8 +1,21 @@
 # Resume Portfolio — Project Memory
 
-> 프로젝트 루트: `C:/Users/dh654/OneDrive/바탕 화면/개발/03_WORKSPACE/resume`
-> 페르소나 루트: `C:/Users/dh654/OneDrive/바탕 화면/개발/03_WORKSPACE/persona`
+> 프로젝트 루트: `C:/Users/wisecan/Desktop/min/workspace/resume`
+> 페르소나 루트: `C:/Users/wisecan/Desktop/min/workspace/persona`
 > 플랫폼: Windows 11 / Shell: bash (Unix 경로 사용)
+
+---
+
+## 필수 사전 읽기 (에이전트 실행 전 반드시 읽을 것)
+
+작업 시작 전 아래 AGENTS.md 파일을 **모두 읽어야** 한다. 규칙 위반 시 결과물이 반려된다.
+
+| 파일 | 역할 |
+|------|------|
+| `C:/Users/wisecan/Desktop/min/workspace/persona/AGENTS.md` | 공통 규칙 (git push 금지, 커밋 컨벤션, 보고 형식 등) |
+| `C:/Users/wisecan/Desktop/min/workspace/persona/frontend_developer/AGENTS.md` | FE 에이전트 규칙 |
+| `C:/Users/wisecan/Desktop/min/workspace/persona/project_manager/AGENTS.md` | PM 에이전트 규칙 |
+| `C:/Users/wisecan/Desktop/min/workspace/persona/uiux_designer/AGENTS.md` | UI/UX 에이전트 규칙 |
 
 ---
 
@@ -154,15 +167,27 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 - [x] **D4~D5 FE**: About 섹션 (`/api/profile` 연동) — 부분 완료 (D2에 시작)
   - `components/sections/AboutSection.tsx` — 서버 컴포넌트 (Prisma 직접 사용)
   - `components/sections/AboutContent.tsx` — 클라이언트 래퍼 (useInView 스크롤 애니메이션 + 소셜 링크 카드)
-- [ ] **D5~D7 FE**: Experience 섹션 (버티컬 타임라인 + `/api/companies` 연동)
-- [ ] **D7~D9 FE**: Projects 섹션 (cursor 기반 무한 스크롤 + 카드 그리드)
-- [ ] **D9~D11 FE**: 프로젝트 상세 `/projects/[id]` (동적 라우팅 + SEO meta)
-- [ ] **D8~D10 FE**: Skills 섹션 (카테고리 탭 + 숙련도 시각화)
-- [ ] **D10~D11 FE**: Contact 섹션 (링크 카드)
+- [x] **D5~D7 FE (2026-03-06)**: Experience 섹션 (버티컬 타임라인 + `/api/companies` 연동)
+  - `components/sections/ExperienceSection.tsx` (서버 컴포넌트, Prisma 직접 + DateTime 직렬화)
+  - `components/sections/ExperienceContent.tsx` (클라이언트, 버티컬 타임라인, useInView stagger)
+  - 날짜 포맷 YYYY.MM, isCurrent "재직 중" 뱃지, techStack JSON 파싱
+- [x] **D7~D9 FE (2026-03-06)**: Projects 섹션 (cursor 기반 무한 스크롤 + 카드 그리드)
+  - `components/sections/ProjectsSection.tsx` (서버 컴포넌트, Prisma 직접 + DateTime 직렬화)
+  - `components/sections/ProjectsContent.tsx` (클라이언트, IntersectionObserver 무한 스크롤, 3컬럼 그리드)
+  - `types/index.ts` — SerializedProject, SerializedCompany 타입 추가
+- [x] **D9~D11 FE (2026-03-06)**: 프로젝트 상세 `/projects/[id]` (동적 라우팅 + SEO meta)
+  - `app/projects/[id]/page.tsx` (서버 컴포넌트, generateMetadata, 기술스택 배지 + 성과 목록)
+- [x] **D8~D10 FE (2026-03-06)**: Skills 섹션 (카테고리별 숙련도 dot 시각화)
+  - `components/sections/SkillsSection.tsx` (서버 컴포넌트, Prisma 직접, ProficiencyDots 컴포넌트)
+- [x] **D10~D11 FE (2026-03-06)**: Contact 섹션 (링크 카드)
+  - `components/sections/ContactSection.tsx` (클라이언트, GitHub/Blog/Email 카드 3개)
 - [x] **D3 UI/UX (2026-03-06)**: Hi-fi 시안 Day3 Figma 아카이브 생성
   - `uiux_designer/figma-manifests/day3-2026-03-06/` (4파일: manifest.json, manifest.import-data.json, code.js, ui.html)
   - 4개 프레임: ProjectDetail-PC/Mobile, Skills-PC/Mobile
-- [ ] **D12 PM**: Sprint 2 통합 검증 (`tsc --noEmit` 0건 + `npm run build` 성공)
+- [x] **D12 PM (2026-03-06)**: Sprint 2 통합 검증 완료
+  - `npx tsc --noEmit` 에러 0건
+  - `npm run build` 성공 (exit 0)
+  - 전 섹션 컴포넌트 연결: Hero/About/Philosophy/Experience/Skills/Projects/Contact
 
 ---
 

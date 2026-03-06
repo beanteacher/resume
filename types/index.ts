@@ -13,3 +13,55 @@ export type SkillsByCategory = {
     sortOrder: number
   }>
 }
+
+export type ProjectData = {
+  id: number
+  title: string
+  description: string
+  techStack: string
+  achievements: string
+  thumbnailUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  companyId: number | null
+}
+
+export type CompanyWithProjects = {
+  id: number
+  name: string
+  role: string
+  startDate: string
+  endDate: string | null
+  isCurrent: boolean
+  description: string
+  logoUrl: string | null
+  projects: ProjectData[]
+}
+
+export type SerializedCompany = {
+  id: number
+  name: string
+  role: string
+  startDate: string
+  endDate: string | null
+  isCurrent: boolean
+  description: string
+  logoUrl: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export type SerializedProject = {
+  id: number
+  title: string
+  description: string
+  techStack: string
+  achievements: string
+  thumbnailUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  companyId: number | null
+  createdAt: string
+  updatedAt: string
+  company: SerializedCompany | null
+}
