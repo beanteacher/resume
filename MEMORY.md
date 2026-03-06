@@ -188,6 +188,23 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
   - `npx tsc --noEmit` 에러 0건
   - `npm run build` 성공 (exit 0)
   - 전 섹션 컴포넌트 연결: Hero/About/Philosophy/Experience/Skills/Projects/Contact
+- [x] **추가 FE (2026-03-06)**: 활성 섹션 nav 하이라이트
+  - `components/layout/Header.tsx` — IntersectionObserver(`rootMargin: '-20% 0px -60% 0px'`)로 현재 섹션 감지, 해당 nav gradient 색상 (PC + 모바일)
+  - `components/sections/Section.tsx` — `scroll-mt-16` 추가 (헤더 가림 방지)
+  - scroll-snap은 UX 이슈로 제거 → `scroll-behavior: smooth`만 유지
+  - Contact 섹션 감지: 하단 80px 이내 도달 시 강제 활성화 (짧은 섹션 IntersectionObserver 한계 대응)
+  - 최종 커밋: `b179972`
+
+---
+
+## Vercel 배포 현황
+
+- **배포 URL**: https://resume-beanteacher.vercel.app (또는 Vercel 자동 생성 URL)
+- **DB**: Neon PostgreSQL (ap-southeast-1) — `prisma/schema.prisma` provider: `postgresql`
+- **빌드 스크립트**: `prisma generate && next build`
+- **환경변수 (Vercel)**: `DATABASE_URL` (pgbouncer 풀링), `DIRECT_URL` (직접 연결)
+- **마이그레이션**: `prisma/migrations/20260306074233_init/` (PostgreSQL init)
+- **최초 배포 성공**: 2026-03-06 (커밋 `fae2bab`)
 
 ---
 
