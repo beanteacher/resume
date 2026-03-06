@@ -68,6 +68,11 @@ API 연동, 스크롤 애니메이션, 반응형 레이아웃을 완성하여
    - Mobile 375px ~ Desktop 1280px+ 전 섹션 검수
    - DoD: 모든 섹션 모바일 정상 렌더링
 
+8. **활성 섹션 nav 하이라이트 (추가)**
+   - IntersectionObserver로 현재 뷰포트 섹션 감지
+   - 해당 nav 링크에 gradient 색상 적용 (PC + 모바일)
+   - DoD: 스크롤 시 nav 항목 실시간 하이라이트
+
 ### PM
 
 1. **Sprint 2 통합 검증 (D12)**
