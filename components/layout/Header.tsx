@@ -4,23 +4,39 @@ import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 
 const NAV_LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#philosophy', label: 'Philosophy' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#about', label: 'About', id: 'about' },
+  { href: '#philosophy', label: 'Philosophy', id: 'philosophy' },
+  { href: '#experience', label: 'Experience', id: 'experience' },
+  { href: '#skills', label: 'Skills', id: 'skills' },
+  { href: '#projects', label: 'Projects', id: 'projects' },
+  { href: '#contact', label: 'Contact', id: 'contact' },
 ]
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = []
+    NAV_LINKS.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id) },
+        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach((o) => o.disconnect())
   }, [])
 
   return (
@@ -45,7 +61,11 @@ export function Header() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-[var(--text-muted)] hover:text-[var(--text)] text-[var(--font-size-body2)] transition-colors duration-[var(--transition-fast)]"
+                className={`text-[var(--font-size-body2)] transition-all duration-[var(--transition-fast)] ${
+                  activeSection === link.id
+                    ? 'bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent font-semibold'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text)]'
+                }`}
               >
                 {link.label}
               </a>
@@ -83,7 +103,11 @@ export function Header() {
                 <a
                   href={link.href}
                   onClick={() => setIsMobileOpen(false)}
-                  className="block text-[var(--text-muted)] hover:text-[var(--text)] text-[var(--font-size-body1)] transition-colors duration-[var(--transition-fast)]"
+                  className={`block text-[var(--font-size-body1)] transition-all duration-[var(--transition-fast)] ${
+                    activeSection === link.id
+                      ? 'bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent font-semibold'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text)]'
+                  }`}
                 >
                   {link.label}
                 </a>

@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <Layout>
       {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16">
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16" style={{ scrollSnapAlign: 'start' }}>
         <div className="max-w-4xl mx-auto text-center">
           <p
             className="text-[var(--text-muted)] text-[var(--font-size-body1)] mb-4 animate-[fade-up_0.6s_ease_both]"

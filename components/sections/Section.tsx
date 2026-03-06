@@ -8,7 +8,7 @@ interface SectionProps {
 
 export function Section({ id, title, subtitle, children, className = '' }: SectionProps) {
   return (
-    <section id={id} className={`py-[var(--spacing-24)] px-6 ${className}`}>
+    <section id={id} className={`py-[var(--spacing-24)] px-6 scroll-mt-16 ${className}`} style={{ scrollSnapAlign: 'start' }}>
       <div className="max-w-6xl mx-auto">
         {title && (
           <div className="mb-[var(--spacing-12)] text-center">
