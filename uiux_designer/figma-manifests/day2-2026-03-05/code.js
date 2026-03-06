@@ -27,6 +27,14 @@ const CATEGORY_COLOR = {
   contact:     { r: 0.063, g: 0.725, b: 0.506 }  // #10B981
 };
 
+const PALETTE = {
+  bg: { r: 0.031, g: 0.031, b: 0.071 },
+  surface: { r: 0.067, g: 0.067, b: 0.125 },
+  elevated: { r: 0.102, g: 0.102, b: 0.180 },
+  text: { r: 0.941, g: 0.941, b: 1 },
+  muted: { r: 0.545, g: 0.545, b: 0.655 }
+};
+
 async function loadFontSafe() {
   const candidates = [
     { family: "Inter", style: "Bold" },
@@ -47,36 +55,153 @@ async function loadFontSafe() {
   throw new Error("사용 가능한 폰트를 로드하지 못했습니다.");
 }
 
+function createRect(frame, x, y, width, height, color, radius) {
+  const rect = figma.createRectangle();
+  rect.x = x;
+  rect.y = y;
+  rect.resize(width, height);
+  rect.fills = [{ type: "SOLID", color: color }];
+  if (typeof radius === "number") {
+    rect.cornerRadius = radius;
+  }
+  frame.appendChild(rect);
+  return rect;
+}
+
+function createText(frame, x, y, text, fontName, size, color) {
+  const node = figma.createText();
+  node.fontName = fontName;
+  node.characters = text;
+  node.fontSize = size;
+  node.fills = [{ type: "SOLID", color: color }];
+  node.x = x;
+  node.y = y;
+  frame.appendChild(node);
+  return node;
+}
+
+function drawSectionHeader(frame, spec, titleFont) {
+  createRect(frame, 0, 0, spec.width, 64, CATEGORY_COLOR[spec.category] || CATEGORY_COLOR.hero, 0);
+  createText(frame, 24, 18, spec.name, titleFont, 20, { r: 1, g: 1, b: 1 });
+  createText(frame, 24, 84, "Section: " + spec.category + "  Size: " + spec.width + "x" + spec.height, titleFont, 14, PALETTE.muted);
+}
+
+function drawHero(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  createRect(frame, margin, 156, width * (isMobile ? 1 : 0.56), isMobile ? 160 : 220, PALETTE.elevated, 14);
+  createRect(frame, margin, isMobile ? 340 : 400, width * (isMobile ? 1 : 0.4), 52, CATEGORY_COLOR.hero, 12);
+  createRect(frame, isMobile ? margin : margin + width * 0.62, 156, isMobile ? width : width * 0.38, isMobile ? 220 : 340, PALETTE.surface, 14);
+  createText(frame, margin + 20, 184, "Hero Headline", titleFont, isMobile ? 28 : 44, PALETTE.text);
+}
+
+function drawAbout(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  createRect(frame, margin, 156, isMobile ? width : 280, isMobile ? 200 : 280, PALETTE.elevated, 14);
+  createRect(frame, isMobile ? margin : margin + 320, 156, isMobile ? width : width - 320, isMobile ? 300 : 280, PALETTE.surface, 14);
+  createText(frame, isMobile ? margin + 16 : margin + 340, 184, "About Content", titleFont, 28, PALETTE.text);
+}
+
+function drawPhilosophy(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  const cols = isMobile ? 1 : 2;
+  const gap = 20;
+  const cardW = Math.floor((width - gap * (cols - 1)) / cols);
+  for (let i = 0; i < 4; i += 1) {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+    createRect(frame, margin + col * (cardW + gap), 156 + row * 170, cardW, 150, PALETTE.elevated, 12);
+  }
+  createText(frame, margin + 8, 126, "Philosophy Cards", titleFont, 24, PALETTE.text);
+}
+
+function drawExperience(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const lineX = isMobile ? margin + 24 : margin + 120;
+  createRect(frame, lineX, 172, 6, spec.height - 240, CATEGORY_COLOR.experience, 4);
+  for (let i = 0; i < 4; i += 1) {
+    const y = 190 + i * 210;
+    createRect(frame, lineX - 12, y + 16, 30, 30, CATEGORY_COLOR.experience, 9999);
+    createRect(frame, isMobile ? margin + 56 : margin + 170, y, isMobile ? spec.width - (margin + 56) - margin : spec.width - (margin + 170) - margin, 150, PALETTE.elevated, 12);
+  }
+  createText(frame, margin + 8, 126, "Experience Timeline", titleFont, 24, PALETTE.text);
+}
+
+function drawSkills(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  const cols = isMobile ? 1 : 3;
+  const gap = 20;
+  const cardW = Math.floor((width - gap * (cols - 1)) / cols);
+  for (let i = 0; i < 6; i += 1) {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+    const x = margin + col * (cardW + gap);
+    const y = 156 + row * 170;
+    createRect(frame, x, y, cardW, 150, PALETTE.elevated, 12);
+    for (let d = 0; d < 5; d += 1) {
+      createRect(frame, x + 20 + d * 18, y + 100, 12, 12, d < 3 ? CATEGORY_COLOR.skills : PALETTE.surface, 9999);
+    }
+  }
+  createText(frame, margin + 8, 126, "Skills Grid", titleFont, 24, PALETTE.text);
+}
+
+function drawProjects(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  const cols = isMobile ? 1 : 3;
+  const gap = 20;
+  const cardW = Math.floor((width - gap * (cols - 1)) / cols);
+  for (let i = 0; i < 6; i += 1) {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+    const x = margin + col * (cardW + gap);
+    const y = 156 + row * 220;
+    createRect(frame, x, y, cardW, 200, PALETTE.elevated, 12);
+    createRect(frame, x + 16, y + 16, cardW - 32, 84, PALETTE.surface, 10);
+  }
+  createText(frame, margin + 8, 126, "Projects Grid", titleFont, 24, PALETTE.text);
+}
+
+function drawContact(frame, spec, titleFont, isMobile) {
+  const margin = isMobile ? 20 : 72;
+  const width = spec.width - margin * 2;
+  const cols = isMobile ? 1 : 3;
+  const gap = 20;
+  const cardW = Math.floor((width - gap * (cols - 1)) / cols);
+  for (let i = 0; i < cols; i += 1) {
+    createRect(frame, margin + i * (cardW + gap), 200, cardW, 160, PALETTE.elevated, 12);
+  }
+  createText(frame, margin + 8, 150, "Contact Cards", titleFont, 24, PALETTE.text);
+}
+
 async function createFrameFromSpec(spec, x, y, titleFont) {
   const frame = figma.createFrame();
   frame.name = spec.name;
   frame.x = x;
   frame.y = y;
   frame.resize(spec.width, spec.height);
-  frame.fills = [{ type: "SOLID", color: { r: 0.031, g: 0.031, b: 0.071 } }]; // #080812
+  frame.fills = [{ type: "SOLID", color: PALETTE.bg }];
+  drawSectionHeader(frame, spec, titleFont);
 
-  const header = figma.createRectangle();
-  header.resize(spec.width, 64);
-  header.fills = [{ type: "SOLID", color: CATEGORY_COLOR[spec.category] || CATEGORY_COLOR.hero }];
-  frame.appendChild(header);
-
-  const title = figma.createText();
-  title.fontName = titleFont;
-  title.characters = spec.name;
-  title.fontSize = 20;
-  title.fills = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
-  title.x = 24;
-  title.y = 18;
-  frame.appendChild(title);
-
-  const meta = figma.createText();
-  meta.fontName = titleFont;
-  meta.characters = "Section: " + spec.category + "  Size: " + spec.width + "x" + spec.height;
-  meta.fontSize = 14;
-  meta.fills = [{ type: "SOLID", color: { r: 0.545, g: 0.545, b: 0.655 } }]; // #8B8BA7
-  meta.x = 24;
-  meta.y = 84;
-  frame.appendChild(meta);
+  const isMobile = spec.width <= 430;
+  if (spec.category === "hero") {
+    drawHero(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "about") {
+    drawAbout(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "philosophy") {
+    drawPhilosophy(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "experience") {
+    drawExperience(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "skills") {
+    drawSkills(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "projects") {
+    drawProjects(frame, spec, titleFont, isMobile);
+  } else if (spec.category === "contact") {
+    drawContact(frame, spec, titleFont, isMobile);
+  }
 
   figma.currentPage.appendChild(frame);
   return frame;
