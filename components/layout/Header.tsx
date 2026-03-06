@@ -19,8 +19,13 @@ export function Header() {
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+      const distanceFromBottom =
+        document.documentElement.scrollHeight - window.scrollY - window.innerHeight
+      if (distanceFromBottom < 80) setActiveSection('contact')
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
