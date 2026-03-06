@@ -226,6 +226,15 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
   - 10개 Admin 프레임: Login(PC·Mobile), Dashboard(PC·Mobile), Company List/Form, Project List/Form, Skill List/Form
   - CATEGORY_COLOR에 admin 색상 추가: `{r:0.961, g:0.620, b:0.043}` (#F59E0B)
   - commit: `docs: Sprint 3 D1 UI/UX Admin 설계 Figma 아카이브 day4`
+- [x] **D1 UI/UX Hotfix (2026-03-06)**: Figma import 빈 프레임(헤더/메타만 보이는 문제) 개선
+  - 원인: day1~day4 `code.js`가 프레임 외곽/메타만 생성해 내부 UI가 비어 보임
+  - 조치: `createRect`/`createText` 유틸 + 화면별 렌더 함수 추가로 내부 레이아웃 블록 생성
+  - 수정 파일:
+    - `uiux_designer/figma-manifests/day1-2026-03-05/code.js`
+    - `uiux_designer/figma-manifests/day2-2026-03-05/code.js`
+    - `uiux_designer/figma-manifests/day3-2026-03-06/code.js`
+    - `uiux_designer/figma-manifests/day4-2026-03-06/code.js`
+  - 검증: `node --check`로 day1~day4 `code.js` 문법 통과 (`all-syntax-ok`)
 
 ---
 
