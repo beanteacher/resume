@@ -12,7 +12,7 @@ const fieldClass = (error?: string, hasValue = false, extra = '') =>
   [
     'w-full rounded-[var(--radius-sm)] border border-[var(--border-color)]',
     'bg-[var(--elevated)] px-4 py-2 pr-10 text-left',
-    hasValue ? 'text-[var(--text)]' : 'text-[var(--text-secondary)]',
+    hasValue ? 'text-[var(--text)]' : 'text-[var(--text-muted)]',
     'transition-colors duration-[var(--transition-fast)]',
     'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-purple)]',
     'focus:border-transparent',
@@ -112,7 +112,7 @@ export function Select({ label, error, options, className = '', id, value, defau
           <span className="block truncate pr-4">{selectedOption?.label ?? '선택하세요'}</span>
           <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
             <svg
-              className={`h-4 w-4 text-[var(--text-secondary)] transition-transform duration-[var(--transition-fast)] ${open ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-[var(--text-muted)] transition-transform duration-[var(--transition-fast)] ${open ? 'rotate-180' : ''}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -144,13 +144,13 @@ export function Select({ label, error, options, className = '', id, value, defau
                     isSelected
                       ? 'bg-[color:color-mix(in_srgb,var(--color-brand-purple)_18%,var(--elevated))] text-[var(--text)]'
                       : 'text-[var(--text)] hover:bg-[var(--surface)]',
-                    option.value === '' ? 'text-[var(--text-secondary)]' : '',
+                    option.value === '' ? 'text-[var(--text-muted)]' : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
                 >
                   <span>{option.label}</span>
-                  {isSelected && option.value !== '' && <span className="text-xs text-[var(--text-secondary)]">선택됨</span>}
+                  {isSelected && option.value !== '' && <span className="text-xs text-[var(--text-muted)]">선택됨</span>}
                 </button>
               )
             })}

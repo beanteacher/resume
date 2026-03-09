@@ -39,7 +39,7 @@ export function AdminSidebar() {
                   ${
                     isActive
                       ? 'bg-[var(--color-brand-purple)]/20 text-[var(--color-brand-purple)]'
-                      : 'text-[var(--text-secondary)] hover:bg-[var(--elevated)] hover:text-[var(--text)]'
+                      : 'text-[var(--text-muted)] hover:bg-[var(--elevated)] hover:text-[var(--text)]'
                   }
                 `}
               >

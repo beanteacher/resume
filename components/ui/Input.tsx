@@ -47,7 +47,7 @@ export function Input(props: Props) {
         />
         {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
         {helperText && !error && (
-          <p className="text-xs text-[var(--text-secondary)]">{helperText}</p>
+          <p className="text-xs text-[var(--text-muted)]">{helperText}</p>
         )}
       </div>
     )
@@ -67,7 +67,7 @@ export function Input(props: Props) {
       />
       {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
       {helperText && !error && (
-        <p className="text-xs text-[var(--text-secondary)]">{helperText}</p>
+        <p className="text-xs text-[var(--text-muted)]">{helperText}</p>
       )}
     </div>
   )

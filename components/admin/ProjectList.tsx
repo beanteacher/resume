@@ -46,7 +46,7 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
                   <td className="px-4 py-3 text-sm text-[var(--text)] font-medium max-w-[200px] truncate">
                     {project.title}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[var(--text-secondary)] hidden md:table-cell">
+                  <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell">
                     {project.company ? project.company.name : '—'}
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell">

@@ -54,7 +54,7 @@ export function SkillList({ skills, loading, onEdit, onDelete }: SkillListProps)
                     <td className="px-4 py-3 text-sm text-yellow-400 hidden sm:table-cell tracking-wide">
                       {PROFICIENCY_STARS(skill.proficiency)}
                     </td>
-                    <td className="px-4 py-3 text-sm text-[var(--text-secondary)] hidden md:table-cell">
+                    <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell">
                       {skill.sortOrder}
                     </td>
                     <td className="px-4 py-3">

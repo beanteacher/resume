@@ -30,7 +30,7 @@ export function AdminTabBar() {
                 flex flex-col items-center gap-1 px-3 py-2
                 text-xs font-medium
                 transition-colors duration-[var(--transition-fast)]
-                ${isActive ? 'text-[var(--color-brand-purple)]' : 'text-[var(--text-secondary)]'}
+                ${isActive ? 'text-[var(--color-brand-purple)]' : 'text-[var(--text-muted)]'}
               `}
             >
               <span className="text-xl">{tab.icon}</span>

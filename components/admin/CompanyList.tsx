@@ -38,8 +38,8 @@ export function CompanyList({ companies, loading, onEdit, onDelete }: CompanyLis
                 className="border-t border-[var(--border-color)] hover:bg-[var(--elevated)] transition-colors"
               >
                 <td className="px-4 py-3 text-sm text-[var(--text)] font-medium">{company.name}</td>
-                <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{company.role}</td>
-                <td className="px-4 py-3 text-sm text-[var(--text-secondary)] hidden md:table-cell">
+                <td className="px-4 py-3 text-sm text-[var(--text-muted)]">{company.role}</td>
+                <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell">
                   {new Date(company.startDate).toLocaleDateString('ko-KR')}
                   {company.endDate
                     ? ` ~ ${new Date(company.endDate).toLocaleDateString('ko-KR')}`

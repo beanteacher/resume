@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
           <Card key={item.key} hover className="flex flex-col justify-between">
             <div>
               <p className="text-3xl mb-2">{item.icon}</p>
-              <p className="text-sm text-[var(--text-secondary)] font-medium mb-1">{item.label}</p>
+              <p className="text-sm text-[var(--text-muted)] font-medium mb-1">{item.label}</p>
               <p className="text-4xl font-bold text-[var(--color-brand-purple)]">
                 {loading ? '—' : stats[item.key]}
               </p>
