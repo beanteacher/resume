@@ -52,6 +52,19 @@ Admin CRUD 페이지와 SEO 최적화를 완성하여 실사용 가능한 포트
    - Admin 레이아웃: 사이드바 네비게이션
    - DoD: 전체 CRUD 동작, TypeScript 에러 0건
 
+   **D3 완료 내역 (2026-03-09)**
+   - ✅ UI 컴포넌트 신규: `Input.tsx` (textarea 지원), `Badge.tsx`, `Select.tsx`
+   - ✅ Admin 컴포넌트 신규: `AdminSidebar`, `AdminTabBar`, `CompanyForm/List`, `ProjectForm/List`, `SkillForm/List`
+   - ✅ Admin 페이지 전체 구현: layout, login, dashboard, companies, projects, skills
+   - ✅ `Select.tsx` UI 개선 (Codex 작업): 네이티브 `<select>` → 완전한 커스텀 드롭다운으로 대체
+     - 숨겨진 `<select>`로 폼 호환성 유지 (name/value/onChange 정상 동작)
+     - 커스텀 버튼 트리거 + chevron SVG (열림 시 180° 회전 애니메이션)
+     - 커스텀 listbox 드롭다운 (z-index, shadow, 선택 항목 퍼플 하이라이트)
+     - controlled/uncontrolled 모드 모두 지원 (`useId`, `useState`, `useMemo`)
+     - 외부 클릭 시 닫힘 (`mousedown` 이벤트 리스너)
+     - ARIA 속성 완비 (`aria-haspopup`, `aria-expanded`, `aria-controls`, `role="listbox/option"`)
+   - ✅ `npx tsc --noEmit` 에러 0건, `npm run build` 성공
+
 2. **SEO 최적화 (3.5 D7~D9)**
    - `app/sitemap.ts` — Next.js 빌트인 sitemap 생성
    - `app/robots.ts` — robots.txt 생성
