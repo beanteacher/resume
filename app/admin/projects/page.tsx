@@ -1,47 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { ProjectList } from '@/components/admin/ProjectList'
 import { ProjectForm } from '@/components/admin/ProjectForm'
-import type { SerializedProject } from '@/types'
+import type { SerializedProject, ApiResponse } from '@/types'
 
 export default function AdminProjectsPage() {
-  const [projects, setProjects] = useState<SerializedProject[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [editingId, setEditingId] = useState<number | null>(null)
 
-  useEffect(() => {
-    void fetchProjects()
-  }, [])
-
-  const fetchProjects = async () => {
-    setLoading(true)
-    try {
+  const { data: projects = [], isPending } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
       const res = await fetch('/api/projects')
-      const data = await res.json() as { data: { items: SerializedProject[] } }
-      setProjects(data.data?.items ?? [])
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      const json = await res.json() as ApiResponse<{ items: SerializedProject[] }>
+      return json.data?.items ?? []
+    },
+    placeholderData: (prev) => prev,
+  })
 
-  const handleDelete = async (id: number) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => fetch(`/api/projects/${id}`, { method: 'DELETE' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['projects'] }),
+  })
+
+  const handleDelete = (id: number) => {
     if (!window.confirm('이 프로젝트를 삭제하시겠습니까?')) return
-    try {
-      await fetch(`/api/projects/${id}`, { method: 'DELETE' })
-      setProjects((prev) => prev.filter((p) => p.id !== id))
-    } catch (err) {
-      console.error(err)
-    }
+    deleteMutation.mutate(id)
   }
 
-  const handleFormSuccess = async () => {
+  const handleFormSuccess = () => {
     setEditingId(null)
-    await fetchProjects()
+    void queryClient.invalidateQueries({ queryKey: ['projects'] })
   }
 
   return (
@@ -65,7 +58,7 @@ export default function AdminProjectsPage() {
 
       <ProjectList
         projects={projects}
-        loading={loading}
+        loading={isPending}
         onEdit={(id) => setEditingId(id)}
         onDelete={handleDelete}
       />

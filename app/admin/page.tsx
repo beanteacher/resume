@@ -1,16 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import type { SkillsByCategory } from '@/types'
-
-interface Stats {
-  companies: number
-  projects: number
-  skills: number
-}
+import type { SkillsByCategory, ApiResponse } from '@/types'
 
 const statItems = [
   { key: 'companies' as const, label: '회사', href: '/admin/companies', icon: '🏢' },
@@ -19,40 +13,43 @@ const statItems = [
 ]
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<Stats>({ companies: 0, projects: 0, skills: 0 })
-  const [loading, setLoading] = useState(true)
+  const { data: companies } = useQuery({
+    queryKey: ['companies'],
+    queryFn: async () => {
+      const res = await fetch('/api/companies')
+      const json = await res.json() as ApiResponse<unknown[]>
+      return json.data ?? []
+    },
+  })
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [companiesRes, projectsRes, skillsRes] = await Promise.all([
-          fetch('/api/companies'),
-          fetch('/api/projects'),
-          fetch('/api/skills'),
-        ])
-        const companies = await companiesRes.json() as { data: unknown[] }
-        const projects = await projectsRes.json() as { data: { items: unknown[] } }
-        const skills = await skillsRes.json() as { data: SkillsByCategory }
+  const { data: projects } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      const res = await fetch('/api/projects')
+      const json = await res.json() as ApiResponse<{ items: unknown[] }>
+      return json.data?.items ?? []
+    },
+  })
 
-        setStats({
-          companies: companies.data?.length ?? 0,
-          projects: projects.data?.items?.length ?? 0,
-          skills: Object.values(skills.data ?? {}).flat().length,
-        })
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    void fetchStats()
-  }, [])
+  const { data: skills } = useQuery({
+    queryKey: ['skills'],
+    queryFn: async () => {
+      const res = await fetch('/api/skills')
+      const json = await res.json() as ApiResponse<SkillsByCategory>
+      return json.data ?? {}
+    },
+  })
+
+  const counts = {
+    companies: companies?.length,
+    projects: projects?.length,
+    skills: skills ? Object.values(skills).flat().length : undefined,
+  }
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-[var(--text)] mb-8">대시보드</h1>
 
-      {/* 통계 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
         {statItems.map((item) => (
           <Card key={item.key} hover className="flex flex-col justify-between">
@@ -60,7 +57,7 @@ export default function AdminDashboardPage() {
               <p className="text-3xl mb-2">{item.icon}</p>
               <p className="text-sm text-[var(--text-muted)] font-medium mb-1">{item.label}</p>
               <p className="text-4xl font-bold text-[var(--color-brand-purple)]">
-                {loading ? '—' : stats[item.key]}
+                {counts[item.key] ?? '—'}
               </p>
             </div>
             <Link href={item.href} className="mt-4 block">
@@ -72,7 +69,6 @@ export default function AdminDashboardPage() {
         ))}
       </div>
 
-      {/* 빠른 접근 */}
       <Card>
         <h3 className="text-base font-semibold text-[var(--text)] mb-4">빠른 접근</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

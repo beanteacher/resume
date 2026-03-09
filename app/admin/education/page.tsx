@@ -1,47 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { EducationList } from '@/components/admin/EducationList'
 import { EducationForm } from '@/components/admin/EducationForm'
-import type { SerializedEducation } from '@/types'
+import type { SerializedEducation, ApiResponse } from '@/types'
 
 export default function AdminEducationPage() {
-  const [educations, setEducations] = useState<SerializedEducation[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [editingId, setEditingId] = useState<number | null>(null)
 
-  useEffect(() => {
-    void fetchEducations()
-  }, [])
-
-  const fetchEducations = async () => {
-    setLoading(true)
-    try {
+  const { data: educations = [], isPending } = useQuery({
+    queryKey: ['education'],
+    queryFn: async () => {
       const res = await fetch('/api/education')
-      const data = await res.json() as { data: SerializedEducation[] }
-      setEducations(data.data ?? [])
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      const json = await res.json() as ApiResponse<SerializedEducation[]>
+      return json.data ?? []
+    },
+    placeholderData: (prev) => prev,
+  })
 
-  const handleDelete = async (id: number) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => fetch(`/api/education/${id}`, { method: 'DELETE' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['education'] }),
+  })
+
+  const handleDelete = (id: number) => {
     if (!window.confirm('이 항목을 삭제하시겠습니까?')) return
-    try {
-      await fetch(`/api/education/${id}`, { method: 'DELETE' })
-      setEducations((prev) => prev.filter((e) => e.id !== id))
-    } catch (err) {
-      console.error(err)
-    }
+    deleteMutation.mutate(id)
   }
 
-  const handleFormSuccess = async () => {
+  const handleFormSuccess = () => {
     setEditingId(null)
-    await fetchEducations()
+    void queryClient.invalidateQueries({ queryKey: ['education'] })
   }
 
   return (
@@ -65,7 +58,7 @@ export default function AdminEducationPage() {
 
       <EducationList
         educations={educations}
-        loading={loading}
+        loading={isPending}
         onEdit={(id) => setEditingId(id)}
         onDelete={handleDelete}
       />

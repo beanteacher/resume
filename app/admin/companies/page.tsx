@@ -1,47 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { CompanyList } from '@/components/admin/CompanyList'
 import { CompanyForm } from '@/components/admin/CompanyForm'
-import type { SerializedCompany } from '@/types'
+import type { SerializedCompany, ApiResponse } from '@/types'
 
 export default function AdminCompaniesPage() {
-  const [companies, setCompanies] = useState<SerializedCompany[]>([])
-  const [loading, setLoading] = useState(true)
-  const [editingId, setEditingId] = useState<number | null>(null) // null=폼닫힘, 0=신규, n=수정
+  const queryClient = useQueryClient()
+  const [editingId, setEditingId] = useState<number | null>(null)
 
-  useEffect(() => {
-    void fetchCompanies()
-  }, [])
-
-  const fetchCompanies = async () => {
-    setLoading(true)
-    try {
+  const { data: companies = [], isPending } = useQuery({
+    queryKey: ['companies'],
+    queryFn: async () => {
       const res = await fetch('/api/companies')
-      const data = await res.json() as { data: SerializedCompany[] }
-      setCompanies(data.data ?? [])
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      const json = await res.json() as ApiResponse<SerializedCompany[]>
+      return json.data ?? []
+    },
+    placeholderData: (prev) => prev,
+  })
 
-  const handleDelete = async (id: number) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => fetch(`/api/companies/${id}`, { method: 'DELETE' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['companies'] }),
+  })
+
+  const handleDelete = (id: number) => {
     if (!window.confirm('이 회사를 삭제하시겠습니까?')) return
-    try {
-      await fetch(`/api/companies/${id}`, { method: 'DELETE' })
-      setCompanies((prev) => prev.filter((c) => c.id !== id))
-    } catch (err) {
-      console.error(err)
-    }
+    deleteMutation.mutate(id)
   }
 
-  const handleFormSuccess = async () => {
+  const handleFormSuccess = () => {
     setEditingId(null)
-    await fetchCompanies()
+    void queryClient.invalidateQueries({ queryKey: ['companies'] })
   }
 
   return (
@@ -65,7 +58,7 @@ export default function AdminCompaniesPage() {
 
       <CompanyList
         companies={companies}
-        loading={loading}
+        loading={isPending}
         onEdit={(id) => setEditingId(id)}
         onDelete={handleDelete}
       />

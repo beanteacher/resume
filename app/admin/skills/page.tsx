@@ -1,47 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { SkillList } from '@/components/admin/SkillList'
 import { SkillForm } from '@/components/admin/SkillForm'
-import type { SkillsByCategory } from '@/types'
+import type { SkillsByCategory, ApiResponse } from '@/types'
 
 export default function AdminSkillsPage() {
-  const [skills, setSkills] = useState<SkillsByCategory>({})
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [editingId, setEditingId] = useState<number | null>(null)
 
-  useEffect(() => {
-    void fetchSkills()
-  }, [])
-
-  const fetchSkills = async () => {
-    setLoading(true)
-    try {
+  const { data: skills = {}, isPending } = useQuery({
+    queryKey: ['skills'],
+    queryFn: async () => {
       const res = await fetch('/api/skills')
-      const data = await res.json() as { data: SkillsByCategory }
-      setSkills(data.data ?? {})
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      const json = await res.json() as ApiResponse<SkillsByCategory>
+      return json.data ?? {}
+    },
+    placeholderData: (prev) => prev,
+  })
 
-  const handleDelete = async (id: number) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => fetch(`/api/skills/${id}`, { method: 'DELETE' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['skills'] }),
+  })
+
+  const handleDelete = (id: number) => {
     if (!window.confirm('이 스킬을 삭제하시겠습니까?')) return
-    try {
-      await fetch(`/api/skills/${id}`, { method: 'DELETE' })
-      await fetchSkills()
-    } catch (err) {
-      console.error(err)
-    }
+    deleteMutation.mutate(id)
   }
 
-  const handleFormSuccess = async () => {
+  const handleFormSuccess = () => {
     setEditingId(null)
-    await fetchSkills()
+    void queryClient.invalidateQueries({ queryKey: ['skills'] })
   }
 
   return (
@@ -65,7 +58,7 @@ export default function AdminSkillsPage() {
 
       <SkillList
         skills={skills}
-        loading={loading}
+        loading={isPending}
         onEdit={(id) => setEditingId(id)}
         onDelete={handleDelete}
       />
