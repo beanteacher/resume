@@ -65,6 +65,30 @@ Admin CRUD 페이지와 SEO 최적화를 완성하여 실사용 가능한 포트
      - ARIA 속성 완비 (`aria-haspopup`, `aria-expanded`, `aria-controls`, `role="listbox/option"`)
    - ✅ `npx tsc --noEmit` 에러 0건, `npm run build` 성공
 
+   **D4 완료 내역 (2026-03-09)**
+   - ✅ API 누락 필드 수정 (버그 수정)
+     - `POST/PUT /api/projects`: `thumbnailUrl` 저장 누락 수정
+     - `POST/PUT /api/skills`: `iconUrl`, `sortOrder` 저장 누락 수정
+     - `POST /api/companies`: 불필요한 `techStack` 타입 제거, `logoUrl` 저장 추가
+   - ✅ UI 버그 수정
+     - `Input.tsx` placeholder: `--text-secondary`(미정의 변수) → `--text-muted` + `opacity-50`로 교체
+     - `Select.tsx` placeholder: 미선택 상태 텍스트 동일 변수 문제 수정 예정
+   - ✅ `npx tsc --noEmit` 에러 0건
+
+   **D5 완료 내역 (2026-03-09)**
+   - ✅ `--text-secondary` 미정의 변수 전체 교체 (8개 파일 → `--text-muted`)
+     - AdminSidebar, AdminTabBar, CompanyList, ProjectList, SkillList, Input(helperText), Select, admin/page
+   - ✅ Education(학력/교육) 기능 전체 추가
+     - Prisma: `Education` 모델 추가 (`name`, `course`, `type`, `startDate`, `endDate`, `isCurrent`, `description`)
+     - DB: `prisma db push`로 Education 테이블 생성
+     - Types: `SerializedEducation` 타입 추가
+     - API: `/api/education` CRUD (GET/POST/PUT/DELETE) — `app/api/education/route.ts`, `[id]/route.ts`
+     - Admin: `EducationForm.tsx`, `EducationList.tsx`, `app/admin/education/page.tsx`
+     - Admin: `AdminSidebar` / `AdminTabBar`에 🎓 학력/교육 메뉴 추가
+     - 공개 페이지: `EducationSection.tsx`(서버), `EducationContent.tsx`(클라이언트) 신규
+     - 공개 페이지: `app/page.tsx` Experience 섹션 하단에 `<EducationSection />` 추가
+   - ✅ `npx tsc --noEmit` 에러 0건
+
 2. **SEO 최적화 (3.5 D7~D9)**
    - `app/sitemap.ts` — Next.js 빌트인 sitemap 생성
    - `app/robots.ts` — robots.txt 생성
