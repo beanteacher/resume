@@ -98,11 +98,38 @@ Admin CRUD 페이지와 SEO 최적화를 완성하여 실사용 가능한 포트
 ### PM — D10
 
 1. **Sprint 3 통합 검증 (3.8 D10)**
-   - `npx tsc --noEmit` 에러 0건
-   - `npm run build` 성공
-   - Admin CRUD 전 기능 동작 확인
-   - sitemap.xml, robots.txt 접근 확인
-   - MEMORY.md 업데이트
+
+   **사전 준비**
+   - [ ] `git push origin main` → Vercel 재배포 완료 확인
+   - [ ] `npx tsc --noEmit` 에러 0건
+   - [ ] `npm run build` 성공
+
+   **Playwright MCP 자동화 테스트**
+   - [ ] Admin 인증
+     - `/admin` 직접 접속 → `/admin/login` 리다이렉트 확인
+     - 비밀번호 입력 → 로그인 성공 → 대시보드 이동 확인
+     - 로그아웃 → 로그인 페이지 복귀 확인
+   - [ ] Company CRUD
+     - 회사 등록 (폼 입력 → 저장 → 목록 반영 확인)
+     - 회사 수정 (기존 항목 수정 → 저장)
+     - 회사 삭제 (목록에서 제거 확인)
+   - [ ] Project CRUD
+     - 프로젝트 등록 → 저장 → `/projects/[id]` 공개 페이지 내용 확인
+     - 수정 / 삭제
+   - [ ] Skill CRUD
+     - 스킬 등록 / 수정 / 삭제
+   - [ ] Education CRUD
+     - 학력/교육 등록 → 저장 → 공개 페이지 Experience 섹션 표시 확인
+     - 수정 / 삭제
+   - [ ] SEO 파일
+     - `https://resume-nine-gold.vercel.app/sitemap.xml` 접근 → XML 구조 확인
+     - `https://resume-nine-gold.vercel.app/robots.txt` 접근 → `Disallow: /admin/` 확인
+   - [ ] OG 태그
+     - 홈(`/`) `<head>` 내 `og:title`, `og:description`, `og:site_name` 존재 확인
+
+   **완료 처리**
+   - [ ] MEMORY.md Sprint 3 완료 ✅ 업데이트
+   - [ ] Sprint 3 Done 선언
 
 ---
 
