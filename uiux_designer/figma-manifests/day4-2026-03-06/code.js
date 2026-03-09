@@ -170,17 +170,85 @@ function drawDashboard(frame, spec, titleFont) {
   }
 }
 
+// 테이블 헤더 + 실제 샘플 데이터 행을 그리는 함수
+function drawTable(frame, mainX, mainW, startY, headers, rows, titleFont) {
+  const totalW = mainW - 80;
+  const colW = Math.floor(totalW / headers.length);
+
+  // 헤더 행
+  createRect(frame, mainX + 40, startY, totalW, 36, PALETTE.surface, 6);
+  for (let c = 0; c < headers.length; c += 1) {
+    createText(frame, mainX + 40 + c * colW + 10, startY + 10, headers[c], titleFont, 12, PALETTE.muted);
+  }
+  // 데이터 행
+  for (let r = 0; r < rows.length; r += 1) {
+    const rowY = startY + 44 + r * 46;
+    createRect(frame, mainX + 40, rowY, totalW, 34, PALETTE.bg, 6);
+    for (let c = 0; c < rows[r].length; c += 1) {
+      const val = rows[r][c];
+      const color = val === "재직 중" ? { r: 0.18, g: 0.78, b: 0.44 }
+                  : val === "종료"   ? PALETTE.muted
+                  : PALETTE.text;
+      createText(frame, mainX + 40 + c * colW + 10, rowY + 10, val, titleFont, 12, color);
+    }
+  }
+}
+
 function drawList(frame, spec, titleFont, label) {
   const mainX = 312;
   const mainW = spec.width - 336;
   const topY = 168;
+
   createText(frame, mainX + 24, topY, label + " 목록", titleFont, 32, PALETTE.text);
   createRect(frame, mainX + mainW - 184, topY - 4, 160, 44, PALETTE.accent, 10);
-  createText(frame, mainX + mainW - 130, topY + 8, "추가", titleFont, 18, { r: 1, g: 1, b: 1 });
+  createText(frame, mainX + mainW - 128, topY + 10, "+ 추가", titleFont, 16, { r: 1, g: 1, b: 1 });
+  createRect(frame, mainX + 24, topY + 64, mainW - 48, 490, PALETTE.elevated, 12);
 
-  createRect(frame, mainX + 24, topY + 72, mainW - 48, 520, PALETTE.elevated, 12);
-  for (let i = 0; i < 8; i += 1) {
-    createRect(frame, mainX + 40, topY + 114 + i * 54, mainW - 80, 34, PALETTE.bg, 8);
+  if (label === "회사") {
+    drawTable(frame, mainX, mainW, topY + 80,
+      ["회사명", "기간", "재직여부", "기술스택 수", "작업"],
+      [
+        ["와이즈캔 네트웍스", "2025.03 ~ 현재",    "재직 중", "8개",  "수정 | 삭제"],
+        ["티젠소프트",        "2022.02 ~ 2024.05", "종료",    "12개", "수정 | 삭제"]
+      ],
+      titleFont
+    );
+  } else if (label === "프로젝트") {
+    drawTable(frame, mainX, mainW, topY + 80,
+      ["프로젝트명", "소속 회사", "기간", "기술스택 수", "작업"],
+      [
+        ["MCP Server 포트폴리오", "와이즈캔 네트웍스", "2025.03 ~ 현재",     "6개", "수정 | 삭제"],
+        ["물류 ERP 시스템",       "티젠소프트",        "2022.06 ~ 2023.12",  "9개", "수정 | 삭제"],
+        ["재고 관리 API",         "티젠소프트",        "2023.01 ~ 2024.05",  "7개", "수정 | 삭제"]
+      ],
+      titleFont
+    );
+  } else if (label === "스킬") {
+    drawTable(frame, mainX, mainW, topY + 80,
+      ["스킬명", "카테고리", "숙련도", "작업"],
+      [
+        ["Java",        "Backend",  "●●●●●", "수정 | 삭제"],
+        ["Spring Boot", "Backend",  "●●●●○", "수정 | 삭제"],
+        ["Next.js",     "Frontend", "●●●●○", "수정 | 삭제"],
+        ["TypeScript",  "Frontend", "●●●○○", "수정 | 삭제"],
+        ["PostgreSQL",  "Database", "●●●●○", "수정 | 삭제"],
+        ["Docker",      "DevOps",   "●●●○○", "수정 | 삭제"]
+      ],
+      titleFont
+    );
+  }
+}
+
+// 실제 필드명과 플레이스홀더 힌트를 가진 폼 필드를 그리는 함수
+function drawFormFields(frame, mainX, formW, startY, fields, titleFont) {
+  let y = startY;
+  for (let i = 0; i < fields.length; i += 1) {
+    const f = fields[i];
+    createText(frame, mainX + 44, y, f.label, titleFont, 13, PALETTE.muted);
+    const h = f.tall ? 72 : 44;
+    createRect(frame, mainX + 44, y + 20, formW - 40, h, PALETTE.bg, 8);
+    createText(frame, mainX + 58, y + 20 + Math.floor(h / 2) - 8, f.hint, titleFont, 12, { r: 0.38, g: 0.38, b: 0.50 });
+    y += h + 36;
   }
 }
 
@@ -188,23 +256,47 @@ function drawForm(frame, spec, titleFont, label) {
   const mainX = 312;
   const topY = 168;
   const formW = Math.min(840, spec.width - 380);
-  createText(frame, mainX + 24, topY, label + " 폼", titleFont, 32, PALETTE.text);
-  createRect(frame, mainX + 24, topY + 72, formW, spec.height - topY - 130, PALETTE.elevated, 12);
 
-  let y = topY + 110;
-  for (let i = 0; i < 6; i += 1) {
-    createText(frame, mainX + 44, y, "필드 " + (i + 1), titleFont, 14, PALETTE.muted);
-    createRect(frame, mainX + 44, y + 26, formW - 40, 46, PALETTE.bg, 10);
-    y += 96;
-    if (y + 100 > spec.height - 130) {
-      break;
-    }
+  createText(frame, mainX + 24, topY, label + " 등록 / 수정", titleFont, 32, PALETTE.text);
+  createRect(frame, mainX + 24, topY + 64, formW, spec.height - topY - 120, PALETTE.elevated, 12);
+
+  let fields = [];
+  if (label === "회사") {
+    fields = [
+      { label: "회사명 *",              hint: "예) 와이즈캔 네트웍스" },
+      { label: "직함 / 역할 *",         hint: "예) Backend Developer" },
+      { label: "시작일 *",              hint: "예) 2025-03-01" },
+      { label: "종료일  (재직 중이면 비워두기)", hint: "예) 2024-05-31" },
+      { label: "업무 설명",             hint: "주요 업무 및 책임을 작성하세요", tall: true },
+      { label: "기술 스택 (쉼표 구분)", hint: "예) Java, Spring Boot, PostgreSQL" }
+    ];
+  } else if (label === "프로젝트") {
+    fields = [
+      { label: "프로젝트명 *",          hint: "예) MCP Server 포트폴리오" },
+      { label: "소속 회사",             hint: "예) 와이즈캔 네트웍스" },
+      { label: "역할 *",               hint: "예) 풀스택 개발, API 설계" },
+      { label: "시작일 *",              hint: "예) 2025-03-01" },
+      { label: "종료일  (진행 중이면 비워두기)", hint: "예) 2025-12-31" },
+      { label: "프로젝트 설명",         hint: "목적 및 주요 기능 설명", tall: true },
+      { label: "기술 스택 (쉼표 구분)", hint: "예) Next.js, TypeScript, Prisma, PostgreSQL" },
+      { label: "주요 성과 (줄바꿈 구분)",hint: "예) API 응답속도 40% 개선", tall: true },
+      { label: "GitHub URL",           hint: "https://github.com/beanteacher/..." },
+      { label: "Demo URL",             hint: "https://resume-nine-gold.vercel.app" }
+    ];
+  } else if (label === "스킬") {
+    fields = [
+      { label: "스킬명 *",             hint: "예) Spring Boot" },
+      { label: "카테고리 *",           hint: "Frontend / Backend / Database / DevOps / Tool" },
+      { label: "숙련도 (1~5) *",       hint: "1 입문  2 초급  3 중급  4 고급  5 전문가" }
+    ];
   }
 
-  createRect(frame, mainX + 44, spec.height - 104, 120, 44, PALETTE.accent, 10);
-  createText(frame, mainX + 82, spec.height - 92, "저장", titleFont, 16, { r: 1, g: 1, b: 1 });
-  createRect(frame, mainX + 176, spec.height - 104, 120, 44, PALETTE.bg, 10);
-  createText(frame, mainX + 214, spec.height - 92, "취소", titleFont, 16, PALETTE.text);
+  drawFormFields(frame, mainX, formW, topY + 96, fields, titleFont);
+
+  createRect(frame, mainX + 44, spec.height - 88, 120, 44, PALETTE.accent, 10);
+  createText(frame, mainX + 82, spec.height - 76, "저장", titleFont, 16, { r: 1, g: 1, b: 1 });
+  createRect(frame, mainX + 176, spec.height - 88, 120, 44, PALETTE.bg, 10);
+  createText(frame, mainX + 214, spec.height - 76, "취소", titleFont, 16, PALETTE.text);
 }
 
 function drawSidebarContents(frame, spec, titleFont) {
