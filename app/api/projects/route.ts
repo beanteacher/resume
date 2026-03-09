@@ -8,11 +8,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as {
       title: string
       description: string
-      role: string
       techStack: string[]
       achievements: string[]
-      startDate: string
-      endDate?: string
       companyId?: number
       githubUrl?: string
       demoUrl?: string

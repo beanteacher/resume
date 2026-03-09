@@ -235,6 +235,20 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
     - `uiux_designer/figma-manifests/day3-2026-03-06/code.js`
     - `uiux_designer/figma-manifests/day4-2026-03-06/code.js`
   - 검증: `node --check`로 day1~day4 `code.js` 문법 통과 (`all-syntax-ok`)
+- [x] **D2 BE (2026-03-09)**: projects POST body 미사용 필드 정리
+  - `app/api/projects/route.ts` POST body에서 `role`, `startDate`, `endDate` 제거
+  - Prisma Project 모델에 없는 필드였음 (Company 모델의 필드와 혼용 오류)
+  - `npx tsc --noEmit` 에러 0건 확인
+- [x] **D2 UI/UX (2026-03-09)**: Admin 페이지 FE 핸드오프 문서 작성
+  - `uiux_designer/day4-handoff-for-fe.md` — Admin 10개 프레임 스펙 + API 계약 + 컴포넌트 코드 샘플
+  - 포함 내용: 파일 구조, 인증 플로우, 로그인/대시보드/Company/Project/Skill 화면 스펙, 타입 정의, 검증 규칙, 에러 처리
+  - ⏳ **D3~D7 FE 합류 예정**: Admin 페이지 6개 파일 구현
+    - `app/admin/layout.tsx` — 사이드바(240px) + 하단 탭바(모바일)
+    - `app/admin/login/page.tsx` — 비밀번호 로그인 폼
+    - `app/admin/page.tsx` — 대시보드 (통계 카드 3개)
+    - `app/admin/companies/page.tsx` — Company CRUD
+    - `app/admin/projects/page.tsx` — Project CRUD
+    - `app/admin/skills/page.tsx` — Skill CRUD
 
 ---
 
