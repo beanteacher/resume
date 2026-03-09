@@ -3,6 +3,7 @@ import { Section } from '@/components/sections/Section'
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { AboutSection } from '@/components/sections/AboutSection'
 import { ExperienceSection } from '@/components/sections/ExperienceSection'
+import { EducationSection } from '@/components/sections/EducationSection'
 import { SkillsSection } from '@/components/sections/SkillsSection'
 import { ProjectsSection } from '@/components/sections/ProjectsSection'
 import { ContactSection } from '@/components/sections/ContactSection'
@@ -127,6 +128,7 @@ export default function Home() {
       {/* ── Experience ─────────────────────────────────────────── */}
       <Section id="experience" title="Experience" subtitle="경력 사항">
         <ExperienceSection />
+        <EducationSection />
       </Section>
 
       {/* ── Skills ─────────────────────────────────────────────── */}

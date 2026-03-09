@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation'
 const tabs = [
   { href: '/admin', label: '대시보드', icon: '📊' },
   { href: '/admin/companies', label: '회사', icon: '🏢' },
+  { href: '/admin/education', label: '학력', icon: '🎓' },
   { href: '/admin/projects', label: '프로젝트', icon: '🛠️' },
   { href: '/admin/skills', label: '스킬', icon: '⚙️' },
 ]

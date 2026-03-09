@@ -51,6 +51,19 @@ export type SerializedCompany = {
   updatedAt: string
 }
 
+export type SerializedEducation = {
+  id: number
+  name: string
+  course: string
+  type: string
+  startDate: string
+  endDate: string | null
+  isCurrent: boolean
+  description: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 export type SerializedProject = {
   id: number
   title: string

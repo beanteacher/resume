@@ -1,0 +1,24 @@
+import { prisma } from '@/lib/prisma'
+import { EducationContent } from '@/components/sections/EducationContent'
+import type { SerializedEducation } from '@/types'
+
+export async function EducationSection() {
+  const educations = await prisma.education.findMany({
+    orderBy: { startDate: 'desc' },
+  })
+
+  const serialized: SerializedEducation[] = educations.map((e) => ({
+    id: e.id,
+    name: e.name,
+    course: e.course,
+    type: e.type,
+    startDate: e.startDate.toISOString(),
+    endDate: e.endDate ? e.endDate.toISOString() : null,
+    isCurrent: e.isCurrent,
+    description: e.description,
+    createdAt: e.createdAt.toISOString(),
+    updatedAt: e.updatedAt.toISOString(),
+  }))
+
+  return <EducationContent educations={serialized} />
+}
