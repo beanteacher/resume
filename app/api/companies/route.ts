@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       startDate: string
       endDate?: string
       isCurrent: boolean
-      techStack: string[]
+      logoUrl?: string
     }
 
     const company = await prisma.company.create({
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
         startDate: new Date(body.startDate),
         endDate: body.endDate ? new Date(body.endDate) : null,
         isCurrent: body.isCurrent,
+        logoUrl: body.logoUrl ?? null,
       },
     })
 

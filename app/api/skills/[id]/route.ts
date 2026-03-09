@@ -37,6 +37,8 @@ export async function PUT(
       name: string
       category: string
       proficiency: number
+      iconUrl?: string
+      sortOrder?: number
     }
 
     const skill = await prisma.skill.update({
@@ -45,6 +47,8 @@ export async function PUT(
         name: body.name,
         category: body.category,
         proficiency: body.proficiency,
+        iconUrl: body.iconUrl ?? null,
+        sortOrder: body.sortOrder ?? 0,
       },
     })
 

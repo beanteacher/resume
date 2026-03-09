@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       companyId?: number
       githubUrl?: string
       demoUrl?: string
+      thumbnailUrl?: string
     }
 
     const project = await prisma.project.create({
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
         companyId: body.companyId ?? null,
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
+        thumbnailUrl: body.thumbnailUrl ?? null,
       },
     })
 

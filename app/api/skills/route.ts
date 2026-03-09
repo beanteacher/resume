@@ -9,6 +9,8 @@ export async function POST(request: NextRequest) {
       name: string
       category: string
       proficiency: number
+      iconUrl?: string
+      sortOrder?: number
     }
 
     const skill = await prisma.skill.create({
@@ -16,6 +18,8 @@ export async function POST(request: NextRequest) {
         name: body.name,
         category: body.category,
         proficiency: body.proficiency,
+        iconUrl: body.iconUrl ?? null,
+        sortOrder: body.sortOrder ?? 0,
       },
     })
 
