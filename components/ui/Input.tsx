@@ -22,7 +22,7 @@ const fieldClass = (error?: string, extra = '') =>
     'w-full px-4 py-2 rounded-[var(--radius-sm)]',
     'bg-[var(--elevated)] text-[var(--text)]',
     'border border-[var(--border-color)]',
-    'placeholder:text-[var(--text-secondary)]',
+    'placeholder:text-[var(--text-muted)] placeholder:opacity-50',
     'transition-colors duration-[var(--transition-fast)]',
     'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-purple)]',
     'focus:border-transparent',
