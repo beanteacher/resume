@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { unstable_cache, revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
+
+const getCachedCompanies = unstable_cache(
+  async () => prisma.company.findMany({ include: { projects: true }, orderBy: { startDate: 'desc' } }),
+  ['companies'],
+  { revalidate: 300, tags: ['companies'] }
+)
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,6 +34,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    revalidateTag('companies', {})
     return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -38,10 +46,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const companies = await prisma.company.findMany({
-      include: { projects: true },
-      orderBy: { startDate: 'desc' },
-    })
+    const companies = await getCachedCompanies()
     return NextResponse.json<ApiResponse<typeof companies>>({ data: companies })
   } catch {
     return NextResponse.json<ApiResponse<never[]>>(

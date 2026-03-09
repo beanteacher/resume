@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
 
@@ -55,6 +56,7 @@ export async function PUT(
       },
     })
 
+    revalidateTag('companies', {})
     return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -71,6 +73,7 @@ export async function DELETE(
   try {
     const { id } = await params
     await prisma.company.delete({ where: { id: parseInt(id) } })
+    revalidateTag('companies', {})
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

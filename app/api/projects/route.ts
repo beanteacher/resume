@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { unstable_cache, revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
 
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    revalidateTag('projects', {})
     return NextResponse.json<ApiResponse<typeof project>>({ data: project })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -44,20 +46,25 @@ export async function GET(request: Request) {
     const cursor = searchParams.get('cursor') ? Number(searchParams.get('cursor')) : undefined
     const limit = Number(searchParams.get('limit') ?? '6')
 
-    const projects = await prisma.project.findMany({
-      take: limit + 1,
-      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-      include: { company: true },
-      orderBy: { createdAt: 'desc' },
-    })
+    const getCachedProjects = unstable_cache(
+      async () => {
+        const projects = await prisma.project.findMany({
+          take: limit + 1,
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+          include: { company: true },
+          orderBy: { createdAt: 'desc' },
+        })
+        const hasMore = projects.length > limit
+        const items = hasMore ? projects.slice(0, limit) : projects
+        const nextCursor = hasMore ? items[items.length - 1].id : null
+        return { items, nextCursor }
+      },
+      ['projects', String(cursor ?? ''), String(limit)],
+      { revalidate: 300, tags: ['projects'] }
+    )
 
-    const hasMore = projects.length > limit
-    const items = hasMore ? projects.slice(0, limit) : projects
-    const nextCursor = hasMore ? items[items.length - 1].id : null
-
-    return NextResponse.json<ApiResponse<{ items: typeof items; nextCursor: number | null }>>({
-      data: { items, nextCursor },
-    })
+    const data = await getCachedProjects()
+    return NextResponse.json<ApiResponse<typeof data>>({ data })
   } catch {
     return NextResponse.json<ApiResponse<{ items: never[]; nextCursor: null }>>(
       { data: { items: [], nextCursor: null }, error: '프로젝트를 불러올 수 없습니다.' },

@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { unstable_cache, revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse, SerializedEducation } from '@/types'
 
-export async function GET() {
-  try {
-    const educations = await prisma.education.findMany({
-      orderBy: { startDate: 'desc' },
-    })
-    const serialized: SerializedEducation[] = educations.map((e) => ({
+const getCachedEducation = unstable_cache(
+  async (): Promise<SerializedEducation[]> => {
+    const educations = await prisma.education.findMany({ orderBy: { startDate: 'desc' } })
+    return educations.map((e) => ({
       id: e.id,
       name: e.name,
       course: e.course,
@@ -20,6 +19,14 @@ export async function GET() {
       createdAt: e.createdAt.toISOString(),
       updatedAt: e.updatedAt.toISOString(),
     }))
+  },
+  ['education'],
+  { revalidate: 300, tags: ['education'] }
+)
+
+export async function GET() {
+  try {
+    const serialized = await getCachedEducation()
     return NextResponse.json<ApiResponse<SerializedEducation[]>>({ data: serialized })
   } catch {
     return NextResponse.json<ApiResponse<SerializedEducation[]>>(
@@ -53,6 +60,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    revalidateTag('education', {})
     return NextResponse.json<ApiResponse<typeof education>>({ data: education })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
