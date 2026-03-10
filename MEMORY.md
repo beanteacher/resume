@@ -34,6 +34,8 @@
 | 애니메이션 | **Tailwind CSS keyframes만 사용** | framer-motion 설치 안 함 |
 | ORM | Prisma 5 + SQLite → PostgreSQL | 단일 스택 (Spring MSA 없음) |
 | 테마 | next-themes (다크 기본) | |
+| 서버 캐싱 | Next.js `unstable_cache` + `revalidateTag` | revalidateTag(tag, {}) — 2번째 인수 필수 |
+| 클라이언트 캐싱 | `@tanstack/react-query` | Admin 페이지 전용 |
 | 패키지 매니저 | npm | |
 
 > FE 페르소나 명시: "framer-motion 없이 Tailwind keyframes만으로 충분"
@@ -242,13 +244,34 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 - [x] **D2 UI/UX (2026-03-09)**: Admin 페이지 FE 핸드오프 문서 작성
   - `uiux_designer/day4-handoff-for-fe.md` — Admin 10개 프레임 스펙 + API 계약 + 컴포넌트 코드 샘플
   - 포함 내용: 파일 구조, 인증 플로우, 로그인/대시보드/Company/Project/Skill 화면 스펙, 타입 정의, 검증 규칙, 에러 처리
-  - ⏳ **D3~D7 FE 합류 예정**: Admin 페이지 6개 파일 구현
-    - `app/admin/layout.tsx` — 사이드바(240px) + 하단 탭바(모바일)
-    - `app/admin/login/page.tsx` — 비밀번호 로그인 폼
-    - `app/admin/page.tsx` — 대시보드 (통계 카드 3개)
-    - `app/admin/companies/page.tsx` — Company CRUD
-    - `app/admin/projects/page.tsx` — Project CRUD
-    - `app/admin/skills/page.tsx` — Skill CRUD
+- [x] **D3 FE (2026-03-09)**: Admin 페이지 전체 구현 완료
+  - UI 신규: `Input.tsx`(textarea 지원), `Badge.tsx`, `Select.tsx`(커스텀 드롭다운, ARIA 완비)
+  - Admin 컴포넌트: `AdminSidebar`, `AdminTabBar`, `CompanyForm/List`, `ProjectForm/List`, `SkillForm/List`
+  - Admin 페이지: `layout.tsx`, `login/page.tsx`, `page.tsx`(대시보드), `companies`, `projects`, `skills`
+  - `npx tsc --noEmit` 에러 0건, `npm run build` 성공
+- [x] **D4 FE (2026-03-09)**: API 누락 필드 + UI 버그 수정
+  - API: `thumbnailUrl`, `iconUrl`, `sortOrder`, `logoUrl` 저장 누락 수정
+  - UI: `--text-secondary` → `--text-muted` 8개 파일 일괄 교체
+- [x] **D5 FE (2026-03-09)**: Education(학력/교육) 기능 전체 추가
+  - Prisma: Education 모델 + `prisma db push`
+  - API: `/api/education` CRUD (GET/POST/PUT/DELETE)
+  - Admin: `EducationForm`, `EducationList`, `/admin/education` 페이지, 사이드바/탭바 메뉴 추가
+  - 공개 페이지: Experience 섹션 하단 학력/교육 섹션 표시
+- [x] **D6 BE (2026-03-09)**: 코드 수준 버그 점검 (이상 없음)
+- [x] **D7~D9 FE (2026-03-09)**: SEO 최적화
+  - `app/sitemap.ts` — 동적 sitemap (홈 + 프로젝트)
+  - `app/robots.ts` — /admin/ disallow
+  - `app/layout.tsx` — openGraph + twitter 메타 강화
+  - `middleware.ts` → `proxy.ts` 마이그레이션 (Next.js 16 컨벤션)
+- [x] **D10 (2026-03-10)**: 브라우저 테스트 + 성능 최적화 + Vercel 재배포
+  - Playwright MCP로 전 페이지 테스트 완료 (홈/프로젝트/Admin CRUD)
+  - `lib/prisma.ts` — production 캐싱 버그 수정 (`globalThis` 항상 캐싱)
+  - API Routes: `unstable_cache`(5분) + `revalidateTag` 적용 (4개 엔티티)
+  - Admin 페이지(5개): `useEffect+useState` → `useQuery+useMutation` 전환
+  - `providers.tsx`: `QueryClientProvider` 추가 (staleTime 5분, gcTime 6분)
+  - `npx tsc --noEmit` 에러 0건, `next build` 성공, Vercel 배포 완료
+
+**Sprint 3 완료 ✅ (2026-03-10)**
 
 ---
 
