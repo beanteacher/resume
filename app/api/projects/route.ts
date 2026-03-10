@@ -32,9 +32,10 @@ export async function POST(request: NextRequest) {
 
     try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof project>>({ data: project })
-  } catch {
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
     return NextResponse.json<ApiResponse<null>>(
-      { data: null, error: '프로젝트를 생성할 수 없습니다.' },
+      { data: null, error: msg },
       { status: 500 }
     )
   }
