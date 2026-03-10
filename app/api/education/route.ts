@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    revalidateTag('education', {})
+    try { revalidateTag('education', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof education>>({ data: education })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

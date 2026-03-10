@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    revalidateTag('companies', {})
+    try { revalidateTag('companies', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

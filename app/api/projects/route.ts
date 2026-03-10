@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    revalidateTag('projects', {})
+    try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof project>>({ data: project })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

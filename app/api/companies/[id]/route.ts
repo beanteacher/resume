@@ -56,7 +56,7 @@ export async function PUT(
       },
     })
 
-    revalidateTag('companies', {})
+    try { revalidateTag('companies', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof company>>({ data: company })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -73,7 +73,7 @@ export async function DELETE(
   try {
     const { id } = await params
     await prisma.company.delete({ where: { id: parseInt(id) } })
-    revalidateTag('companies', {})
+    try { revalidateTag('companies', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

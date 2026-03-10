@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    revalidateTag('skills', {})
+    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof skill>>({ data: skill })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
