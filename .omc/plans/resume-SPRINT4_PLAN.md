@@ -48,6 +48,26 @@
 - ✅ git commit & push (08790b8)
 
 
+**D5 완료 내역 (2026-03-10)**
+- ✅ 최종 릴리즈 게이트 전체 통과
+  - tsc --noEmit 에러 0건
+  - next build 성공 (sitemap.xml, robots.txt 포함)
+  - Vercel 배포 최신 상태 확인 (https://resume-nine-gold.vercel.app)
+  - 콘솔 에러 0건 (Vercel 프로덕션)
+- ✅ 릴리즈 산출물 작성 완료
+  - SPRINT4_REVIEW.md: 게이트 점검 결과 + 작업 완료 내역 + 미완료 항목 정리
+  - SPRINT4_RETROSPECTIVE.md: KPT (Keep/Problem/Try) + 프로젝트 전체 회고
+- ✅ MEMORY.md Sprint 4 완료 ✅ 업데이트
+
+**D4 완료 내역 (2026-03-10)**
+- ✅ Vercel 프로덕션 크로스 브라우저/디바이스 테스트 (Playwright MCP)
+  - Desktop 1440px: 레이아웃 정상, 콘솔 에러 0건
+  - Tablet 768px: 레이아웃 정상
+  - Mobile 390px (iPhone 14): 햄버거 메뉴 slide-down 정상, projects/[id] 모바일 정상
+  - 라이트 모드 전환 정상 (☀️ → 🌙 토글)
+  - 다크 모드 기본값 유지 확인
+- ✅ git commit & push (42a7bc4)
+
 **D3 완료 내역 (2026-03-10)**
 - ✅ 애니메이션 시각 검증: Hero/Skills/projects/[id] Playwright 스크린샷 확인
   - Hero fade-up, Skills 섹션 제목 fade-in + dot 순차 등장, projects/[id] main fade-in 모두 정상
