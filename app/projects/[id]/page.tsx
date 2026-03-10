@@ -47,7 +47,7 @@ export default async function ProjectDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-[var(--bg)] pt-24 pb-16 px-6">
+    <main className="min-h-screen bg-[var(--bg)] pt-24 pb-16 px-6 animate-[fade-in_0.4s_ease_both]">
       <article className="max-w-3xl mx-auto">
         {/* 뒤로 가기 */}
         <Link

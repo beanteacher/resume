@@ -48,6 +48,21 @@
 - ✅ git commit & push (08790b8)
 
 
+**D3 완료 내역 (2026-03-10)**
+- ✅ 애니메이션 시각 검증: Hero/Skills/projects/[id] Playwright 스크린샷 확인
+  - Hero fade-up, Skills 섹션 제목 fade-in + dot 순차 등장, projects/[id] main fade-in 모두 정상
+- ✅ Lighthouse 최적화:
+  - 폰트: globals.css `@import url(CDN)` 제거 → layout.tsx `<head>` `<link rel="stylesheet">` 이동 (렌더 블로킹 제거)
+  - 폰트 preconnect: `<link rel="preconnect" href="https://cdn.jsdelivr.net">` 추가
+  - 접근성: `<nav aria-label="메인 네비게이션">` 추가 (Header.tsx)
+- ✅ tsc --noEmit 에러 0건, next build 성공
+
+**D2 완료 내역 (2026-03-10)**
+- ✅ Section.tsx 섹션 제목 fade-in: `'use client'` + `useInView` → 스크롤 진입 시 title/subtitle fade-up
+- ✅ SkillsContent.tsx ProficiencyDots 순차 등장: dot별 `opacity`/`scale` + `index * 0.05s` delay
+- ✅ projects/[id]/page.tsx `<main>` 래퍼 fade-in: `animate-[fade-in_0.4s_ease_both]` 추가
+- ✅ tsc --noEmit 에러 0건, next build 성공
+
 **목표**: 공개 페이지 전체 인터랙션을 부드럽게 정제한다. 성능 저하 없이 체감 UX 향상.
 
 **작업 항목**:

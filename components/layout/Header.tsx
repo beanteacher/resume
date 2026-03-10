@@ -57,7 +57,7 @@ export function Header() {
           : 'bg-transparent'
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="메인 네비게이션">
         <a
           href="#"
           className="text-[var(--font-size-h3)] font-bold bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent"

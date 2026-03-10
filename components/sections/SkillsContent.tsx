@@ -13,28 +13,37 @@ const CATEGORY_LABELS: Record<string, string> = {
   Tool: 'Tool',
 }
 
-function ProficiencyDots({ level }: { level: number }) {
+function ProficiencyDots({ level, isVisible = true }: { level: number; isVisible?: boolean }) {
   return (
     <div className="flex gap-1">
       {Array.from({ length: 5 }, (_, i) => (
         <span
           key={i}
-          className={`w-2 h-2 rounded-full transition-colors ${
+          className={`w-2 h-2 rounded-full ${
             i < level
               ? 'bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-blue)]'
               : 'bg-[var(--border-color)]'
           }`}
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'scale(1)' : 'scale(0)',
+            transition: `opacity 0.3s ease ${i * 0.05}s, transform 0.3s ease ${i * 0.05}s`,
+          }}
         />
       ))}
     </div>
   )
 }
 
-function SkillRow({ name, proficiency }: Pick<SkillItem, 'name' | 'proficiency'>) {
+function SkillRow({
+  name,
+  proficiency,
+  isVisible,
+}: Pick<SkillItem, 'name' | 'proficiency'> & { isVisible: boolean }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-[var(--elevated)] border border-[var(--border-color)] rounded-[var(--radius-sm)] hover:border-[var(--color-brand-purple)]/50 transition-colors duration-[var(--transition-fast)]">
       <span className="text-[var(--font-size-body2)] text-[var(--text)] font-medium">{name}</span>
-      <ProficiencyDots level={proficiency} />
+      <ProficiencyDots level={proficiency} isVisible={isVisible} />
     </div>
   )
 }
@@ -66,7 +75,7 @@ function CategoryCard({
       </h3>
       <div className="space-y-2">
         {skills.map((skill) => (
-          <SkillRow key={skill.id} name={skill.name} proficiency={skill.proficiency} />
+          <SkillRow key={skill.id} name={skill.name} proficiency={skill.proficiency} isVisible={isInView} />
         ))}
       </div>
     </div>
