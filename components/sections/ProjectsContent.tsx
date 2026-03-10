@@ -3,8 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { SerializedProject, ApiResponse } from '@/types'
+import { useInView } from '@/lib/hooks/useInView'
 
 function ProjectCard({ project, index }: { project: SerializedProject; index: number }) {
+  const { ref, isInView } = useInView({ threshold: 0.1 })
+
   let techTags: string[] = []
   try {
     techTags = JSON.parse(project.techStack) as string[]
@@ -14,14 +17,18 @@ function ProjectCard({ project, index }: { project: SerializedProject; index: nu
 
   return (
     <div
+      ref={ref as React.RefObject<HTMLDivElement>}
       className="
         flex flex-col bg-[var(--surface)] border border-[var(--border-color)]
         rounded-[var(--radius-md)] p-6 shadow-[var(--shadow-sm)]
         hover:shadow-[var(--shadow-md)] hover:border-[var(--color-brand-purple)]/50 hover:-translate-y-1
-        transition-all duration-[var(--transition-base)]
-        animate-[fade-up_0.5s_ease_both]
+        transition-[box-shadow,border-color,transform] duration-[var(--transition-base)]
       "
-      style={{ animationDelay: `${index * 0.06}s` }}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 0.6s ease ${(index % 6) * 0.08}s, transform 0.6s ease ${(index % 6) * 0.08}s, box-shadow var(--transition-base), border-color var(--transition-base)`,
+      }}
     >
       {/* 헤더 */}
       <div className="flex items-start justify-between gap-2 mb-2">

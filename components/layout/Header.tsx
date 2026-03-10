@@ -16,7 +16,12 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
+  const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,7 +90,7 @@ export function Header() {
             className="w-9 h-9 flex items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--elevated)] transition-all duration-[var(--transition-fast)]"
             aria-label="테마 전환"
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {mounted ? (theme === 'dark' ? '☀️' : '🌙') : '☀️'}
           </button>
 
           {/* Mobile Menu Button */}

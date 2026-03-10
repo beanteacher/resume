@@ -38,14 +38,17 @@ function EducationCard({ education, index }: { education: SerializedEducation; i
       />
       <div
         ref={ref as unknown as React.RefObject<HTMLDivElement>}
-        className={`
+        className="
           bg-[var(--surface)] border border-[var(--border-color)] rounded-[var(--radius-md)] p-6
           shadow-[var(--shadow-sm)]
           hover:shadow-[var(--shadow-md)] hover:border-[var(--color-brand-purple)]/50 hover:-translate-y-1
-          transition-all duration-[var(--transition-base)]
-          animate-[fade-up_0.5s_ease_both]
-        `}
-        style={{ animationDelay: `${index * 0.08}s`, opacity: isInView ? 1 : 0 }}
+          transition-[box-shadow,border-color,transform] duration-[var(--transition-base)]
+        "
+        style={{
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+          transition: `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s, box-shadow var(--transition-base), border-color var(--transition-base)`,
+        }}
       >
         <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
           <h3 className="text-[var(--font-size-h3)] font-[var(--font-weight-heading)] text-[var(--text)]">

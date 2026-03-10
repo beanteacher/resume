@@ -17,9 +17,12 @@ export function AboutContent({ name, title, bio, email, github, blog }: AboutCon
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={`max-w-4xl mx-auto transition-all duration-700 ${
-        isInView ? 'animate-[fade-up_0.5s_ease_both]' : 'opacity-0 translate-y-3'
-      }`}
+      className="max-w-4xl mx-auto"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+        transition: 'opacity 0.7s ease, transform 0.7s ease',
+      }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* 좌측: 텍스트 */}

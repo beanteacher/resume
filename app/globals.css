@@ -130,6 +130,14 @@
   --text-muted: var(--color-text-secondary-light);
 }
 
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ── Base Styles ── */
 *,
 *::before,
