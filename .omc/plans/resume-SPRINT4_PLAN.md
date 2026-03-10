@@ -28,6 +28,26 @@
 
 #### 4.1 애니메이션 세부 조정 (D1~D3)
 
+**D1 완료 내역 (2026-03-10)**
+- ✅ React Hydration Error #418 수정
+  - 원인: `Header.tsx`에서 `useTheme()` SSR 불일치 (서버: undefined, 클라이언트: 'dark')
+  - 수정: `mounted` state 추가 → 마운트 전 테마 버튼 고정값(`☀️`) 사용
+- ✅ 스크롤 진입 애니메이션 전 공개 섹션 적용
+  - 패턴 통일: CSS `animate-[fade-up]` 제거 → `style={{ opacity, transform }}` + `transition` 직접 제어
+  - `AboutContent.tsx`: `animate+transition` 혼용 → 올바른 패턴으로 교체
+  - `ExperienceContent.tsx`: CSS animation + opacity 충돌 → stagger transition 직접 제어
+  - `EducationContent.tsx`: ExperienceContent와 동일 패턴 적용
+  - `ProjectsContent.tsx`: ProjectCard에 `useInView` + stagger 추가
+  - `ContactSection.tsx`: ContactCard별 `useInView` + stagger 적용
+- ✅ 신규 클라이언트 컴포넌트 분리
+  - `PhilosophyContent.tsx`: `page.tsx` 인라인 → 클라이언트 분리, 카드 4개 stagger
+  - `SkillsContent.tsx`: `SkillsSection.tsx` 서버 유지, 렌더링 로직 클라이언트 분리
+- ✅ `@media (prefers-reduced-motion: reduce)` globals.css 추가
+- ✅ Playwright MCP 전 섹션 시각 검증 완료 (s4-01~s4-07 스크린샷)
+- ✅ tsc --noEmit 에러 0건, npm run build 성공
+- ✅ git commit & push (08790b8)
+
+
 **목표**: 공개 페이지 전체 인터랙션을 부드럽게 정제한다. 성능 저하 없이 체감 UX 향상.
 
 **작업 항목**:
