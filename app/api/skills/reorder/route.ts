@@ -16,7 +16,7 @@ export async function PATCH(request: NextRequest) {
       )
     )
 
-    try { revalidateTag('skills') } catch { /* ignore cache errors */ }
+    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
   } catch {
     return NextResponse.json<ApiResponse<null>>(

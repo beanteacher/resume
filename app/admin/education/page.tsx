@@ -21,7 +21,7 @@ export default function AdminEducationPage() {
       const json = await res.json() as ApiResponse<SerializedEducation[]>
       return json.data ?? []
     },
-    placeholderData: (prev) => prev,
+    placeholderData: (prev: SerializedEducation[] | undefined) => prev,
   })
 
   const deleteMutation = useMutation({

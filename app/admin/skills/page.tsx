@@ -20,7 +20,7 @@ export default function AdminSkillsPage() {
       const json = await res.json() as ApiResponse<SkillsByCategory>
       return json.data ?? {}
     },
-    placeholderData: (prev) => prev,
+    placeholderData: (prev: SkillsByCategory | undefined) => prev,
   })
 
   const deleteMutation = useMutation({

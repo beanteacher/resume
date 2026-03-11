@@ -51,7 +51,7 @@ export async function PUT(
       },
     })
 
-    try { revalidateTag('skills') } catch { /* ignore cache errors */ }
+    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof skill>>({ data: skill })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -85,7 +85,7 @@ export async function DELETE(
       )
     })
 
-    try { revalidateTag('skills') } catch { /* ignore cache errors */ }
+    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
   } catch (err) {
     if (err instanceof Error && err.message === 'NOT_FOUND') {

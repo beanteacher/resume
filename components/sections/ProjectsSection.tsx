@@ -45,6 +45,8 @@ export async function ProjectsSection() {
           endDate: p.company.endDate ? new Date(p.company.endDate).toISOString() : null,
           isCurrent: p.company.isCurrent,
           description: p.company.description,
+          responsibilities: p.company.responsibilities ?? null,
+          achievements: p.company.achievements ?? null,
           logoUrl: p.company.logoUrl,
           createdAt: new Date(p.company.createdAt).toISOString(),
           updatedAt: new Date(p.company.updatedAt).toISOString(),

@@ -148,7 +148,7 @@ function CategoryTable({
     const newItems = arrayMove(items, oldIndex, newIndex)
 
     setItems(newItems)
-    onReorder(newItems.map((s, i) => ({ id: s.id, sortOrder: i + 1 })))
+    onReorder(newItems.map((s: Skill, i: number) => ({ id: s.id, sortOrder: i + 1 })))
   }
 
   return (

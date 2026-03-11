@@ -21,7 +21,7 @@ export default function AdminCompaniesPage() {
       const json = await res.json() as ApiResponse<SerializedCompany[]>
       return json.data ?? []
     },
-    placeholderData: (prev) => prev,
+    placeholderData: (prev: SerializedCompany[] | undefined) => prev,
   })
 
   const deleteMutation = useMutation({

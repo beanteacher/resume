@@ -21,7 +21,7 @@ export default function AdminProjectsPage() {
       const json = await res.json() as ApiResponse<{ items: SerializedProject[] }>
       return json.data?.items ?? []
     },
-    placeholderData: (prev) => prev,
+    placeholderData: (prev: SerializedProject[] | undefined) => prev,
   })
 
   const deleteMutation = useMutation({
