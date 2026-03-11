@@ -1,3 +1,5 @@
+import { unstable_cache } from 'next/cache'
+import { prisma } from '@/lib/prisma'
 import { Layout } from '@/components/layout/Layout'
 import { Section } from '@/components/sections/Section'
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
@@ -9,42 +11,69 @@ import { ProjectsSection } from '@/components/sections/ProjectsSection'
 import { ContactSection } from '@/components/sections/ContactSection'
 import { PhilosophyContent } from '@/components/sections/PhilosophyContent'
 
-export default function Home() {
+const getProfile = unstable_cache(
+  async () => prisma.profile.findFirst(),
+  ['profile-hero'],
+  { tags: ['profile'] }
+)
+
+export default async function Home() {
+  const profile = await getProfile()
+  const name = profile?.name ?? '오민성'
+  const title = profile?.title ?? 'Backend Developer'
+  const bio = profile?.bio ?? '데이터의 안정성과 품질 보장, 그리고 AI 협업으로 혼자서도 팀처럼 일합니다.'
+  const avatarUrl = profile?.avatarUrl
+
   return (
     <Layout>
       {/* ── Hero ───────────────────────────────────────────────── */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16">
         <div className="max-w-4xl mx-auto text-center">
+          {avatarUrl && (
+            <div
+              className="mb-6 animate-[fade-up_0.6s_ease_both]"
+              style={{ animationDelay: '0s' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={avatarUrl}
+                alt={name}
+                width={96}
+                height={96}
+                className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-[var(--border-color)] shadow-[var(--shadow-md)]"
+              />
+            </div>
+          )}
           <p
             className="text-[var(--text-muted)] text-[var(--font-size-body1)] mb-4 animate-[fade-up_0.6s_ease_both]"
-            style={{ animationDelay: '0s' }}
+            style={{ animationDelay: avatarUrl ? '0.08s' : '0s' }}
           >
             안녕하세요 👋
           </p>
           <h1
             className="text-[var(--font-size-display)] font-[var(--font-weight-display)] leading-[var(--line-height-tight)] mb-6 animate-[fade-up_0.6s_ease_both]"
-            style={{ animationDelay: '0.08s' }}
+            style={{ animationDelay: avatarUrl ? '0.16s' : '0.08s' }}
           >
             <span className="bg-gradient-to-r from-[var(--color-brand-purple)] via-[var(--color-brand-blue)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent">
-              오민성
+              {name}
             </span>
             입니다
           </h1>
           <p
             className="text-[var(--font-size-h3)] text-[var(--text-muted)] mb-4 animate-[fade-up_0.6s_ease_both]"
-            style={{ animationDelay: '0.16s' }}
+            style={{ animationDelay: avatarUrl ? '0.24s' : '0.16s' }}
           >
-            Backend Developer
+            {title}
           </p>
           <p
             className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto animate-[fade-up_0.6s_ease_both]"
-            style={{ animationDelay: '0.24s' }}
+            style={{ animationDelay: avatarUrl ? '0.32s' : '0.24s' }}
           >
-            데이터의 안정성과 품질 보장, 그리고 AI 협업으로 혼자서도 팀처럼 일합니다.
+            {bio}
           </p>
           <div
             className="flex items-center justify-center gap-4 animate-[fade-up_0.6s_ease_both]"
-            style={{ animationDelay: '0.32s' }}
+            style={{ animationDelay: avatarUrl ? '0.40s' : '0.32s' }}
           >
             <a
               href="#projects"
