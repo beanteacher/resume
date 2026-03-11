@@ -1,14 +1,24 @@
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { ProjectsContent } from './ProjectsContent'
 import type { SerializedProject } from '@/types'
 
+const LIMIT = 6
+
+const getInitialProjects = unstable_cache(
+  async () => {
+    return prisma.project.findMany({
+      take: LIMIT + 1,
+      include: { company: true },
+      orderBy: { createdAt: 'desc' },
+    })
+  },
+  ['projects-initial'],
+  { tags: ['projects'] }
+)
+
 export async function ProjectsSection() {
-  const LIMIT = 6
-  const raw = await prisma.project.findMany({
-    take: LIMIT + 1,
-    include: { company: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const raw = await getInitialProjects()
 
   const hasMore = raw.length > LIMIT
   const slice = hasMore ? raw.slice(0, LIMIT) : raw
