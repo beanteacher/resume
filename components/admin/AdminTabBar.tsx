@@ -2,13 +2,15 @@
 
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
+import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const tabs = [
-  { href: '/admin', label: '대시보드', icon: '📊' },
-  { href: '/admin/companies', label: '회사', icon: '🏢' },
-  { href: '/admin/education', label: '학력', icon: '🎓' },
-  { href: '/admin/projects', label: '프로젝트', icon: '🛠️' },
-  { href: '/admin/skills', label: '스킬', icon: '⚙️' },
+const tabs: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/admin', label: '대시보드', icon: LayoutDashboard },
+  { href: '/admin/companies', label: '회사', icon: Building2 },
+  { href: '/admin/education', label: '학력', icon: GraduationCap },
+  { href: '/admin/projects', label: '프로젝트', icon: Wrench },
+  { href: '/admin/skills', label: '스킬', icon: Settings },
 ]
 
 export function AdminTabBar() {
@@ -24,6 +26,7 @@ export function AdminTabBar() {
     <div className="flex justify-around items-center h-full px-2">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href
+        const Icon = tab.icon
         return (
           <Link key={tab.href} href={tab.href}>
             <span
@@ -34,7 +37,7 @@ export function AdminTabBar() {
                 ${isActive ? 'text-[var(--color-brand-purple)]' : 'text-[var(--text-muted)]'}
               `}
             >
-              <span className="text-xl">{tab.icon}</span>
+              <Icon size={20} strokeWidth={1.75} />
               <span className="hidden xs:inline">{tab.label}</span>
             </span>
           </Link>
@@ -44,7 +47,7 @@ export function AdminTabBar() {
         onClick={handleLogout}
         className="flex flex-col items-center gap-1 px-3 py-2 text-red-400 hover:text-red-500 transition-colors"
       >
-        <span className="text-xl">🚪</span>
+        <LogOut size={20} strokeWidth={1.75} />
       </button>
     </div>
   )

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { EducationList } from '@/components/admin/EducationList'
 import { EducationForm } from '@/components/admin/EducationForm'
 import type { SerializedEducation, ApiResponse } from '@/types'
+import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
+import { AdminAddButton } from '@/components/admin/AdminAddButton'
 
 export default function AdminEducationPage() {
   const queryClient = useQueryClient()
@@ -40,10 +42,8 @@ export default function AdminEducationPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-[var(--text)]">학력 / 교육 관리</h1>
-        <Button variant="primary" onClick={() => setEditingId(0)}>
-          + 항목 추가
-        </Button>
+        <AdminPageTitle title="학력 / 교육 관리" />
+        <AdminAddButton label="항목" onClick={() => setEditingId(0)} />
       </div>
 
       {editingId !== null && (

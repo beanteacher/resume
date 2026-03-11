@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { ProjectList } from '@/components/admin/ProjectList'
 import { ProjectForm } from '@/components/admin/ProjectForm'
 import type { SerializedProject, ApiResponse } from '@/types'
+import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
+import { AdminAddButton } from '@/components/admin/AdminAddButton'
 
 export default function AdminProjectsPage() {
   const queryClient = useQueryClient()
@@ -40,10 +42,8 @@ export default function AdminProjectsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-[var(--text)]">프로젝트 관리</h1>
-        <Button variant="primary" onClick={() => setEditingId(0)}>
-          + 프로젝트 추가
-        </Button>
+        <AdminPageTitle title="프로젝트 관리" />
+        <AdminAddButton label="프로젝트" onClick={() => setEditingId(0)} />
       </div>
 
       {editingId !== null && (

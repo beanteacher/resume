@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { SkillList } from '@/components/admin/SkillList'
 import { SkillForm } from '@/components/admin/SkillForm'
 import type { SkillsByCategory, ApiResponse } from '@/types'
+import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
+import { AdminAddButton } from '@/components/admin/AdminAddButton'
 
 export default function AdminSkillsPage() {
   const queryClient = useQueryClient()
@@ -40,10 +42,8 @@ export default function AdminSkillsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-[var(--text)]">스킬 관리</h1>
-        <Button variant="primary" onClick={() => setEditingId(0)}>
-          + 스킬 추가
-        </Button>
+        <AdminPageTitle title="스킬 관리" />
+        <AdminAddButton label="스킬" onClick={() => setEditingId(0)} />
       </div>
 
       {editingId !== null && (

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { CompanyList } from '@/components/admin/CompanyList'
 import { CompanyForm } from '@/components/admin/CompanyForm'
 import type { SerializedCompany, ApiResponse } from '@/types'
+import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
+import { AdminAddButton } from '@/components/admin/AdminAddButton'
 
 export default function AdminCompaniesPage() {
   const queryClient = useQueryClient()
@@ -40,10 +42,8 @@ export default function AdminCompaniesPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-[var(--text)]">회사 관리</h1>
-        <Button variant="primary" onClick={() => setEditingId(0)}>
-          + 회사 추가
-        </Button>
+        <AdminPageTitle title="회사 관리" />
+        <AdminAddButton label="회사" onClick={() => setEditingId(0)} />
       </div>
 
       {editingId !== null && (
