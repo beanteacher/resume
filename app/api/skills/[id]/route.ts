@@ -39,7 +39,6 @@ export async function PUT(
       category: string
       proficiency: number
       iconUrl?: string
-      sortOrder?: number
     }
 
     const skill = await prisma.skill.update({
@@ -49,11 +48,10 @@ export async function PUT(
         category: body.category,
         proficiency: body.proficiency,
         iconUrl: body.iconUrl ?? null,
-        sortOrder: body.sortOrder ?? 0,
       },
     })
 
-    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
+    try { revalidateTag('skills') } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<typeof skill>>({ data: skill })
   } catch {
     return NextResponse.json<ApiResponse<null>>(
@@ -69,10 +67,33 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    await prisma.skill.delete({ where: { id: parseInt(id) } })
-    try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
+
+    await prisma.$transaction(async (tx) => {
+      const skill = await tx.skill.findUnique({ where: { id: parseInt(id) } })
+      if (!skill) throw new Error('NOT_FOUND')
+
+      await tx.skill.delete({ where: { id: parseInt(id) } })
+
+      const remaining = await tx.skill.findMany({
+        where: { category: skill.category },
+        orderBy: { sortOrder: 'asc' },
+      })
+      await Promise.all(
+        remaining.map((s, i) =>
+          tx.skill.update({ where: { id: s.id }, data: { sortOrder: i + 1 } })
+        )
+      )
+    })
+
+    try { revalidateTag('skills') } catch { /* ignore cache errors */ }
     return NextResponse.json<ApiResponse<{ success: boolean }>>({ data: { success: true } })
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.message === 'NOT_FOUND') {
+      return NextResponse.json<ApiResponse<null>>(
+        { data: null, error: '스킬을 찾을 수 없습니다.' },
+        { status: 404 }
+      )
+    }
     return NextResponse.json<ApiResponse<null>>(
       { data: null, error: '스킬을 삭제할 수 없습니다.' },
       { status: 500 }

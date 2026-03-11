@@ -1,14 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { unstable_cache, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
 
-const getCachedCompanies = unstable_cache(
-  async () => prisma.company.findMany({ include: { projects: true }, orderBy: { startDate: 'desc' } }),
-  ['companies'],
-  { revalidate: 300, tags: ['companies'] }
-)
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,7 +45,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const companies = await getCachedCompanies()
+    const companies = await prisma.company.findMany({ include: { projects: true }, orderBy: { startDate: 'desc' } })
     return NextResponse.json<ApiResponse<typeof companies>>({ data: companies })
   } catch {
     return NextResponse.json<ApiResponse<never[]>>(

@@ -110,14 +110,17 @@ export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
           category: formData.category,
           proficiency: Number(formData.proficiency),
           iconUrl: formData.iconUrl || null,
-          sortOrder: Number(formData.sortOrder) || 0,
+          ...(skillId ? {} : { sortOrder: Number(formData.sortOrder) || 0 }),
         }),
       })
-      if (!res.ok) throw new Error('저장 실패')
+      if (!res.ok) {
+        const json = await res.json() as { error?: string }
+        throw new Error(json.error ?? '저장에 실패했습니다.')
+      }
       onSuccess()
     } catch (err) {
       console.error(err)
-      setErrors({ submit: '저장에 실패했습니다.' })
+      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
     } finally {
       setLoading(false)
     }
@@ -139,7 +142,9 @@ export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Select label="숙련도" value={formData.proficiency} onChange={set('proficiency')} options={proficiencyOptions} disabled={loading} />
-        <Input type="number" label="정렬 순서" value={formData.sortOrder} onChange={set('sortOrder')} disabled={loading} min={0} helperText="숫자가 작을수록 앞에 표시됩니다." />
+        {!skillId && (
+          <Input type="number" label="정렬 순서" value={formData.sortOrder} onChange={set('sortOrder')} disabled={loading} min={0} helperText="0 입력 시 맨 앞에 추가됩니다." />
+        )}
       </div>
 
       <Input label="아이콘 URL (선택)" placeholder="https://example.com/icon.svg" value={formData.iconUrl} onChange={set('iconUrl')} disabled={loading} />

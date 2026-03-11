@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { unstable_cache, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse, SkillsByCategory } from '@/types'
 
@@ -14,14 +14,33 @@ export async function POST(request: NextRequest) {
       sortOrder?: number
     }
 
-    const skill = await prisma.skill.create({
-      data: {
-        name: body.name,
-        category: body.category,
-        proficiency: body.proficiency,
-        iconUrl: body.iconUrl ?? null,
-        sortOrder: body.sortOrder ?? 0,
-      },
+    const sortOrder = body.sortOrder ?? 0
+
+    if (sortOrder !== 0) {
+      const existing = await prisma.skill.findFirst({ where: { sortOrder } })
+      if (existing) {
+        return NextResponse.json<ApiResponse<null>>(
+          { data: null, error: `정렬 순서 ${sortOrder}는 이미 사용 중입니다.` },
+          { status: 409 }
+        )
+      }
+    }
+
+    const skill = await prisma.$transaction(async (tx) => {
+      if (sortOrder === 0) {
+        await tx.skill.updateMany({
+          data: { sortOrder: { increment: 1 } },
+        })
+      }
+      return tx.skill.create({
+        data: {
+          name: body.name,
+          category: body.category,
+          proficiency: body.proficiency,
+          iconUrl: body.iconUrl ?? null,
+          sortOrder: sortOrder === 0 ? 1 : sortOrder,
+        },
+      })
     })
 
     try { revalidateTag('skills', {}) } catch { /* ignore cache errors */ }
@@ -34,24 +53,16 @@ export async function POST(request: NextRequest) {
   }
 }
 
-const getCachedSkills = unstable_cache(
-  async () => {
+export async function GET() {
+  try {
     const skills = await prisma.skill.findMany({
       orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
     })
-    return skills.reduce<SkillsByCategory>((acc, skill) => {
+    const grouped = skills.reduce<SkillsByCategory>((acc, skill) => {
       if (!acc[skill.category]) acc[skill.category] = []
       acc[skill.category].push(skill)
       return acc
     }, {})
-  },
-  ['skills'],
-  { revalidate: 300, tags: ['skills'] }
-)
-
-export async function GET() {
-  try {
-    const grouped = await getCachedSkills()
     return NextResponse.json<ApiResponse<SkillsByCategory>>({ data: grouped })
   } catch {
     return NextResponse.json<ApiResponse<SkillsByCategory>>(

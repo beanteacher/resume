@@ -106,11 +106,14 @@ export function EducationForm({ educationId, onSuccess, onCancel }: EducationFor
           description: formData.description || null,
         }),
       })
-      if (!res.ok) throw new Error('저장 실패')
+      if (!res.ok) {
+        const json = await res.json() as { error?: string }
+        throw new Error(json.error ?? '저장에 실패했습니다.')
+      }
       onSuccess()
     } catch (err) {
       console.error(err)
-      setErrors({ submit: '저장에 실패했습니다.' })
+      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
     } finally {
       setLoading(false)
     }

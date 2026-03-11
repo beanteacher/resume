@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { unstable_cache, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
 
@@ -47,24 +47,16 @@ export async function GET(request: Request) {
     const cursor = searchParams.get('cursor') ? Number(searchParams.get('cursor')) : undefined
     const limit = Number(searchParams.get('limit') ?? '6')
 
-    const getCachedProjects = unstable_cache(
-      async () => {
-        const projects = await prisma.project.findMany({
-          take: limit + 1,
-          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-          include: { company: true },
-          orderBy: { createdAt: 'desc' },
-        })
-        const hasMore = projects.length > limit
-        const items = hasMore ? projects.slice(0, limit) : projects
-        const nextCursor = hasMore ? items[items.length - 1].id : null
-        return { items, nextCursor }
-      },
-      ['projects', String(cursor ?? ''), String(limit)],
-      { revalidate: 300, tags: ['projects'] }
-    )
-
-    const data = await getCachedProjects()
+    const projects = await prisma.project.findMany({
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      include: { company: true },
+      orderBy: { createdAt: 'desc' },
+    })
+    const hasMore = projects.length > limit
+    const items = hasMore ? projects.slice(0, limit) : projects
+    const nextCursor = hasMore ? items[items.length - 1].id : null
+    const data = { items, nextCursor }
     return NextResponse.json<ApiResponse<typeof data>>({ data })
   } catch {
     return NextResponse.json<ApiResponse<{ items: never[]; nextCursor: null }>>(
