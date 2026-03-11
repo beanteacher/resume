@@ -275,6 +275,39 @@ uiux_designer/design-tokens.md — 디자인 토큰 전체 (CSS 변수 포함)
 
 ---
 
+## Sprint 4 진행 상태
+
+- [x] **D1 FE (2026-03-10)**: React Hydration Error #418 수정 + 스크롤 진입 애니메이션 전 공개 섹션 적용
+  - `Header.tsx` mounted state 추가, `AboutContent`/`ExperienceContent`/`EducationContent`/`ProjectsContent`/`ContactSection` stagger 애니메이션
+  - `PhilosophyContent.tsx`, `SkillsContent.tsx` 클라이언트 컴포넌트 분리
+  - `@media (prefers-reduced-motion: reduce)` globals.css 추가
+- [x] **D2 FE (2026-03-10)**: Section.tsx 섹션 제목 fade-in + SkillsContent ProficiencyDots 순차 등장 + projects/[id] fade-in
+- [x] **D3 FE (2026-03-10)**: Lighthouse 최적화 — 폰트 preconnect, `<nav aria-label>` 접근성 추가
+- [x] **D4 FE (2026-03-10)**: Playwright MCP 크로스 브라우저/디바이스 테스트 (Desktop 1440px / Tablet 768px / Mobile 390px)
+- [x] **D5 PM (2026-03-10)**: 최종 릴리즈 게이트 통과 + SPRINT4_REVIEW.md / SPRINT4_RETROSPECTIVE.md 작성
+
+**Sprint 4 완료 ✅ (2026-03-10)**
+
+---
+
+## Sprint 5 진행 상태
+
+- [x] **D1 FE (2026-03-11)**: 스킬 정렬 UX 개선 전체 구현
+  - `app/api/skills/route.ts`: sortOrder=0 → 전체 +1 이동 후 신규 스킬 1번 배치, 중복 시 409 에러
+  - `app/api/skills/[id]/route.ts`: DELETE 트랜잭션 — 삭제 후 동일 카테고리 sortOrder 1부터 재정렬
+  - `app/api/skills/reorder/route.ts` 신규: PATCH 배치 정렬 업데이트 엔드포인트
+  - `components/admin/SkillList.tsx` 전면 재작성: @dnd-kit SortableRow + CategoryTable 드래그앤드롭
+  - `components/admin/SkillForm.tsx`: 수정 모드 sortOrder 입력 숨김, API 에러 메시지 파싱
+  - `app/admin/skills/page.tsx`: reorderMutation + handleReorder 추가
+  - Admin 전 폼(Company/Education/Project): API 에러 메시지 파싱 통일
+  - API Route Handler GET에서 `unstable_cache` 제거 → CUD 후 목록 즉시 반영
+  - @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities 패키지 추가
+  - commit: `feat: 스킬 정렬 개선, 드래그앤드롭 순서 변경, CUD 새로고침 수정` (58e8f3a)
+
+**Sprint 5 완료 ✅ (2026-03-11)**
+
+---
+
 ## Open Questions (미결)
 
 - 무한 스크롤 범위: Projects 섹션만 확정

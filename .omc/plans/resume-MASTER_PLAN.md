@@ -82,10 +82,17 @@ BE 페르소나의 역할은 **DB 스키마 설계, API 설계, 데이터 모델
 - SEO 최적화 (meta, OG tags, sitemap)
 - Vercel 배포 + 커스텀 도메인 설정
 
-### Sprint 4 (1주) -- 폴리싱 + 릴리즈
+### Sprint 4 (1주) -- 폴리싱 + 릴리즈 ✅
 - 애니메이션 세부 조정
 - 성능 최적화 (Lighthouse 90+)
 - 최종 QA + 릴리즈
+
+### Sprint 5 (1일) -- 스킬 정렬 UX 개선 ✅
+- sortOrder=0 입력 시 기존 스킬 전체 +1, 신규 스킬 1번 배치
+- 중복 sortOrder 입력 시 409 에러 메시지 표시
+- DELETE 후 동일 카테고리 sortOrder 1부터 연속 재정렬
+- @dnd-kit 기반 드래그앤드롭 순서 변경 UI (카테고리 내)
+- Admin CUD 후 즉시 목록 반영 버그 수정 (unstable_cache 제거)
 
 ---
 
