@@ -40,7 +40,7 @@ export default async function Home() {
                 alt={name}
                 width={96}
                 height={96}
-                className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-[var(--border-color)] shadow-[var(--shadow-md)]"
+                className="w-36 h-36 rounded-full mx-auto object-cover border-2 border-[var(--border-color)] shadow-[var(--shadow-md)]"
               />
             </div>
           )}
