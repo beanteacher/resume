@@ -1,12 +1,19 @@
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { ExperienceContent } from '@/components/sections/ExperienceContent'
 import type { CompanyWithProjects } from '@/types'
 
-export async function ExperienceSection() {
-  const companies = await prisma.company.findMany({
+const getCompanies = unstable_cache(
+  async () => prisma.company.findMany({
     include: { projects: true },
     orderBy: { startDate: 'desc' },
-  })
+  }),
+  ['companies-initial'],
+  { tags: ['companies'] }
+)
+
+export async function ExperienceSection() {
+  const companies = await getCompanies()
 
   const serialized: CompanyWithProjects[] = companies.map((c) => ({
     id: c.id,

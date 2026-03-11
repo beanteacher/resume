@@ -1,11 +1,18 @@
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { EducationContent } from '@/components/sections/EducationContent'
 import type { SerializedEducation } from '@/types'
 
-export async function EducationSection() {
-  const educations = await prisma.education.findMany({
+const getEducations = unstable_cache(
+  async () => prisma.education.findMany({
     orderBy: { startDate: 'desc' },
-  })
+  }),
+  ['education-initial'],
+  { tags: ['education'] }
+)
+
+export async function EducationSection() {
+  const educations = await getEducations()
 
   const serialized: SerializedEducation[] = educations.map((e) => ({
     id: e.id,
