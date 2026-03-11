@@ -9,9 +9,10 @@ interface AboutContentProps {
   email: string | null
   github: string
   blog: string
+  avatarUrl: string | null
 }
 
-export function AboutContent({ name, title, bio, email, github, blog }: AboutContentProps) {
+export function AboutContent({ name, title, bio, email, github, blog, avatarUrl }: AboutContentProps) {
   const { ref, isInView } = useInView()
 
   return (
@@ -25,8 +26,16 @@ export function AboutContent({ name, title, bio, email, github, blog }: AboutCon
       }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-        {/* 좌측: 텍스트 */}
+        {/* 좌측: 아바타 + 텍스트 */}
         <div>
+          {avatarUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={name}
+              className="w-80 h-80 rounded-full object-cover border-2 border-[var(--border-color)] shadow-[var(--shadow-md)] mb-6"
+            />
+          )}
           <h3 className="text-[var(--font-size-h2)] font-bold text-[var(--text)] mb-2">{name}</h3>
           <p className="text-[var(--color-brand-purple)] text-[var(--font-size-body1)] font-semibold mb-4">
             {title}
