@@ -1,16 +1,30 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
+import type { ApiResponse } from '@/types'
 
 export default function AdminLoginPage() {
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [profileName, setProfileName] = useState<string>('')
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch('/api/profile')
+        const json = await res.json() as ApiResponse<{ name: string; [key: string]: unknown }>
+        setProfileName(json.data?.name ?? '')
+      } catch {
+        setProfileName('')
+      }
+    })()
+  }, [])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -42,7 +56,11 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[var(--bg)] p-4">
       <Card className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-[var(--text)] mb-1">오민성</h1>
+          {profileName ? (
+            <h1 className="text-2xl font-bold text-[var(--text)] mb-1">{profileName}</h1>
+          ) : (
+            <div className="h-8 w-24 mx-auto mb-1 rounded bg-[var(--surface)] animate-pulse" />
+          )}
           <p className="text-[var(--color-brand-purple)] font-semibold">Admin</p>
         </div>
 

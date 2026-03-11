@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut, UserCircle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 const tabs: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/admin/profile', label: '프로필', icon: UserCircle },
   { href: '/admin', label: '대시보드', icon: LayoutDashboard },
   { href: '/admin/companies', label: '회사', icon: Building2 },
   { href: '/admin/education', label: '학력', icon: GraduationCap },
