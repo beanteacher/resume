@@ -34,6 +34,8 @@ export type CompanyWithProjects = {
   endDate: string | null
   isCurrent: boolean
   description: string
+  responsibilities: string | null
+  achievements: string | null
   logoUrl: string | null
   projects: ProjectData[]
 }
@@ -46,6 +48,8 @@ export type SerializedCompany = {
   endDate: string | null
   isCurrent: boolean
   description: string
+  responsibilities: string | null
+  achievements: string | null
   logoUrl: string | null
   createdAt: string
   updatedAt: string

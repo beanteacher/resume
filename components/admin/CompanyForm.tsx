@@ -18,6 +18,8 @@ interface FormData {
   endDate: string
   isCurrent: boolean
   description: string
+  responsibilities: string
+  achievements: string
   logoUrl: string
 }
 
@@ -28,6 +30,8 @@ const defaultForm: FormData = {
   endDate: '',
   isCurrent: false,
   description: '',
+  responsibilities: '',
+  achievements: '',
   logoUrl: '',
 }
 
@@ -56,6 +60,8 @@ export function CompanyForm({ companyId, onSuccess, onCancel }: CompanyFormProps
         endDate: c.endDate ? c.endDate.split('T')[0] : '',
         isCurrent: c.isCurrent,
         description: c.description,
+        responsibilities: c.responsibilities ?? '',
+        achievements: c.achievements ?? '',
         logoUrl: c.logoUrl ?? '',
       })
     } catch (err) {
@@ -96,6 +102,8 @@ export function CompanyForm({ companyId, onSuccess, onCancel }: CompanyFormProps
           endDate: formData.isCurrent ? null : formData.endDate || null,
           isCurrent: formData.isCurrent,
           description: formData.description,
+          responsibilities: formData.responsibilities || null,
+          achievements: formData.achievements || null,
           logoUrl: formData.logoUrl || null,
         }),
       })
@@ -147,7 +155,27 @@ export function CompanyForm({ companyId, onSuccess, onCancel }: CompanyFormProps
         error={errors.description}
         disabled={loading}
         rows={4}
-        placeholder="회사에서 담당한 역할과 업무를 설명하세요."
+        placeholder="회사에 대한 간략한 설명을 입력하세요."
+      />
+
+      <Input
+        as="textarea"
+        label="담당 업무 (선택)"
+        value={formData.responsibilities}
+        onChange={set('responsibilities')}
+        disabled={loading}
+        rows={4}
+        placeholder={"담당 업무를 줄바꿈으로 구분하여 입력하세요.\n예) 백엔드 API 설계 및 개발\nCI/CD 파이프라인 구축"}
+      />
+
+      <Input
+        as="textarea"
+        label="주요 성과 (선택)"
+        value={formData.achievements}
+        onChange={set('achievements')}
+        disabled={loading}
+        rows={4}
+        placeholder={"주요 성과를 줄바꿈으로 구분하여 입력하세요.\n예) 응답 속도 40% 개선\n월간 활성 사용자 2만명 달성"}
       />
 
       <Input

@@ -39,6 +39,8 @@ export async function PUT(
       name: string
       role: string
       description: string
+      responsibilities?: string
+      achievements?: string
       startDate: string
       endDate?: string
       isCurrent: boolean
@@ -50,6 +52,8 @@ export async function PUT(
         name: body.name,
         role: body.role,
         description: body.description,
+        responsibilities: body.responsibilities ?? null,
+        achievements: body.achievements ?? null,
         startDate: new Date(body.startDate),
         endDate: body.endDate ? new Date(body.endDate) : null,
         isCurrent: body.isCurrent,

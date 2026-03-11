@@ -66,33 +66,42 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
         </div>
 
         {/* 설명 */}
-        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-4">
+        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-4 whitespace-pre-wrap">
           {company.description}
         </p>
 
+        {/* 담당 업무 */}
+        {company.responsibilities && (
+          <div className="mb-4">
+            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-1">담당 업무</p>
+            <p className="text-[var(--font-size-body2)] text-[var(--text-muted)] whitespace-pre-wrap leading-relaxed">
+              {company.responsibilities}
+            </p>
+          </div>
+        )}
+
+        {/* 주요 성과 */}
+        {company.achievements && (
+          <div className="mb-4">
+            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-1">주요 성과</p>
+            <p className="text-[var(--font-size-body2)] text-[var(--text-muted)] whitespace-pre-wrap leading-relaxed">
+              {company.achievements}
+            </p>
+          </div>
+        )}
+
         {/* 참여 프로젝트 */}
         {company.projects.length > 0 && (
-          <div className="mb-4">
-            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-2">
-              참여 프로젝트
-            </p>
-            <ul className="space-y-1">
-              {company.projects.map((p) => (
-                <li key={p.id}>
-                  <a
-                    href={`/projects/${p.id}`}
-                    className="text-[var(--font-size-caption)] text-[var(--color-brand-blue)] hover:underline"
-                  >
-                    {p.title}
-                    {p.description && (
-                      <span className="text-[var(--text-muted)] ml-1">
-                        — {p.description.length > 60 ? `${p.description.slice(0, 60)}…` : p.description}
-                      </span>
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {company.projects.map((p) => (
+              <a
+                key={p.id}
+                href={`/projects/${p.id}`}
+                className="inline-flex items-center gap-1 text-[var(--font-size-caption)] text-[var(--color-brand-blue)] border border-[var(--color-brand-blue)]/40 rounded-full px-3 py-1 hover:bg-[var(--color-brand-blue)]/10 transition-colors"
+              >
+                {p.title} →
+              </a>
+            ))}
           </div>
         )}
 

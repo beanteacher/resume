@@ -19,12 +19,12 @@ export async function EducationSection() {
     name: e.name,
     course: e.course,
     type: e.type,
-    startDate: e.startDate.toISOString(),
-    endDate: e.endDate ? e.endDate.toISOString() : null,
+    startDate: new Date(e.startDate).toISOString(),
+    endDate: e.endDate ? new Date(e.endDate).toISOString() : null,
     isCurrent: e.isCurrent,
     description: e.description,
-    createdAt: e.createdAt.toISOString(),
-    updatedAt: e.updatedAt.toISOString(),
+    createdAt: new Date(e.createdAt).toISOString(),
+    updatedAt: new Date(e.updatedAt).toISOString(),
   }))
 
   return <EducationContent educations={serialized} />

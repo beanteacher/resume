@@ -34,20 +34,20 @@ export async function ProjectsSection() {
     githubUrl: p.githubUrl,
     demoUrl: p.demoUrl,
     companyId: p.companyId,
-    createdAt: p.createdAt.toISOString(),
-    updatedAt: p.updatedAt.toISOString(),
+    createdAt: new Date(p.createdAt).toISOString(),
+    updatedAt: new Date(p.updatedAt).toISOString(),
     company: p.company
       ? {
           id: p.company.id,
           name: p.company.name,
           role: p.company.role,
-          startDate: p.company.startDate.toISOString(),
-          endDate: p.company.endDate?.toISOString() ?? null,
+          startDate: new Date(p.company.startDate).toISOString(),
+          endDate: p.company.endDate ? new Date(p.company.endDate).toISOString() : null,
           isCurrent: p.company.isCurrent,
           description: p.company.description,
           logoUrl: p.company.logoUrl,
-          createdAt: p.company.createdAt.toISOString(),
-          updatedAt: p.company.updatedAt.toISOString(),
+          createdAt: new Date(p.company.createdAt).toISOString(),
+          updatedAt: new Date(p.company.updatedAt).toISOString(),
         }
       : null,
   }))

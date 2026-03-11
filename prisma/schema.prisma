@@ -29,9 +29,11 @@ model Company {
   role        String
   startDate   DateTime
   endDate     DateTime?
-  isCurrent   Boolean   @default(false)
-  description String
-  logoUrl     String?
+  isCurrent        Boolean   @default(false)
+  description      String
+  responsibilities String?
+  achievements     String?
+  logoUrl          String?
   projects    Project[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
