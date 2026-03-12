@@ -2,7 +2,7 @@
 
 import type React from 'react'
 import { useInView } from '@/lib/hooks/useInView'
-import type { SerializedEducation } from '@/types'
+import type { EducationDto } from '@/feature/education/type'
 
 const TYPE_LABEL: Record<string, string> = {
   university: '학력',
@@ -21,7 +21,7 @@ function formatDate(dateStr: string): string {
   return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
-function EducationCard({ education, index }: { education: SerializedEducation; index: number }) {
+function EducationCard({ education, index }: { education: EducationDto; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.15 })
 
   const period = education.isCurrent
@@ -87,7 +87,7 @@ function EducationCard({ education, index }: { education: SerializedEducation; i
   )
 }
 
-export function EducationContent({ educations }: { educations: SerializedEducation[] }) {
+export function EducationContent({ educations }: { educations: EducationDto[] }) {
   if (educations.length === 0) return null
 
   return (

@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import type { SerializedProject, ApiResponse } from '@/types'
+import type { ApiResponse } from '@/types'
+import type { ProjectDto } from '@/feature/project/type'
 import { useInView } from '@/lib/hooks/useInView'
 
-function ProjectCard({ project, index }: { project: SerializedProject; index: number }) {
+function ProjectCard({ project, index }: { project: ProjectDto; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.1 })
 
   let techTags: string[] = []
@@ -104,10 +105,10 @@ export function ProjectsContent({
   initialItems,
   initialCursor,
 }: {
-  initialItems: SerializedProject[]
+  initialItems: ProjectDto[]
   initialCursor: number | null
 }) {
-  const [items, setItems] = useState<SerializedProject[]>(initialItems)
+  const [items, setItems] = useState<ProjectDto[]>(initialItems)
   const [cursor, setCursor] = useState<number | null>(initialCursor)
   const [loading, setLoading] = useState(false)
   const loadingRef = useRef(false)
@@ -118,9 +119,9 @@ export function ProjectsContent({
     loadingRef.current = true
     setLoading(true)
     try {
-      const res = await fetch(`/api/projects?cursor=${cursor}&limit=6`)
+      const res = await fetch(`/api/project?cursor=${cursor}&limit=6`)
       const json = (await res.json()) as ApiResponse<{
-        items: SerializedProject[]
+        items: ProjectDto[]
         nextCursor: number | null
       }>
       setItems((prev) => [...prev, ...json.data.items])

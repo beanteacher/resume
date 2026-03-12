@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import type { SkillsByCategory } from '@/types'
+import type { SkillsByCategory } from '@/feature/skill/type'
 import { SkillsContent } from './SkillsContent'
 
 const getSkills = unstable_cache(

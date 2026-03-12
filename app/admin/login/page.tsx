@@ -1,63 +1,39 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
-import type { ApiResponse } from '@/types'
+import { useLoginMutation } from '@/feature/auth/query'
+import { useProfileQuery } from '@/feature/profile/query'
 
 export default function AdminLoginPage() {
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [profileName, setProfileName] = useState<string>('')
 
-  useEffect(() => {
-    void (async () => {
-      try {
-        const res = await fetch('/api/profile')
-        const json = await res.json() as ApiResponse<{ name: string; [key: string]: unknown }>
-        setProfileName(json.data?.name ?? '')
-      } catch {
-        setProfileName('')
-      }
-    })()
-  }, [])
+  const { data: profile } = useProfileQuery()
 
-  const handleSubmit = async (e: FormEvent) => {
+  const loginMutation = useLoginMutation({
+    onSuccess: () => router.push('/admin'),
+    onError: (err) => setError(err.message),
+  })
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setError('')
-    setLoading(true)
-
-    try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json() as { error?: string }
-        setError(data.error ?? '로그인에 실패했습니다.')
-        return
-      }
-
-      router.push('/admin')
-    } catch {
-      setError('네트워크 오류가 발생했습니다.')
-    } finally {
-      setLoading(false)
-    }
+    loginMutation.mutate(password)
   }
+
+  const loading = loginMutation.isPending
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--bg)] p-4">
       <Card className="w-full max-w-sm">
         <div className="text-center mb-8">
-          {profileName ? (
-            <h1 className="text-2xl font-bold text-[var(--text)] mb-1">{profileName}</h1>
+          {profile ? (
+            <h1 className="text-2xl font-bold text-[var(--text)] mb-1">{profile.name}</h1>
           ) : (
             <div className="h-8 w-24 mx-auto mb-1 rounded bg-[var(--surface)] animate-pulse" />
           )}

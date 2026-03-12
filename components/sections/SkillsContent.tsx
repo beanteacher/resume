@@ -1,7 +1,7 @@
 'use client'
 
 import { useInView } from '@/lib/hooks/useInView'
-import type { SkillsByCategory } from '@/types'
+import type { SkillsByCategory } from '@/feature/skill/type'
 
 type SkillItem = SkillsByCategory[string][number]
 

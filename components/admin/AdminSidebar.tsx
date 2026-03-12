@@ -5,24 +5,26 @@ import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut, UserCircle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { useLogoutMutation } from '@/feature/auth/query'
 
 const menuItems: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/admin/profile', label: '프로필', icon: UserCircle },
   { href: '/admin', label: '대시보드', icon: LayoutDashboard },
   { href: '/admin/company', label: '회사', icon: Building2 },
   { href: '/admin/education', label: '학력/교육', icon: GraduationCap },
-  { href: '/admin/projects', label: '프로젝트', icon: Wrench },
-  { href: '/admin/skills', label: '스킬', icon: Settings },
+  { href: '/admin/project', label: '프로젝트', icon: Wrench },
+  { href: '/admin/skill', label: '스킬', icon: Settings },
 ]
 
 export function AdminSidebar() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleLogout = async () => {
-    await fetch('/api/admin/logout', { method: 'POST' })
-    router.push('/admin/login')
-  }
+  const logoutMutation = useLogoutMutation({
+    onSuccess: () => router.push('/admin/login'),
+  })
+
+  const handleLogout = () => logoutMutation.mutate()
 
   return (
     <div className="flex flex-col h-full p-6">

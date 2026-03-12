@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import type { ApiResponse, SkillsByCategory } from '@/types'
+import type { ApiResponse } from '@/types'
+import type { SkillsByCategory } from '@/feature/skill/type'
 
 export async function POST(request: NextRequest) {
   try {

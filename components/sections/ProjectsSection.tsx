@@ -1,7 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { ProjectsContent } from './ProjectsContent'
-import type { SerializedProject } from '@/types'
+import type { ProjectDto } from '@/feature/project/type'
 
 const LIMIT = 6
 
@@ -24,7 +24,7 @@ export async function ProjectsSection() {
   const slice = hasMore ? raw.slice(0, LIMIT) : raw
   const nextCursor = hasMore ? slice[slice.length - 1].id : null
 
-  const initialItems: SerializedProject[] = slice.map((p) => ({
+  const initialItems: ProjectDto[] = slice.map((p) => ({
     id: p.id,
     title: p.title,
     description: p.description,

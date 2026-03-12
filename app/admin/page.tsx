@@ -4,15 +4,16 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import type { SkillsByCategory, ApiResponse } from '@/types'
+import type { ApiResponse } from '@/types'
+import type { SkillsByCategory } from '@/feature/skill/type'
 import { Building2, Wrench, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
 
 const statItems: { key: 'companies' | 'projects' | 'skills'; label: string; href: string; icon: LucideIcon }[] = [
   { key: 'companies', label: '회사', href: '/admin/company', icon: Building2 },
-  { key: 'projects', label: '프로젝트', href: '/admin/projects', icon: Wrench },
-  { key: 'skills', label: '스킬', href: '/admin/skills', icon: Settings },
+  { key: 'projects', label: '프로젝트', href: '/admin/project', icon: Wrench },
+  { key: 'skills', label: '스킬', href: '/admin/skill', icon: Settings },
 ]
 
 export default function AdminDashboardPage() {
@@ -28,7 +29,7 @@ export default function AdminDashboardPage() {
   const { data: projects } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const res = await fetch('/api/projects')
+      const res = await fetch('/api/project')
       const json = await res.json() as ApiResponse<{ items: unknown[] }>
       return json.data?.items ?? []
     },
@@ -37,7 +38,7 @@ export default function AdminDashboardPage() {
   const { data: skills } = useQuery({
     queryKey: ['skills'],
     queryFn: async () => {
-      const res = await fetch('/api/skills')
+      const res = await fetch('/api/skill')
       const json = await res.json() as ApiResponse<SkillsByCategory>
       return json.data ?? {}
     },

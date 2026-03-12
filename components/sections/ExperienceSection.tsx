@@ -1,7 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { ExperienceContent } from '@/components/sections/ExperienceContent'
-import type { CompanyWithProjects } from '@/types'
+import type { CompanyWithProjects } from '@/feature/company/type'
 
 const getCompanies = unstable_cache(
   async () => prisma.company.findMany({

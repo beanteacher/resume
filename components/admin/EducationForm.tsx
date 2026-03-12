@@ -4,7 +4,8 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import type { SerializedEducation } from '@/types'
+import { useEducationQuery, useCreateEducationMutation, useUpdateEducationMutation } from '@/feature/education/query'
+import type { EducationFormData } from '@/feature/education/type'
 
 interface EducationFormProps {
   educationId: number | null
@@ -12,17 +13,7 @@ interface EducationFormProps {
   onCancel: () => void
 }
 
-interface FormData {
-  name: string
-  course: string
-  type: string
-  startDate: string
-  endDate: string
-  isCurrent: boolean
-  description: string
-}
-
-const defaultForm: FormData = {
+const defaultForm: EducationFormData = {
   name: '',
   course: '',
   type: '',
@@ -39,36 +30,28 @@ const typeOptions = [
 ]
 
 export function EducationForm({ educationId, onSuccess, onCancel }: EducationFormProps) {
-  const [formData, setFormData] = useState<FormData>(defaultForm)
+  const [formData, setFormData] = useState<EducationFormData>(defaultForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
+
+  const { data: education } = useEducationQuery(educationId)
+  const createMutation = useCreateEducationMutation({ onSuccess })
+  const updateMutation = useUpdateEducationMutation({ onSuccess })
 
   useEffect(() => {
-    if (educationId) {
-      void fetchEducation(educationId)
+    if (education) {
+      setFormData({
+        name: education.name,
+        course: education.course,
+        type: education.type,
+        startDate: education.startDate.split('T')[0],
+        endDate: education.endDate ? education.endDate.split('T')[0] : '',
+        isCurrent: education.isCurrent,
+        description: education.description ?? '',
+      })
     } else {
       setFormData(defaultForm)
     }
-  }, [educationId])
-
-  const fetchEducation = async (id: number) => {
-    try {
-      const res = await fetch(`/api/education/${id}`)
-      const data = await res.json() as { data: SerializedEducation }
-      const e = data.data
-      setFormData({
-        name: e.name,
-        course: e.course,
-        type: e.type,
-        startDate: e.startDate.split('T')[0],
-        endDate: e.endDate ? e.endDate.split('T')[0] : '',
-        isCurrent: e.isCurrent,
-        description: e.description ?? '',
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  }, [education])
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {}
@@ -80,7 +63,7 @@ export function EducationForm({ educationId, onSuccess, onCancel }: EducationFor
     return e
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -88,39 +71,29 @@ export function EducationForm({ educationId, onSuccess, onCancel }: EducationFor
       return
     }
     setErrors({})
-    setLoading(true)
 
-    try {
-      const method = educationId ? 'PUT' : 'POST'
-      const url = educationId ? `/api/education/${educationId}` : '/api/education'
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          course: formData.course,
-          type: formData.type,
-          startDate: formData.startDate,
-          endDate: formData.isCurrent ? null : formData.endDate || null,
-          isCurrent: formData.isCurrent,
-          description: formData.description || null,
-        }),
-      })
-      if (!res.ok) {
-        const json = await res.json() as { error?: string }
-        throw new Error(json.error ?? '저장에 실패했습니다.')
-      }
-      onSuccess()
-    } catch (err) {
-      console.error(err)
-      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
-    } finally {
-      setLoading(false)
+    const input = {
+      name: formData.name,
+      course: formData.course,
+      type: formData.type,
+      startDate: formData.startDate,
+      endDate: formData.isCurrent ? null : formData.endDate || null,
+      isCurrent: formData.isCurrent,
+      description: formData.description || null,
+    }
+
+    if (educationId) {
+      updateMutation.mutate({ id: educationId, ...input })
+    } else {
+      createMutation.mutate(input)
     }
   }
 
-  const set = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+  const set = (field: keyof EducationFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const loading = createMutation.isPending || updateMutation.isPending
+  const mutationError = createMutation.error?.message ?? updateMutation.error?.message
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -161,7 +134,7 @@ export function EducationForm({ educationId, onSuccess, onCancel }: EducationFor
         placeholder="전공 내용, 수료 과정 등을 간략히 입력하세요."
       />
 
-      {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+      {mutationError && <p className="text-sm text-red-500">{mutationError}</p>}
 
       <div className="flex gap-3">
         <Button type="submit" variant="primary" disabled={loading}>

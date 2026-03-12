@@ -4,7 +4,9 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import type { SerializedProject, SerializedCompany } from '@/types'
+import { useProjectQuery, useCreateProjectMutation, useUpdateProjectMutation } from '@/feature/project/query'
+import { useCompaniesQuery } from '@/feature/company/query'
+import type { ProjectFormData } from '@/feature/project/type'
 
 interface ProjectFormProps {
   projectId: number | null
@@ -12,18 +14,7 @@ interface ProjectFormProps {
   onCancel: () => void
 }
 
-interface FormData {
-  title: string
-  description: string
-  techStack: string      // 쉼표 구분 문자열
-  achievements: string   // 쉼표 구분 문자열
-  companyId: string
-  githubUrl: string
-  demoUrl: string
-  thumbnailUrl: string
-}
-
-const defaultForm: FormData = {
+const defaultForm: ProjectFormData = {
   title: '',
   description: '',
   techStack: '',
@@ -35,51 +26,32 @@ const defaultForm: FormData = {
 }
 
 export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps) {
-  const [formData, setFormData] = useState<FormData>(defaultForm)
-  const [companies, setCompanies] = useState<SerializedCompany[]>([])
+  const [formData, setFormData] = useState<ProjectFormData>(defaultForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
+
+  const { data: project } = useProjectQuery(projectId)
+  const { data: companies = [] } = useCompaniesQuery()
+  const createMutation = useCreateProjectMutation({ onSuccess })
+  const updateMutation = useUpdateProjectMutation({ onSuccess })
 
   useEffect(() => {
-    void fetchCompanies()
-    if (projectId) {
-      void fetchProject(projectId)
+    if (project) {
+      const techArr = JSON.parse(project.techStack) as string[]
+      const achArr = JSON.parse(project.achievements) as string[]
+      setFormData({
+        title: project.title,
+        description: project.description,
+        techStack: techArr.join(', '),
+        achievements: achArr.join('\n'),
+        companyId: project.companyId ? String(project.companyId) : '',
+        githubUrl: project.githubUrl ?? '',
+        demoUrl: project.demoUrl ?? '',
+        thumbnailUrl: project.thumbnailUrl ?? '',
+      })
     } else {
       setFormData(defaultForm)
     }
-  }, [projectId])
-
-  const fetchCompanies = async () => {
-    try {
-      const res = await fetch('/api/company')
-      const data = await res.json() as { data: SerializedCompany[] }
-      setCompanies(data.data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const fetchProject = async (id: number) => {
-    try {
-      const res = await fetch(`/api/projects/${id}`)
-      const data = await res.json() as { data: SerializedProject }
-      const p = data.data
-      const techArr = JSON.parse(p.techStack) as string[]
-      const achArr = JSON.parse(p.achievements) as string[]
-      setFormData({
-        title: p.title,
-        description: p.description,
-        techStack: techArr.join(', '),
-        achievements: achArr.join('\n'),
-        companyId: p.companyId ? String(p.companyId) : '',
-        githubUrl: p.githubUrl ?? '',
-        demoUrl: p.demoUrl ?? '',
-        thumbnailUrl: p.thumbnailUrl ?? '',
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  }, [project])
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {}
@@ -90,7 +62,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
     return e
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -98,45 +70,31 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       return
     }
     setErrors({})
-    setLoading(true)
 
-    const techStack = formData.techStack.split(',').map((s) => s.trim()).filter(Boolean)
-    const achievements = formData.achievements.split('\n').map((s) => s.trim()).filter(Boolean)
+    const input = {
+      title: formData.title,
+      description: formData.description,
+      techStack: formData.techStack.split(',').map((s) => s.trim()).filter(Boolean),
+      achievements: formData.achievements.split('\n').map((s) => s.trim()).filter(Boolean),
+      companyId: formData.companyId ? Number(formData.companyId) : null,
+      githubUrl: formData.githubUrl || null,
+      demoUrl: formData.demoUrl || null,
+      thumbnailUrl: formData.thumbnailUrl || null,
+    }
 
-    try {
-      const method = projectId ? 'PUT' : 'POST'
-      const url = projectId ? `/api/projects/${projectId}` : '/api/projects'
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          techStack,
-          achievements,
-          companyId: formData.companyId ? Number(formData.companyId) : null,
-          githubUrl: formData.githubUrl || null,
-          demoUrl: formData.demoUrl || null,
-          thumbnailUrl: formData.thumbnailUrl || null,
-        }),
-      })
-      if (!res.ok) {
-        const json = await res.json() as { error?: string }
-        throw new Error(json.error ?? '저장에 실패했습니다.')
-      }
-      onSuccess()
-    } catch (err) {
-      console.error(err)
-      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
-    } finally {
-      setLoading(false)
+    if (projectId) {
+      updateMutation.mutate({ id: projectId, ...input })
+    } else {
+      createMutation.mutate(input)
     }
   }
 
-  const set = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+  const set = (field: keyof ProjectFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }))
 
   const companyOptions = companies.map((c) => ({ value: c.id, label: c.name }))
+  const loading = createMutation.isPending || updateMutation.isPending
+  const mutationError = createMutation.error?.message ?? updateMutation.error?.message
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -194,7 +152,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
 
       <Input label="썸네일 URL (선택)" placeholder="https://example.com/thumbnail.png" value={formData.thumbnailUrl} onChange={set('thumbnailUrl')} disabled={loading} />
 
-      {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+      {mutationError && <p className="text-sm text-red-500">{mutationError}</p>}
 
       <div className="flex gap-3">
         <Button type="submit" variant="primary" disabled={loading}>

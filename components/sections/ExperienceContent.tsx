@@ -2,7 +2,7 @@
 
 import type React from 'react'
 import { useInView } from '@/lib/hooks/useInView'
-import type { CompanyWithProjects } from '@/types'
+import type { CompanyWithProjects } from '@/feature/company/type'
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr)

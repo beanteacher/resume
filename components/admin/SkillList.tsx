@@ -23,7 +23,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { LoadingState } from '@/components/common/LoadingState'
 import { EmptyState } from '@/components/common/EmptyState'
-import type { SkillsByCategory } from '@/types'
+import type { SkillsByCategory } from '@/feature/skill/type'
 
 interface Skill {
   id: number

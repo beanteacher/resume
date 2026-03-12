@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { LoadingState } from '@/components/common/LoadingState'
 import { EmptyState } from '@/components/common/EmptyState'
-import type { SerializedCompany } from '@/types'
+import type { CompanyDto } from '@/feature/company/type'
 
 interface CompanyListProps {
-  companies: SerializedCompany[]
+  companies: CompanyDto[]
   loading: boolean
   onEdit: (id: number) => void
   onDelete: (id: number) => void

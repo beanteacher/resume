@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { LoadingState } from '@/components/common/LoadingState'
 import { EmptyState } from '@/components/common/EmptyState'
-import type { SerializedProject } from '@/types'
+import type { ProjectDto } from '@/feature/project/type'
 
 interface ProjectListProps {
-  projects: SerializedProject[]
+  projects: ProjectDto[]
   loading: boolean
   onEdit: (id: number) => void
   onDelete: (id: number) => void

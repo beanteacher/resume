@@ -3,36 +3,10 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import type { ApiResponse } from '@/types'
+import { useProfileQuery, useUpdateProfileMutation } from '@/feature/profile/query'
+import type { ProfileFormData } from '@/feature/profile/type'
 
-interface ProfileData {
-  id: number
-  name: string
-  title: string
-  bio: string
-  email: string
-  phone: string | null
-  location: string
-  github: string
-  linkedin: string | null
-  blog: string | null
-  avatarUrl: string | null
-}
-
-interface FormData {
-  name: string
-  title: string
-  bio: string
-  email: string
-  phone: string
-  location: string
-  github: string
-  linkedin: string
-  blog: string
-  avatarUrl: string
-}
-
-const defaultForm: FormData = {
+const defaultForm: ProfileFormData = {
   name: '',
   title: '',
   bio: '',
@@ -46,39 +20,34 @@ const defaultForm: FormData = {
 }
 
 export function ProfileForm() {
-  const [formData, setFormData] = useState<FormData>(defaultForm)
+  const [formData, setFormData] = useState<ProfileFormData>(defaultForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
-  const [fetching, setFetching] = useState(true)
   const [successMessage, setSuccessMessage] = useState('')
 
-  useEffect(() => {
-    void fetchProfile()
-  }, [])
+  const { data: profile, isPending } = useProfileQuery()
+  const updateMutation = useUpdateProfileMutation({
+    onSuccess: () => {
+      setSuccessMessage('저장되었습니다.')
+      setTimeout(() => setSuccessMessage(''), 3000)
+    },
+  })
 
-  const fetchProfile = async () => {
-    try {
-      const res = await fetch('/api/admin/profile')
-      const json = await res.json() as ApiResponse<ProfileData>
-      const p = json.data
+  useEffect(() => {
+    if (profile) {
       setFormData({
-        name: p.name,
-        title: p.title,
-        bio: p.bio,
-        email: p.email,
-        phone: p.phone ?? '',
-        location: p.location,
-        github: p.github,
-        linkedin: p.linkedin ?? '',
-        blog: p.blog ?? '',
-        avatarUrl: p.avatarUrl ?? '',
+        name: profile.name,
+        title: profile.title,
+        bio: profile.bio,
+        email: profile.email,
+        phone: profile.phone ?? '',
+        location: profile.location,
+        github: profile.github,
+        linkedin: profile.linkedin ?? '',
+        blog: profile.blog ?? '',
+        avatarUrl: profile.avatarUrl ?? '',
       })
-    } catch (err) {
-      console.error('프로필 정보를 불러올 수 없습니다:', err)
-    } finally {
-      setFetching(false)
     }
-  }
+  }, [profile])
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {}
@@ -91,7 +60,7 @@ export function ProfileForm() {
     return e
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -99,45 +68,28 @@ export function ProfileForm() {
       return
     }
     setErrors({})
-    setLoading(true)
-
-    try {
-      const res = await fetch('/api/admin/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          title: formData.title,
-          bio: formData.bio,
-          email: formData.email,
-          phone: formData.phone || null,
-          location: formData.location,
-          github: formData.github,
-          linkedin: formData.linkedin || null,
-          blog: formData.blog || null,
-          avatarUrl: formData.avatarUrl || null,
-        }),
-      })
-      if (!res.ok) {
-        const json = await res.json() as { error?: string }
-        throw new Error(json.error ?? '저장에 실패했습니다.')
-      }
-      setSuccessMessage('저장되었습니다.')
-      setTimeout(() => setSuccessMessage(''), 3000)
-    } catch (err) {
-      console.error(err)
-      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
-    } finally {
-      setLoading(false)
-    }
+    updateMutation.mutate({
+      name: formData.name,
+      title: formData.title,
+      bio: formData.bio,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      location: formData.location,
+      github: formData.github,
+      linkedin: formData.linkedin || undefined,
+      blog: formData.blog || undefined,
+      avatarUrl: formData.avatarUrl || undefined,
+    })
   }
 
-  const set = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const set = (field: keyof ProfileFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }))
 
-  if (fetching) {
+  if (isPending) {
     return <div className="animate-pulse h-96 rounded-[var(--radius-md)] bg-[var(--elevated)]" />
   }
+
+  const loading = updateMutation.isPending
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -173,7 +125,7 @@ export function ProfileForm() {
 
       <Input type="url" label="프로필 이미지 URL (선택)" value={formData.avatarUrl} onChange={set('avatarUrl')} disabled={loading} placeholder="https://example.com/avatar.png" />
 
-      {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+      {updateMutation.isError && <p className="text-sm text-red-500">{updateMutation.error.message}</p>}
       {successMessage && <p className="text-sm text-green-500 font-medium">{successMessage}</p>}
 
       <div className="flex gap-3">

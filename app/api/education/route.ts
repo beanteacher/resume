@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import type { ApiResponse, SerializedEducation } from '@/types'
+import type { ApiResponse } from '@/types'
+import type { EducationDto } from '@/feature/education/type'
 
 export async function GET() {
   try {
     const educations = await prisma.education.findMany({ orderBy: { startDate: 'desc' } })
-    const serialized: SerializedEducation[] = educations.map((e) => ({
+    const serialized: EducationDto[] = educations.map((e) => ({
       id: e.id,
       name: e.name,
       course: e.course,
@@ -19,9 +20,9 @@ export async function GET() {
       createdAt: e.createdAt.toISOString(),
       updatedAt: e.updatedAt.toISOString(),
     }))
-    return NextResponse.json<ApiResponse<SerializedEducation[]>>({ data: serialized })
+    return NextResponse.json<ApiResponse<EducationDto[]>>({ data: serialized })
   } catch {
-    return NextResponse.json<ApiResponse<SerializedEducation[]>>(
+    return NextResponse.json<ApiResponse<EducationDto[]>>(
       { data: [], error: '학력/교육 정보를 불러올 수 없습니다.' },
       { status: 500 }
     )

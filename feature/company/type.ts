@@ -36,3 +36,29 @@ export type CompanyInput = {
   achievements: string | null
   logoUrl: string | null
 }
+
+export type ProjectInCompany = {
+  id: number
+  title: string
+  description: string
+  techStack: string
+  achievements: string
+  thumbnailUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  companyId: number | null
+}
+
+export type CompanyWithProjects = {
+  id: number
+  name: string
+  role: string
+  startDate: string
+  endDate: string | null
+  isCurrent: boolean
+  description: string
+  responsibilities: string | null
+  achievements: string | null
+  logoUrl: string | null
+  projects: ProjectInCompany[]
+}

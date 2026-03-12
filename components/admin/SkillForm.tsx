@@ -4,6 +4,8 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
+import { useSkillQuery, useCreateSkillMutation, useUpdateSkillMutation } from '@/feature/skill/query'
+import type { SkillFormData } from '@/feature/skill/type'
 
 interface SkillFormProps {
   skillId: number | null
@@ -11,24 +13,7 @@ interface SkillFormProps {
   onCancel: () => void
 }
 
-interface Skill {
-  id: number
-  name: string
-  category: string
-  proficiency: number
-  iconUrl: string | null
-  sortOrder: number
-}
-
-interface FormData {
-  name: string
-  category: string
-  proficiency: string
-  iconUrl: string
-  sortOrder: string
-}
-
-const defaultForm: FormData = {
+const defaultForm: SkillFormData = {
   name: '',
   category: '',
   proficiency: '3',
@@ -53,34 +38,26 @@ const proficiencyOptions = [
 ]
 
 export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
-  const [formData, setFormData] = useState<FormData>(defaultForm)
+  const [formData, setFormData] = useState<SkillFormData>(defaultForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
+
+  const { data: skill } = useSkillQuery(skillId)
+  const createMutation = useCreateSkillMutation({ onSuccess })
+  const updateMutation = useUpdateSkillMutation({ onSuccess })
 
   useEffect(() => {
-    if (skillId) {
-      void fetchSkill(skillId)
+    if (skill) {
+      setFormData({
+        name: skill.name,
+        category: skill.category,
+        proficiency: String(skill.proficiency),
+        iconUrl: skill.iconUrl ?? '',
+        sortOrder: String(skill.sortOrder),
+      })
     } else {
       setFormData(defaultForm)
     }
-  }, [skillId])
-
-  const fetchSkill = async (id: number) => {
-    try {
-      const res = await fetch(`/api/skills/${id}`)
-      const data = await res.json() as { data: Skill }
-      const s = data.data
-      setFormData({
-        name: s.name,
-        category: s.category,
-        proficiency: String(s.proficiency),
-        iconUrl: s.iconUrl ?? '',
-        sortOrder: String(s.sortOrder),
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  }, [skill])
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {}
@@ -89,7 +66,7 @@ export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
     return e
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -97,37 +74,27 @@ export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
       return
     }
     setErrors({})
-    setLoading(true)
 
-    try {
-      const method = skillId ? 'PUT' : 'POST'
-      const url = skillId ? `/api/skills/${skillId}` : '/api/skills'
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          category: formData.category,
-          proficiency: Number(formData.proficiency),
-          iconUrl: formData.iconUrl || null,
-          ...(skillId ? {} : { sortOrder: Number(formData.sortOrder) || 0 }),
-        }),
-      })
-      if (!res.ok) {
-        const json = await res.json() as { error?: string }
-        throw new Error(json.error ?? '저장에 실패했습니다.')
-      }
-      onSuccess()
-    } catch (err) {
-      console.error(err)
-      setErrors({ submit: err instanceof Error ? err.message : '저장에 실패했습니다.' })
-    } finally {
-      setLoading(false)
+    const input = {
+      name: formData.name,
+      category: formData.category,
+      proficiency: Number(formData.proficiency),
+      iconUrl: formData.iconUrl || null,
+      ...(skillId ? {} : { sortOrder: Number(formData.sortOrder) || 0 }),
+    }
+
+    if (skillId) {
+      updateMutation.mutate({ id: skillId, ...input })
+    } else {
+      createMutation.mutate(input)
     }
   }
 
-  const set = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+  const set = (field: keyof SkillFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const loading = createMutation.isPending || updateMutation.isPending
+  const mutationError = createMutation.error?.message ?? updateMutation.error?.message
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -149,7 +116,7 @@ export function SkillForm({ skillId, onSuccess, onCancel }: SkillFormProps) {
 
       <Input label="아이콘 URL (선택)" placeholder="https://example.com/icon.svg" value={formData.iconUrl} onChange={set('iconUrl')} disabled={loading} />
 
-      {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
+      {mutationError && <p className="text-sm text-red-500">{mutationError}</p>}
 
       <div className="flex gap-3">
         <Button type="submit" variant="primary" disabled={loading}>

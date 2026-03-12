@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { LoadingState } from '@/components/common/LoadingState'
 import { EmptyState } from '@/components/common/EmptyState'
-import type { SerializedEducation } from '@/types'
+import type { EducationDto } from '@/feature/education/type'
 
 interface EducationListProps {
-  educations: SerializedEducation[]
+  educations: EducationDto[]
   loading: boolean
   onEdit: (id: number) => void
   onDelete: (id: number) => void
