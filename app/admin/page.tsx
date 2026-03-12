@@ -1,14 +1,14 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import Link from 'next/link'
-import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import type { ApiResponse } from '@/types'
-import type { SkillsByCategory } from '@/feature/skill/type'
-import { Building2, Wrench, Settings } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { useCompaniesQuery } from '@/feature/company/query'
+import { useProjectsQuery } from '@/feature/project/query'
+import { useSkillsQuery } from '@/feature/skill/query'
+import type { LucideIcon } from 'lucide-react'
+import { Building2, Settings, Wrench } from 'lucide-react'
+import Link from 'next/link'
 
 const statItems: { key: 'companies' | 'projects' | 'skills'; label: string; href: string; icon: LucideIcon }[] = [
   { key: 'companies', label: '회사', href: '/admin/company', icon: Building2 },
@@ -17,32 +17,10 @@ const statItems: { key: 'companies' | 'projects' | 'skills'; label: string; href
 ]
 
 export default function AdminDashboardPage() {
-  const { data: companies } = useQuery({
-    queryKey: ['companies'],
-    queryFn: async () => {
-      const res = await fetch('/api/company')
-      const json = await res.json() as ApiResponse<unknown[]>
-      return json.data ?? []
-    },
-  })
 
-  const { data: projects } = useQuery({
-    queryKey: ['projects'],
-    queryFn: async () => {
-      const res = await fetch('/api/project')
-      const json = await res.json() as ApiResponse<{ items: unknown[] }>
-      return json.data?.items ?? []
-    },
-  })
-
-  const { data: skills } = useQuery({
-    queryKey: ['skills'],
-    queryFn: async () => {
-      const res = await fetch('/api/skill')
-      const json = await res.json() as ApiResponse<SkillsByCategory>
-      return json.data ?? {}
-    },
-  })
+  const { data: companies } = useCompaniesQuery();
+  const { data: projects } = useProjectsQuery();
+  const { data: skills } = useSkillsQuery();
 
   const counts = {
     companies: companies?.length,
