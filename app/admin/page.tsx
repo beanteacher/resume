@@ -10,7 +10,7 @@ import type { LucideIcon } from 'lucide-react'
 import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
 
 const statItems: { key: 'companies' | 'projects' | 'skills'; label: string; href: string; icon: LucideIcon }[] = [
-  { key: 'companies', label: '회사', href: '/admin/companies', icon: Building2 },
+  { key: 'companies', label: '회사', href: '/admin/company', icon: Building2 },
   { key: 'projects', label: '프로젝트', href: '/admin/projects', icon: Wrench },
   { key: 'skills', label: '스킬', href: '/admin/skills', icon: Settings },
 ]
@@ -19,7 +19,7 @@ export default function AdminDashboardPage() {
   const { data: companies } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
-      const res = await fetch('/api/companies')
+      const res = await fetch('/api/company')
       const json = await res.json() as ApiResponse<unknown[]>
       return json.data ?? []
     },

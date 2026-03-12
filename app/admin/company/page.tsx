@@ -1,42 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 import { CompanyList } from '@/components/admin/CompanyList'
 import { CompanyForm } from '@/components/admin/CompanyForm'
-import type { SerializedCompany, ApiResponse } from '@/types'
 import { AdminPageTitle } from '@/components/admin/AdminPageTitle'
 import { AdminAddButton } from '@/components/admin/AdminAddButton'
+import { useCompaniesQuery, useDeleteCompanyMutation } from '@/feature/company/query'
 
-export default function AdminCompaniesPage() {
-  const queryClient = useQueryClient()
+export default function AdminCompanyPage() {
   const [editingId, setEditingId] = useState<number | null>(null)
 
-  const { data: companies = [], isPending } = useQuery({
-    queryKey: ['companies'],
-    queryFn: async () => {
-      const res = await fetch('/api/companies')
-      const json = await res.json() as ApiResponse<SerializedCompany[]>
-      return json.data ?? []
-    },
-    placeholderData: (prev: SerializedCompany[] | undefined) => prev,
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => fetch(`/api/companies/${id}`, { method: 'DELETE' }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['companies'] }),
-  })
+  const { data = [], isPending } = useCompaniesQuery()
+  
+  const deleteMutation = useDeleteCompanyMutation()
 
   const handleDelete = (id: number) => {
     if (!window.confirm('이 회사를 삭제하시겠습니까?')) return
     deleteMutation.mutate(id)
-  }
-
-  const handleFormSuccess = () => {
-    setEditingId(null)
-    void queryClient.invalidateQueries({ queryKey: ['companies'] })
   }
 
   return (
@@ -50,14 +31,14 @@ export default function AdminCompaniesPage() {
         <Card className="mb-6">
           <CompanyForm
             companyId={editingId === 0 ? null : editingId}
-            onSuccess={handleFormSuccess}
+            onSuccess={() => setEditingId(null)}
             onCancel={() => setEditingId(null)}
           />
         </Card>
       )}
 
       <CompanyList
-        companies={companies}
+        companies={data}
         loading={isPending}
         onEdit={(id) => setEditingId(id)}
         onDelete={handleDelete}

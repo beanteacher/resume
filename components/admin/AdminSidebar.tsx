@@ -9,7 +9,7 @@ import type { LucideIcon } from 'lucide-react'
 const menuItems: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/admin/profile', label: '프로필', icon: UserCircle },
   { href: '/admin', label: '대시보드', icon: LayoutDashboard },
-  { href: '/admin/companies', label: '회사', icon: Building2 },
+  { href: '/admin/company', label: '회사', icon: Building2 },
   { href: '/admin/education', label: '학력/교육', icon: GraduationCap },
   { href: '/admin/projects', label: '프로젝트', icon: Wrench },
   { href: '/admin/skills', label: '스킬', icon: Settings },

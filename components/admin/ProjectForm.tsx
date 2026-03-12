@@ -51,7 +51,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
 
   const fetchCompanies = async () => {
     try {
-      const res = await fetch('/api/companies')
+      const res = await fetch('/api/company')
       const data = await res.json() as { data: SerializedCompany[] }
       setCompanies(data.data)
     } catch (err) {
