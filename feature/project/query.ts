@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-key'
 import { projectApi } from './api'
+import type { ProjectDto } from './type'
 
 export function useProjectQuery(id: number | null) {
   return useQuery({
@@ -32,7 +33,8 @@ export function useCreateProjectMutation(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: projectApi.create,
-    onSuccess: () => {
+    onSuccess: (created) => {
+      queryClient.setQueryData<ProjectDto[]>(projectKeys.list(), (old = []) => [...old, created])
       queryClient.invalidateQueries({ queryKey: projectKeys.list() })
       options?.onSuccess?.()
     },
@@ -45,6 +47,9 @@ export function useUpdateProjectMutation(options?: { onSuccess?: () => void }) {
     mutationFn: projectApi.update,
     onSuccess: (updated, variables) => {
       queryClient.setQueryData(projectKeys.detail(variables.id), updated)
+      queryClient.setQueryData<ProjectDto[]>(projectKeys.list(), (old = []) =>
+        old.map(p => p.id === variables.id ? updated : p)
+      )
       queryClient.invalidateQueries({ queryKey: projectKeys.list() })
       options?.onSuccess?.()
     },
@@ -55,6 +60,11 @@ export function useDeleteProjectMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: projectApi.delete,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: projectKeys.all }),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData<ProjectDto[]>(projectKeys.list(), (old = []) =>
+        old.filter(p => p.id !== id)
+      )
+      queryClient.invalidateQueries({ queryKey: projectKeys.all })
+    },
   })
 }

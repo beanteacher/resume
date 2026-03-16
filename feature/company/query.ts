@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { companyKeys } from './query-key'
 import { companyApi } from './api'
-import type { CompanyWithProjects } from './type'
+import type { CompanyDto, CompanyWithProjects } from './type'
 
 export function useCompanyQuery(id: number | null) {
   return useQuery({
@@ -33,7 +33,8 @@ export function useCreateCompanyMutation(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: companyApi.create,
-    onSuccess: () => {
+    onSuccess: (created) => {
+      queryClient.setQueryData<CompanyDto[]>(companyKeys.list(), (old = []) => [...old, created])
       queryClient.invalidateQueries({ queryKey: companyKeys.list() })
       options?.onSuccess?.()
     },
@@ -44,8 +45,11 @@ export function useUpdateCompanyMutation(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: companyApi.update,
-    onSuccess: (updatedCompany, variables) => {
-      queryClient.setQueryData(companyKeys.detail(variables.id), updatedCompany)
+    onSuccess: (updated, variables) => {
+      queryClient.setQueryData(companyKeys.detail(variables.id), updated)
+      queryClient.setQueryData<CompanyDto[]>(companyKeys.list(), (old = []) =>
+        old.map(c => c.id === variables.id ? updated : c)
+      )
       queryClient.invalidateQueries({ queryKey: companyKeys.list() })
       options?.onSuccess?.()
     },
@@ -56,6 +60,11 @@ export function useDeleteCompanyMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: companyApi.delete,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: companyKeys.all }),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData<CompanyDto[]>(companyKeys.list(), (old = []) =>
+        old.filter(c => c.id !== id)
+      )
+      queryClient.invalidateQueries({ queryKey: companyKeys.all })
+    },
   })
 }
