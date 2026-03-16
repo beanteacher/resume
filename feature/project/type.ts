@@ -6,6 +6,8 @@ export type ProjectDto = {
   description: string
   techStack: string
   achievements: string
+  startDate: string | null
+  endDate: string | null
   thumbnailUrl: string | null
   githubUrl: string | null
   demoUrl: string | null
@@ -20,6 +22,8 @@ export type ProjectFormData = {
   description: string
   techStack: string
   achievements: string
+  startDate: string
+  endDate: string
   companyId: string
   githubUrl: string
   demoUrl: string
@@ -31,6 +35,8 @@ export type ProjectInput = {
   description: string
   techStack: string[]
   achievements: string[]
+  startDate: string | null
+  endDate: string | null
   companyId: number | null
   githubUrl: string | null
   demoUrl: string | null

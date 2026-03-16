@@ -44,14 +44,14 @@ export default async function Home() {
         <EducationSection />
       </Section>
 
-      {/* ── Skills ─────────────────────────────────────────────── */}
-      <Section id="skills" title="Skills" subtitle="기술 스택">
-        <SkillsSection />
-      </Section>
-
       {/* ── Projects ───────────────────────────────────────────── */}
       <Section id="projects" title="Projects" subtitle="프로젝트">
         <ProjectsSection />
+      </Section>
+
+      {/* ── Skills ─────────────────────────────────────────────── */}
+      <Section id="skills" title="Skills" subtitle="기술 스택">
+        <SkillsSection />
       </Section>
 
       {/* ── Contact ────────────────────────────────────────────── */}

@@ -26,6 +26,7 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
             <tr>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)]">프로젝트명</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden md:table-cell">회사</th>
+              <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden md:table-cell">기간</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden lg:table-cell">기술 스택</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)]">액션</th>
             </tr>
@@ -38,6 +39,13 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
               } catch {
                 techArr = []
               }
+              const fmt = (d: string) => {
+                const date = new Date(d)
+                return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}`
+              }
+              const period = project.startDate
+                ? `${fmt(project.startDate)} ~ ${project.endDate ? fmt(project.endDate) : '진행 중'}`
+                : '—'
               return (
                 <tr
                   key={project.id}
@@ -48,6 +56,9 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell">
                     {project.company ? project.company.name : '—'}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell whitespace-nowrap">
+                    {period}
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     <div className="flex flex-wrap gap-1">

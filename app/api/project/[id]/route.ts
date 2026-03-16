@@ -40,6 +40,8 @@ export async function PUT(
       description: string
       techStack: string[]
       achievements: string[]
+      startDate?: string
+      endDate?: string
       companyId?: number
       githubUrl?: string
       demoUrl?: string
@@ -53,6 +55,8 @@ export async function PUT(
         description: body.description,
         techStack: JSON.stringify(body.techStack),
         achievements: JSON.stringify(body.achievements),
+        startDate: body.startDate ? new Date(body.startDate) : null,
+        endDate: body.endDate ? new Date(body.endDate) : null,
         companyId: body.companyId ?? null,
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,

@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
       description: string
       techStack: string[]
       achievements: string[]
+      startDate?: string
+      endDate?: string
       companyId?: number
       githubUrl?: string
       demoUrl?: string
@@ -23,6 +25,8 @@ export async function POST(request: NextRequest) {
         description: body.description,
         techStack: JSON.stringify(body.techStack),
         achievements: JSON.stringify(body.achievements),
+        startDate: body.startDate ? new Date(body.startDate) : null,
+        endDate: body.endDate ? new Date(body.endDate) : null,
         companyId: body.companyId ?? null,
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
@@ -46,12 +50,14 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const cursor = searchParams.get('cursor') ? Number(searchParams.get('cursor')) : undefined
     const limit = Number(searchParams.get('limit') ?? '6')
+    const standalone = searchParams.get('standalone') === 'true'
 
     const projects = await prisma.project.findMany({
+      where: standalone ? { companyId: null } : undefined,
       take: limit + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       include: { company: true },
-      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
     })
     const hasMore = projects.length > limit
     const items = hasMore ? projects.slice(0, limit) : projects

@@ -43,6 +43,8 @@ export type ProjectInCompany = {
   description: string
   techStack: string
   achievements: string
+  startDate: string | null
+  endDate: string | null
   thumbnailUrl: string | null
   githubUrl: string | null
   demoUrl: string | null

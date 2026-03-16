@@ -19,6 +19,8 @@ const defaultForm: ProjectFormData = {
   description: '',
   techStack: '',
   achievements: '',
+  startDate: '',
+  endDate: '',
   companyId: '',
   githubUrl: '',
   demoUrl: '',
@@ -43,6 +45,8 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
         description: project.description,
         techStack: techArr.join(', '),
         achievements: achArr.join('\n'),
+        startDate: project.startDate ? project.startDate.slice(0, 10) : '',
+        endDate: project.endDate ? project.endDate.slice(0, 10) : '',
         companyId: project.companyId ? String(project.companyId) : '',
         githubUrl: project.githubUrl ?? '',
         demoUrl: project.demoUrl ?? '',
@@ -76,6 +80,8 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       description: formData.description,
       techStack: formData.techStack.split(',').map((s) => s.trim()).filter(Boolean),
       achievements: formData.achievements.split('\n').map((s) => s.trim()).filter(Boolean),
+      startDate: formData.startDate || null,
+      endDate: formData.endDate || null,
       companyId: formData.companyId ? Number(formData.companyId) : null,
       githubUrl: formData.githubUrl || null,
       demoUrl: formData.demoUrl || null,
@@ -111,6 +117,11 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
           options={companyOptions}
           disabled={loading}
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input label="시작일" type="date" value={formData.startDate} onChange={set('startDate')} disabled={loading} />
+        <Input label="종료일 (선택)" type="date" value={formData.endDate} onChange={set('endDate')} disabled={loading} />
       </div>
 
       <Input

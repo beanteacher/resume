@@ -5,7 +5,7 @@ import type { CompanyWithProjects } from '@/feature/company/type'
 
 const getCompanies = unstable_cache(
   async () => prisma.company.findMany({
-    include: { projects: true },
+    include: { projects: { orderBy: { startDate: { sort: 'desc', nulls: 'last' } } } },
     orderBy: { startDate: 'desc' },
   }),
   ['companies-initial'],
@@ -32,6 +32,8 @@ export async function ExperienceSection() {
       description: p.description,
       techStack: p.techStack,
       achievements: p.achievements,
+      startDate: p.startDate ? new Date(p.startDate).toISOString() : null,
+      endDate: p.endDate ? new Date(p.endDate).toISOString() : null,
       thumbnailUrl: p.thumbnailUrl ?? null,
       githubUrl: p.githubUrl ?? null,
       demoUrl: p.demoUrl ?? null,

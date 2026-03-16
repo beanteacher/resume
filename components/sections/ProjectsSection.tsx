@@ -8,9 +8,10 @@ const LIMIT = 6
 const getInitialProjects = unstable_cache(
   async () => {
     return prisma.project.findMany({
+      where: { companyId: null },
       take: LIMIT + 1,
       include: { company: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
     })
   },
   ['projects-initial'],
@@ -30,6 +31,8 @@ export async function ProjectsSection() {
     description: p.description,
     techStack: p.techStack,
     achievements: p.achievements,
+    startDate: p.startDate ? new Date(p.startDate).toISOString() : null,
+    endDate: p.endDate ? new Date(p.endDate).toISOString() : null,
     thumbnailUrl: p.thumbnailUrl,
     githubUrl: p.githubUrl,
     demoUrl: p.demoUrl,

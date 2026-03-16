@@ -111,21 +111,6 @@ async function main() {
         ]),
         githubUrl: 'https://github.com/beanteacher/mcp-server',
       },
-      // 이 포트폴리오
-      {
-        id: 5,
-        title: '개인 포트폴리오 사이트 (현재 프로젝트)',
-        description:
-          'Next.js 16 App Router + Prisma + Tailwind CSS v4 기반의 개인 포트폴리오 사이트입니다. AI 에이전트와 협업하여 스프린트 단위로 개발하며, 이력 데이터를 DB로 관리하고 무한 스크롤·스크롤 애니메이션·다크 모드를 지원합니다.',
-        techStack: JSON.stringify(['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'SQLite']),
-        achievements: JSON.stringify([
-          'AI 에이전트 협업 기반 Sprint 단위 개발 방법론 적용',
-          '디자인 시스템(design-tokens.md) 기반 일관된 UI 구현',
-          'Cursor 기반 무한 스크롤 API 설계 및 구현',
-        ]),
-        githubUrl: 'https://github.com/beanteacher/resume',
-        demoUrl: 'https://portfolio.example.com',
-      },
     ],
   })
 
