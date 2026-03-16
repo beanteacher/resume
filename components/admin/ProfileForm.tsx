@@ -15,7 +15,6 @@ const defaultForm: ProfileFormData = {
   phone: '',
   location: '',
   github: '',
-  linkedin: '',
   blog: '',
   avatarUrl: '',
 }
@@ -44,7 +43,6 @@ export function ProfileForm() {
         phone: profile.phone ?? '',
         location: profile.location,
         github: profile.github,
-        linkedin: profile.linkedin ?? '',
         blog: profile.blog ?? '',
         avatarUrl: profile.avatarUrl ?? '',
       })
@@ -79,7 +77,6 @@ export function ProfileForm() {
       phone: formData.phone || undefined,
       location: formData.location,
       github: formData.github,
-      linkedin: formData.linkedin || undefined,
       blog: formData.blog || undefined,
       avatarUrl: formData.avatarUrl || undefined,
     })
@@ -129,10 +126,7 @@ export function ProfileForm() {
 
       <Input type="url" label="GitHub URL" value={formData.github} onChange={set('github')} error={errors.github} disabled={loading} placeholder="https://github.com/username" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input type="url" label="LinkedIn URL (선택)" value={formData.linkedin} onChange={set('linkedin')} disabled={loading} placeholder="https://linkedin.com/in/username" />
-        <Input type="url" label="블로그 URL (선택)" value={formData.blog} onChange={set('blog')} disabled={loading} placeholder="https://velog.io/@username" />
-      </div>
+      <Input type="url" label="블로그 URL (선택)" value={formData.blog} onChange={set('blog')} disabled={loading} placeholder="https://velog.io/@username" />
 
       <Input type="url" label="프로필 이미지 URL (선택)" value={formData.avatarUrl} onChange={set('avatarUrl')} disabled={loading} placeholder="https://example.com/avatar.png" />
 

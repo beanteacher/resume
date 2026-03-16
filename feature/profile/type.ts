@@ -8,7 +8,6 @@ export type ProfileDto = {
   phone: string | null
   location: string
   github: string
-  linkedin: string | null
   blog: string | null
   avatarUrl: string | null
   createdAt: string
@@ -24,7 +23,6 @@ export type ProfileFormData = {
   phone: string
   location: string
   github: string
-  linkedin: string
   blog: string
   avatarUrl: string
 }
@@ -38,7 +36,6 @@ export type ProfileInput = {
   phone?: string
   location: string
   github: string
-  linkedin?: string
   blog?: string
   avatarUrl?: string
 }

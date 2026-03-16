@@ -144,6 +144,33 @@ async function main() {
     ],
   })
 
+  // ── Philosophy ────────────────────────────────────────────────────
+  await prisma.philosophy.deleteMany()
+  await prisma.philosophy.createMany({
+    data: [
+      {
+        icon: '🤖',
+        title: 'AI를 팀원으로',
+        desc: 'AI에게 PM·FE·BE·UI/UX 페르소나를 부여하고 AGENTS.md로 역할을 정의합니다. 혼자 일하지만 팀처럼 협업합니다.',
+      },
+      {
+        icon: '📋',
+        title: '컨텍스트 엔지니어링',
+        desc: 'MEMORY.md·Sprint Plan·WBS를 직접 작성해 AI와의 대화 품질을 체계적으로 관리합니다. 다음 세션에서도 맥락이 유지됩니다.',
+      },
+      {
+        icon: '🚀',
+        title: 'DRI 문화 — 혼자서도 전체를',
+        desc: '3인 팀 → 1인 전환 후 OAM 시스템을 단독 완수한 경험. AI 협업이 솔로 개발의 한계를 허뭅니다.',
+      },
+      {
+        icon: '📈',
+        title: 'AI 시대의 개발자 기준',
+        desc: 'AI가 코드를 짜는 시대, 더 중요해진 건 설계 능력·검증 판단력·도메인 깊이입니다. 저는 그 기준에 맞춰 성장합니다.',
+      },
+    ],
+  })
+
   console.log('✅ 시드 데이터 삽입 완료 — 오민성 포트폴리오')
 }
 

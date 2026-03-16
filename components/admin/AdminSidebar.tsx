@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut, UserCircle } from 'lucide-react'
+import { LayoutDashboard, Building2, GraduationCap, Wrench, Settings, LogOut, UserCircle, Lightbulb } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useLogoutMutation } from '@/feature/auth/query'
 
@@ -14,6 +14,7 @@ const menuItems: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/admin/education', label: '학력/교육', icon: GraduationCap },
   { href: '/admin/project', label: '프로젝트', icon: Wrench },
   { href: '/admin/skill', label: '스킬', icon: Settings },
+  { href: '/admin/philosophy', label: '가치관', icon: Lightbulb },
 ]
 
 export function AdminSidebar() {

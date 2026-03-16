@@ -44,7 +44,6 @@ export async function PUT(request: NextRequest) {
     phone?: string
     location: string
     github: string
-    linkedin?: string
     blog?: string
     avatarUrl?: string
   }
@@ -70,7 +69,6 @@ export async function PUT(request: NextRequest) {
         phone: body.phone,
         location,
         github,
-        linkedin: body.linkedin,
         blog: body.blog,
         avatarUrl: body.avatarUrl,
       },
@@ -83,7 +81,6 @@ export async function PUT(request: NextRequest) {
         phone: body.phone,
         location,
         github,
-        linkedin: body.linkedin,
         blog: body.blog,
         avatarUrl: body.avatarUrl,
       },
