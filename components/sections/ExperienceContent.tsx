@@ -38,34 +38,32 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
         }}
       >
         {/* 헤더 */}
-        <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
-          <h3 className="text-[var(--font-size-h3)] font-[var(--font-weight-heading)] text-[var(--text)]">
-            {company.name}
-          </h3>
-          <span className="text-[var(--font-size-caption)] text-[var(--text-muted)]">{period}</span>
-        </div>
-
-        {/* 뱃지 */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          <span className="inline-block bg-[var(--color-brand-purple)]/10 text-[var(--color-brand-purple)] rounded-full px-3 py-1 text-sm font-medium">
-            {company.role}
-          </span>
-          {company.isCurrent && (
-            <span className="inline-block bg-[var(--color-success,#10B981)]/10 text-[var(--color-success,#10B981)] rounded-full px-3 py-1 text-sm font-medium">
-              재직 중
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-[var(--font-size-h3)] font-[var(--font-weight-heading)] text-[var(--text)]">
+              {company.name}
+            </h3>
+            <span className="inline-block bg-[var(--color-brand-purple)]/10 text-[var(--color-brand-purple)] rounded-full px-3 py-1 text-sm font-medium">
+              {company.role}
             </span>
-          )}
+            {company.isCurrent && (
+              <span className="inline-block bg-[var(--color-success,#10B981)]/10 text-[var(--color-success,#10B981)] rounded-full px-3 py-1 text-sm font-medium">
+                재직 중
+              </span>
+            )}
+          </div>
+          <span className="text-sm text-[var(--text-muted)] shrink-0">{period}</span>
         </div>
 
         {/* 설명 */}
-        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-4 whitespace-pre-wrap">
+        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-3">
           {company.description}
         </p>
 
         {/* 담당 업무 */}
         {company.responsibilities && (
           <div className="mb-4">
-            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-1">담당 업무</p>
+            <p className="text-base font-semibold text-[var(--color-brand-purple)] mb-1">담당 업무</p>
             <p className="text-[var(--font-size-body2)] text-[var(--text-muted)] whitespace-pre-wrap leading-relaxed">
               {company.responsibilities}
             </p>
@@ -75,7 +73,7 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
         {/* 주요 성과 */}
         {company.achievements && (
           <div className="mb-4">
-            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-1">주요 성과</p>
+            <p className="text-base font-semibold text-[var(--color-brand-purple)] mb-1">주요 성과</p>
             <p className="text-[var(--font-size-body2)] text-[var(--text-muted)] whitespace-pre-wrap leading-relaxed">
               {company.achievements}
             </p>
@@ -85,8 +83,8 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
         {/* 참여 프로젝트 인라인 */}
         {company.projects.length > 0 && (
           <div className="mt-5 space-y-4">
-            <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] uppercase tracking-wide">
-              참여 프로젝트
+            <p className="text-base font-semibold text-[var(--color-brand-purple)] uppercase tracking-wide">
+              프로젝트
             </p>
             {company.projects.map((p) => {
               let techTags: string[] = []
@@ -108,7 +106,7 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
                       {p.title}
                     </h4>
                     {period && (
-                      <span className="text-[var(--font-size-caption)] text-[var(--text-muted)] shrink-0">{period}</span>
+                      <span className="text-sm text-[var(--text-muted)] shrink-0">{period}</span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -142,7 +140,7 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
                   {/* 기술 스택 */}
                   {techTags.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-2">기술 스택</p>
+                      <p className="text-sm font-semibold text-[var(--text-muted)] mb-2">기술 스택</p>
                       <div className="flex flex-wrap gap-1.5">
                         {techTags.map((tag) => (
                           <span
@@ -159,7 +157,7 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
                   {/* 주요 성과 */}
                   {achievements.length > 0 && (
                     <div>
-                      <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-2">주요 성과</p>
+                      <p className="text-sm font-semibold text-[var(--text-muted)] mb-2">주요 성과</p>
                       <ul className="space-y-2">
                         {achievements.map((ach, i) => (
                           <li key={i} className="flex items-start gap-2.5">
