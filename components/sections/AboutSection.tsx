@@ -12,6 +12,7 @@ export function AboutSection() {
       title={profile?.title ?? 'Backend Developer'}
       bio={profile?.bio ?? '데이터의 안정성과 품질 보장, 그리고 AI 협업으로 혼자서도 팀처럼 일합니다.'}
       email={profile?.email ?? null}
+      phone={profile?.phone ?? null}
       github={profile?.github ?? 'https://github.com/beanteacher'}
       blog={profile?.blog ?? 'https://velog.io/@mings/posts'}
       avatarUrl={profile?.avatarUrl ?? null}
