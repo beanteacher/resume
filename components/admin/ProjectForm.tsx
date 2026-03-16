@@ -14,6 +14,20 @@ interface ProjectFormProps {
   onCancel: () => void
 }
 
+type SnippetDraft = { title: string; language: string; code: string }
+
+const LANGUAGES = [
+  { value: 'java', label: 'Java' },
+  { value: 'sql', label: 'SQL' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'python', label: 'Python' },
+  { value: 'bash', label: 'Bash' },
+  { value: 'json', label: 'JSON' },
+  { value: 'xml', label: 'XML' },
+  { value: 'yaml', label: 'YAML' },
+]
+
 const defaultForm: ProjectFormData = {
   title: '',
   description: '',
@@ -27,8 +41,11 @@ const defaultForm: ProjectFormData = {
   thumbnailUrl: '',
 }
 
+const defaultSnippet: SnippetDraft = { title: '', language: 'java', code: '' }
+
 export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps) {
   const [formData, setFormData] = useState<ProjectFormData>(defaultForm)
+  const [snippets, setSnippets] = useState<SnippetDraft[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { data: project } = useProjectQuery(projectId)
@@ -52,8 +69,16 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
         demoUrl: project.demoUrl ?? '',
         thumbnailUrl: project.thumbnailUrl ?? '',
       })
+      setSnippets(
+        (project.codeSnippets ?? []).map((s) => ({
+          title: s.title,
+          language: s.language,
+          code: s.code,
+        }))
+      )
     } else {
       setFormData(defaultForm)
+      setSnippets([])
     }
   }, [project])
 
@@ -86,6 +111,9 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       githubUrl: formData.githubUrl || null,
       demoUrl: formData.demoUrl || null,
       thumbnailUrl: formData.thumbnailUrl || null,
+      codeSnippets: snippets
+        .filter((s) => s.code.trim())
+        .map((s, i) => ({ ...s, sortOrder: i })),
     }
 
     if (projectId) {
@@ -97,6 +125,14 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
 
   const set = (field: keyof ProjectFormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const addSnippet = () => setSnippets((prev) => [...prev, { ...defaultSnippet }])
+
+  const removeSnippet = (index: number) =>
+    setSnippets((prev) => prev.filter((_, i) => i !== index))
+
+  const updateSnippet = (index: number, field: keyof SnippetDraft, value: string) =>
+    setSnippets((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)))
 
   const companyOptions = companies.map((c) => ({ value: c.id, label: c.name }))
   const loading = createMutation.isPending || updateMutation.isPending
@@ -131,7 +167,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
         onChange={set('description')}
         error={errors.description}
         disabled={loading}
-        rows={4}
+        rows={10}
         placeholder="프로젝트 개요와 역할을 설명하세요."
       />
 
@@ -162,6 +198,59 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       </div>
 
       <Input label="썸네일 URL (선택)" placeholder="https://example.com/thumbnail.png" value={formData.thumbnailUrl} onChange={set('thumbnailUrl')} disabled={loading} />
+
+      {/* 코드 스니펫 섹션 */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-[var(--text)]">코드 스니펫 (선택)</p>
+          <Button type="button" size="sm" variant="cyan" onClick={addSnippet} disabled={loading}>
+            + 추가
+          </Button>
+        </div>
+
+        {snippets.map((snippet, index) => (
+          <div
+            key={index}
+            className="border border-[var(--border-color)] rounded-[var(--radius-md)] p-4 space-y-3 bg-[var(--elevated)]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[var(--text-muted)] font-medium">스니펫 #{index + 1}</span>
+              <Button type="button" size="sm" variant="danger" onClick={() => removeSnippet(index)} disabled={loading}>
+                삭제
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Input
+                label="제목"
+                placeholder="예: Redis 조회 로직"
+                value={snippet.title}
+                onChange={(e) => updateSnippet(index, 'title', e.target.value)}
+                disabled={loading}
+              />
+              <Select
+                label="언어"
+                value={snippet.language}
+                onChange={(e) => updateSnippet(index, 'language', e.target.value)}
+                options={LANGUAGES}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-medium text-[var(--text-muted)]">코드</label>
+              <textarea
+                value={snippet.code}
+                onChange={(e) => updateSnippet(index, 'code', e.target.value)}
+                disabled={loading}
+                rows={8}
+                placeholder="코드를 입력하세요..."
+                className="w-full rounded-[var(--radius-sm)] border border-[var(--border-color)] bg-[var(--surface)] text-[var(--text)] text-sm font-mono px-3 py-2 resize-y focus:outline-none focus:border-[var(--color-brand-blue)] disabled:opacity-50 placeholder:text-[var(--text-muted)] placeholder:opacity-50"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
       {mutationError && <p className="text-sm text-red-500">{mutationError}</p>}
 

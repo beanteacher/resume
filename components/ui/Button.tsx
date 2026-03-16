@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'cyan' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
 }
@@ -17,6 +17,8 @@ export function Button({
     primary: 'bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-blue)] text-white hover:brightness-110 shadow-[var(--shadow-glow)]',
     secondary: 'bg-[var(--elevated)] text-[var(--text)] border border-[var(--border-color)] hover:bg-[var(--surface)]',
     ghost: 'text-[var(--color-brand-purple)] hover:bg-[var(--elevated)] border border-transparent',
+    cyan: 'bg-[var(--color-brand-cyan)] text-white hover:brightness-110 shadow-[var(--shadow-sm)]',
+    danger: 'bg-red-500 text-white hover:brightness-110 shadow-[var(--shadow-sm)]',
   }
 
   const sizes = {

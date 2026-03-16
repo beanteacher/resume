@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       githubUrl?: string
       demoUrl?: string
       thumbnailUrl?: string
+      codeSnippets?: { title: string; language: string; code: string; sortOrder: number }[]
     }
 
     const project = await prisma.project.create({
@@ -31,7 +32,11 @@ export async function POST(request: NextRequest) {
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
         thumbnailUrl: body.thumbnailUrl ?? null,
+        codeSnippets: body.codeSnippets?.length
+          ? { create: body.codeSnippets }
+          : undefined,
       },
+      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
 
     try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }
@@ -56,7 +61,7 @@ export async function GET(request: Request) {
       where: standalone ? { companyId: null } : undefined,
       take: limit + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-      include: { company: true },
+      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
       orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
     })
     const hasMore = projects.length > limit

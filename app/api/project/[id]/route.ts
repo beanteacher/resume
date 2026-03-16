@@ -12,7 +12,7 @@ export async function GET(
     const { id } = await params
     const project = await prisma.project.findUnique({
       where: { id: Number(id) },
-      include: { company: true },
+      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
     if (!project) {
       return NextResponse.json<ApiResponse<null>>(
@@ -46,6 +46,7 @@ export async function PUT(
       githubUrl?: string
       demoUrl?: string
       thumbnailUrl?: string
+      codeSnippets?: { title: string; language: string; code: string; sortOrder: number }[]
     }
 
     const project = await prisma.project.update({
@@ -61,7 +62,12 @@ export async function PUT(
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
         thumbnailUrl: body.thumbnailUrl ?? null,
+        codeSnippets: {
+          deleteMany: {},
+          create: body.codeSnippets ?? [],
+        },
       },
+      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
 
     try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }

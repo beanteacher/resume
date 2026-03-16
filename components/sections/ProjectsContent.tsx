@@ -1,8 +1,22 @@
 'use client'
 
 import type React from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import type { ProjectDto } from '@/feature/project/type'
 import { useInView } from '@/lib/hooks/useInView'
+
+const LANGUAGE_LABELS: Record<string, string> = {
+  java: 'Java',
+  sql: 'SQL',
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  python: 'Python',
+  bash: 'Bash',
+  json: 'JSON',
+  xml: 'XML',
+  yaml: 'YAML',
+}
 
 function ProjectCard({ project, index }: { project: ProjectDto; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.1 })
@@ -87,7 +101,7 @@ function ProjectCard({ project, index }: { project: ProjectDto; index: number })
 
       {/* 주요 성과 */}
       {achievements.length > 0 && (
-        <div>
+        <div className="mb-6">
           <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)] mb-2">주요 성과</p>
           <ul className="space-y-3">
             {achievements.map((ach, i) => (
@@ -101,6 +115,33 @@ function ProjectCard({ project, index }: { project: ProjectDto; index: number })
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* 코드 스니펫 */}
+      {project.codeSnippets?.length > 0 && (
+        <div className="space-y-4">
+          <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)]">코드 예시</p>
+          {project.codeSnippets.map((snippet) => (
+            <div key={snippet.id} className="rounded-[var(--radius-md)] overflow-hidden border border-[var(--border-color)]">
+              {/* 헤더 */}
+              <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-[var(--border-color)]">
+                <span className="text-sm font-medium text-gray-200">{snippet.title}</span>
+                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-0.5 rounded">
+                  {LANGUAGE_LABELS[snippet.language] ?? snippet.language}
+                </span>
+              </div>
+              {/* 코드 */}
+              <SyntaxHighlighter
+                language={snippet.language}
+                style={vscDarkPlus}
+                customStyle={{ margin: 0, borderRadius: 0, fontSize: '0.8rem' }}
+                showLineNumbers
+              >
+                {snippet.code}
+              </SyntaxHighlighter>
+            </div>
+          ))}
         </div>
       )}
     </div>

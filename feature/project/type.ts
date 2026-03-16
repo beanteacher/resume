@@ -1,5 +1,20 @@
 import type { CompanyDto } from '@/feature/company/type'
 
+export type CodeSnippetDto = {
+  id: number
+  title: string
+  language: string
+  code: string
+  sortOrder: number
+}
+
+export type CodeSnippetInput = {
+  title: string
+  language: string
+  code: string
+  sortOrder: number
+}
+
 export type ProjectDto = {
   id: number
   title: string
@@ -15,6 +30,7 @@ export type ProjectDto = {
   createdAt: string
   updatedAt: string
   company: CompanyDto | null
+  codeSnippets: CodeSnippetDto[]
 }
 
 export type ProjectFormData = {
@@ -41,4 +57,5 @@ export type ProjectInput = {
   githubUrl: string | null
   demoUrl: string | null
   thumbnailUrl: string | null
+  codeSnippets: CodeSnippetInput[]
 }

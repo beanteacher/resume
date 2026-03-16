@@ -42,7 +42,7 @@ model Company {
 }
 
 model Project {
-  id           Int       @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   title        String
   description  String
   techStack    String
@@ -53,9 +53,22 @@ model Project {
   githubUrl    String?
   demoUrl      String?
   companyId    Int?
-  company      Company?  @relation(fields: [companyId], references: [id])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  company      Company?      @relation(fields: [companyId], references: [id])
+  codeSnippets CodeSnippet[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model CodeSnippet {
+  id        Int      @id @default(autoincrement())
+  title     String
+  language  String
+  code      String
+  sortOrder Int      @default(0)
+  projectId Int
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Skill {
