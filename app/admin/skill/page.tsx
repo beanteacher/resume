@@ -44,7 +44,7 @@ export default function AdminSkillPage() {
       <SkillList
         skills={skills}
         loading={isPending}
-        onEdit={(id) => setEditingId(id)}
+        onEdit={(id) => { setEditingId(id); document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }) }}
         onDelete={handleDelete}
         onReorder={handleReorder}
       />
