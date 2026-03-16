@@ -16,18 +16,17 @@ export async function POST(request: NextRequest) {
     }
 
     const skill = await prisma.$transaction(async (tx) => {
-      const maxResult = await tx.skill.aggregate({
+      await tx.skill.updateMany({
         where: { category: body.category },
-        _max: { sortOrder: true },
+        data: { sortOrder: { increment: 1 } },
       })
-      const nextOrder = (maxResult._max.sortOrder ?? 0) + 1
       return tx.skill.create({
         data: {
           name: body.name,
           category: body.category,
           proficiency: body.proficiency,
           iconUrl: body.iconUrl ?? null,
-          sortOrder: body.sortOrder ?? nextOrder,
+          sortOrder: 1,
         },
       })
     })
