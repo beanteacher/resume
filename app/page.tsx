@@ -21,7 +21,7 @@ export default async function Home() {
   const profile = await getProfile()
   const name = profile?.name ?? '오민성'
   const title = profile?.title ?? 'Backend Developer'
-  const bio = profile?.bio ?? '데이터의 안정성과 품질 보장, 그리고 AI 협업으로 혼자서도 팀처럼 일합니다.'
+  const tagline = profile?.tagline ?? '메시징 백엔드 전문 · Java/Spring Boot · AI 협업으로 혼자서도 팀처럼 일합니다.'
 
   return (
     <Layout>
@@ -53,7 +53,7 @@ export default async function Home() {
             className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto animate-[fade-up_0.6s_ease_both]"
             style={{ animationDelay: '0.24s' }}
           >
-            {bio}
+            {tagline}
           </p>
           <div
             className="flex items-center justify-center gap-4 animate-[fade-up_0.6s_ease_both]"

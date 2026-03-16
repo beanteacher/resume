@@ -2,6 +2,7 @@ export type ProfileDto = {
   id: number
   name: string
   title: string
+  tagline: string | null
   bio: string
   email: string
   phone: string | null
@@ -17,6 +18,7 @@ export type ProfileDto = {
 export type ProfileFormData = {
   name: string
   title: string
+  tagline: string
   bio: string
   email: string
   phone: string
@@ -30,6 +32,7 @@ export type ProfileFormData = {
 export type ProfileInput = {
   name: string
   title: string
+  tagline?: string
   bio: string
   email: string
   phone?: string

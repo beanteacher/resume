@@ -9,6 +9,7 @@ import type { ProfileFormData } from '@/feature/profile/type'
 const defaultForm: ProfileFormData = {
   name: '',
   title: '',
+  tagline: '',
   bio: '',
   email: '',
   phone: '',
@@ -37,6 +38,7 @@ export function ProfileForm() {
       setFormData({
         name: profile.name,
         title: profile.title,
+        tagline: profile.tagline ?? '',
         bio: profile.bio,
         email: profile.email,
         phone: profile.phone ?? '',
@@ -71,6 +73,7 @@ export function ProfileForm() {
     updateMutation.mutate({
       name: formData.name,
       title: formData.title,
+      tagline: formData.tagline || undefined,
       bio: formData.bio,
       email: formData.email,
       phone: formData.phone || undefined,
@@ -99,8 +102,16 @@ export function ProfileForm() {
       </div>
 
       <Input
+        label="Hero 한 줄 소개 (선택)"
+        value={formData.tagline}
+        onChange={set('tagline')}
+        disabled={loading}
+        placeholder="예: 메시징 백엔드 전문 · Java/Spring Boot · AI 협업 개발자"
+      />
+
+      <Input
         as="textarea"
-        label="자기소개"
+        label="자기소개 (About 섹션)"
         value={formData.bio}
         onChange={set('bio')}
         error={errors.bio}

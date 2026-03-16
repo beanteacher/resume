@@ -40,7 +40,7 @@ export function AboutContent({ name, title, bio, email, github, blog, avatarUrl 
           <p className="text-[var(--color-brand-purple)] text-[var(--font-size-body1)] font-semibold mb-4">
             {title}
           </p>
-          <p className="text-[var(--text-muted)] text-[var(--font-size-body1)] leading-[var(--line-height-relaxed)]">
+          <p className="text-[var(--text-muted)] text-[var(--font-size-body1)] leading-[var(--line-height-relaxed)] whitespace-pre-wrap">
             {bio}
           </p>
         </div>

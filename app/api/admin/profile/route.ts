@@ -38,6 +38,7 @@ export async function PUT(request: NextRequest) {
   const body = await request.json() as {
     name: string
     title: string
+    tagline?: string
     bio: string
     email: string
     phone?: string
@@ -63,6 +64,7 @@ export async function PUT(request: NextRequest) {
       update: {
         name,
         title,
+        tagline: body.tagline,
         bio,
         email,
         phone: body.phone,
@@ -75,6 +77,7 @@ export async function PUT(request: NextRequest) {
       create: {
         name,
         title,
+        tagline: body.tagline,
         bio,
         email,
         phone: body.phone,
