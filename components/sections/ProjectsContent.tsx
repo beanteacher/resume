@@ -3,8 +3,21 @@
 import type React from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import type { ProjectDto } from '@/feature/project/type'
+import type { CodeSnippetDto, ProjectDto } from '@/feature/project/type'
 import { useInView } from '@/lib/hooks/useInView'
+
+type ProjectCardData = {
+  id: number
+  title: string
+  description: string
+  techStack: string
+  achievements: string
+  startDate: string | null
+  endDate: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  codeSnippets?: CodeSnippetDto[]
+}
 
 const LANGUAGE_LABELS: Record<string, string> = {
   java: 'Java',
@@ -18,7 +31,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
   yaml: 'YAML',
 }
 
-function ProjectCard({ project, index }: { project: ProjectDto; index: number }) {
+export function ProjectCard({ project, index }: { project: ProjectCardData; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.1 })
 
   let techTags: string[] = []
@@ -119,10 +132,10 @@ function ProjectCard({ project, index }: { project: ProjectDto; index: number })
       )}
 
       {/* 코드 스니펫 */}
-      {project.codeSnippets?.length > 0 && (
+      {(project.codeSnippets?.length ?? 0) > 0 && (
         <div className="space-y-4">
           <p className="text-[var(--font-size-caption)] font-semibold text-[var(--text-muted)]">코드 예시</p>
-          {project.codeSnippets.map((snippet) => (
+          {project.codeSnippets!.map((snippet) => (
             <div key={snippet.id} className="rounded-[var(--radius-md)] overflow-hidden border border-[var(--border-color)]">
               {/* 헤더 */}
               <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-[var(--border-color)]">
