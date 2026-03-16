@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { href: '#experience', label: 'Experience', id: 'experience' },
   { href: '#skills', label: 'Skills', id: 'skills' },
   { href: '#projects', label: 'Projects', id: 'projects' },
-  { href: '#contact', label: 'Contact', id: 'contact' },
 ]
 
 export function Header() {
@@ -26,9 +25,6 @@ export function Header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
-      const distanceFromBottom =
-        document.documentElement.scrollHeight - window.scrollY - window.innerHeight
-      if (distanceFromBottom < 80) setActiveSection('contact')
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
