@@ -15,31 +15,19 @@ export async function POST(request: NextRequest) {
       sortOrder?: number
     }
 
-    const sortOrder = body.sortOrder ?? 0
-
-    if (sortOrder !== 0) {
-      const existing = await prisma.skill.findFirst({ where: { sortOrder } })
-      if (existing) {
-        return NextResponse.json<ApiResponse<null>>(
-          { data: null, error: `정렬 순서 ${sortOrder}는 이미 사용 중입니다.` },
-          { status: 409 }
-        )
-      }
-    }
-
     const skill = await prisma.$transaction(async (tx) => {
-      if (sortOrder === 0) {
-        await tx.skill.updateMany({
-          data: { sortOrder: { increment: 1 } },
-        })
-      }
+      const maxResult = await tx.skill.aggregate({
+        where: { category: body.category },
+        _max: { sortOrder: true },
+      })
+      const nextOrder = (maxResult._max.sortOrder ?? 0) + 1
       return tx.skill.create({
         data: {
           name: body.name,
           category: body.category,
           proficiency: body.proficiency,
           iconUrl: body.iconUrl ?? null,
-          sortOrder: sortOrder === 0 ? 1 : sortOrder,
+          sortOrder: body.sortOrder ?? nextOrder,
         },
       })
     })
