@@ -51,7 +51,7 @@ export async function GET(request: Request) {
       take: limit + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       include: { company: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     })
     const hasMore = projects.length > limit
     const items = hasMore ? projects.slice(0, limit) : projects
