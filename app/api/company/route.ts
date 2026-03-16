@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const companies = await prisma.company.findMany({ include: { projects: true }, orderBy: { startDate: 'desc' } })
+    const companies = await prisma.company.findMany({ include: { projects: { include: { codeSnippets: { orderBy: { sortOrder: 'asc' } } } } }, orderBy: { startDate: 'desc' } })
     return NextResponse.json<ApiResponse<typeof companies>>({ data: companies })
   } catch {
     return NextResponse.json<ApiResponse<never[]>>(

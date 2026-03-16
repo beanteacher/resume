@@ -49,6 +49,7 @@ export type ProjectInCompany = {
   githubUrl: string | null
   demoUrl: string | null
   companyId: number | null
+  codeSnippets?: { id: number; title: string; language: string; code: string; sortOrder: number }[]
 }
 
 export type CompanyWithProjects = {
