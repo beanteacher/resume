@@ -1,15 +1,10 @@
-import { unstable_cache } from 'next/cache'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useProfileQuery } from '@/feature/profile/query'
 import { AboutContent } from '@/components/sections/AboutContent'
 
-const getProfile = unstable_cache(
-  async () => prisma.profile.findFirst(),
-  ['profile-initial'],
-  { tags: ['profile'] }
-)
-
-export async function AboutSection() {
-  const profile = await getProfile()
+export function AboutSection() {
+  const { data: profile } = useProfileQuery()
 
   return (
     <AboutContent

@@ -1,45 +1,20 @@
-import { unstable_cache } from 'next/cache'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useCompaniesWithProjectsQuery } from '@/feature/company/query'
 import { ExperienceContent } from '@/components/sections/ExperienceContent'
-import type { CompanyWithProjects } from '@/feature/company/type'
 
-const getCompanies = unstable_cache(
-  async () => prisma.company.findMany({
-    include: { projects: { orderBy: { startDate: { sort: 'desc', nulls: 'last' } } } },
-    orderBy: { startDate: 'desc' },
-  }),
-  ['companies-initial'],
-  { tags: ['companies'] }
-)
+export function ExperienceSection() {
+  const { data: companies = [], isPending } = useCompaniesWithProjectsQuery()
 
-export async function ExperienceSection() {
-  const companies = await getCompanies()
+  if (isPending) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-8">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="animate-pulse h-40 rounded-[var(--radius-md)] bg-[var(--elevated)]" />
+        ))}
+      </div>
+    )
+  }
 
-  const serialized: CompanyWithProjects[] = companies.map((c) => ({
-    id: c.id,
-    name: c.name,
-    role: c.role,
-    startDate: new Date(c.startDate).toISOString(),
-    endDate: c.endDate ? new Date(c.endDate).toISOString() : null,
-    isCurrent: c.isCurrent,
-    description: c.description,
-    responsibilities: c.responsibilities ?? null,
-    achievements: c.achievements ?? null,
-    logoUrl: c.logoUrl ?? null,
-    projects: c.projects.map((p) => ({
-      id: p.id,
-      title: p.title,
-      description: p.description,
-      techStack: p.techStack,
-      achievements: p.achievements,
-      startDate: p.startDate ? new Date(p.startDate).toISOString() : null,
-      endDate: p.endDate ? new Date(p.endDate).toISOString() : null,
-      thumbnailUrl: p.thumbnailUrl ?? null,
-      githubUrl: p.githubUrl ?? null,
-      demoUrl: p.demoUrl ?? null,
-      companyId: p.companyId ?? null,
-    })),
-  }))
-
-  return <ExperienceContent companies={serialized} />
+  return <ExperienceContent companies={companies} />
 }

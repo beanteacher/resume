@@ -1,4 +1,4 @@
-import type { CompanyDto, CompanyInput } from './type'
+import type { CompanyDto, CompanyInput, CompanyWithProjects } from './type'
 import type { ApiResponse } from '@/types'
 
 export const companyApi = {
@@ -12,6 +12,12 @@ export const companyApi = {
   getAll: async (): Promise<CompanyDto[]> => {
     const res = await fetch('/api/company')
     const json = (await res.json()) as ApiResponse<CompanyDto[]>
+    return json.data ?? []
+  },
+
+  getAllWithProjects: async (): Promise<CompanyWithProjects[]> => {
+    const res = await fetch('/api/company')
+    const json = (await res.json()) as ApiResponse<CompanyWithProjects[]>
     return json.data ?? []
   },
 

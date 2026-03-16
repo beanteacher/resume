@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { companyKeys } from './query-key'
 import { companyApi } from './api'
+import type { CompanyWithProjects } from './type'
 
 export function useCompanyQuery(id: number | null) {
   return useQuery({
@@ -16,6 +17,14 @@ export function useCompaniesQuery() {
   return useQuery({
     queryKey: companyKeys.list(),
     queryFn: () => companyApi.getAll(),
+    placeholderData: (prev) => prev,
+  })
+}
+
+export function useCompaniesWithProjectsQuery() {
+  return useQuery<CompanyWithProjects[]>({
+    queryKey: [...companyKeys.list(), 'with-projects'],
+    queryFn: () => companyApi.getAllWithProjects(),
     placeholderData: (prev) => prev,
   })
 }

@@ -1,61 +1,20 @@
-import { unstable_cache } from 'next/cache'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useStandaloneProjectsQuery } from '@/feature/project/query'
 import { ProjectsContent } from './ProjectsContent'
-import type { ProjectDto } from '@/feature/project/type'
 
-const LIMIT = 6
+export function ProjectsSection() {
+  const { data: projects = [], isPending } = useStandaloneProjectsQuery()
 
-const getInitialProjects = unstable_cache(
-  async () => {
-    return prisma.project.findMany({
-      where: { companyId: null },
-      take: LIMIT + 1,
-      include: { company: true },
-      orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
-    })
-  },
-  ['projects-initial'],
-  { tags: ['projects'] }
-)
+  if (isPending) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-8">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="animate-pulse h-40 rounded-[var(--radius-md)] bg-[var(--elevated)]" />
+        ))}
+      </div>
+    )
+  }
 
-export async function ProjectsSection() {
-  const raw = await getInitialProjects()
-
-  const hasMore = raw.length > LIMIT
-  const slice = hasMore ? raw.slice(0, LIMIT) : raw
-  const nextCursor = hasMore ? slice[slice.length - 1].id : null
-
-  const initialItems: ProjectDto[] = slice.map((p) => ({
-    id: p.id,
-    title: p.title,
-    description: p.description,
-    techStack: p.techStack,
-    achievements: p.achievements,
-    startDate: p.startDate ? new Date(p.startDate).toISOString() : null,
-    endDate: p.endDate ? new Date(p.endDate).toISOString() : null,
-    thumbnailUrl: p.thumbnailUrl,
-    githubUrl: p.githubUrl,
-    demoUrl: p.demoUrl,
-    companyId: p.companyId,
-    createdAt: new Date(p.createdAt).toISOString(),
-    updatedAt: new Date(p.updatedAt).toISOString(),
-    company: p.company
-      ? {
-          id: p.company.id,
-          name: p.company.name,
-          role: p.company.role,
-          startDate: new Date(p.company.startDate).toISOString(),
-          endDate: p.company.endDate ? new Date(p.company.endDate).toISOString() : null,
-          isCurrent: p.company.isCurrent,
-          description: p.company.description,
-          responsibilities: p.company.responsibilities ?? null,
-          achievements: p.company.achievements ?? null,
-          logoUrl: p.company.logoUrl,
-          createdAt: new Date(p.company.createdAt).toISOString(),
-          updatedAt: new Date(p.company.updatedAt).toISOString(),
-        }
-      : null,
-  }))
-
-  return <ProjectsContent initialItems={initialItems} initialCursor={nextCursor} />
+  return <ProjectsContent projects={projects} />
 }

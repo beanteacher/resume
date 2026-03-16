@@ -20,6 +20,14 @@ export function useProjectsQuery() {
   })
 }
 
+export function useStandaloneProjectsQuery() {
+  return useQuery({
+    queryKey: projectKeys.standalone(),
+    queryFn: () => projectApi.getStandalone(),
+    placeholderData: (prev) => prev,
+  })
+}
+
 export function useCreateProjectMutation(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
   return useMutation({

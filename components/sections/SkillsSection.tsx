@@ -1,24 +1,20 @@
-import { unstable_cache } from 'next/cache'
-import { prisma } from '@/lib/prisma'
-import type { SkillsByCategory } from '@/feature/skill/type'
+'use client'
+
+import { useSkillsQuery } from '@/feature/skill/query'
 import { SkillsContent } from './SkillsContent'
 
-const getSkills = unstable_cache(
-  async () => prisma.skill.findMany({
-    orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
-  }),
-  ['skills-initial'],
-  { tags: ['skills'] }
-)
+export function SkillsSection() {
+  const { data: grouped = {}, isPending } = useSkillsQuery()
 
-export async function SkillsSection() {
-  const skills = await getSkills()
-
-  const grouped = skills.reduce<SkillsByCategory>((acc, skill) => {
-    if (!acc[skill.category]) acc[skill.category] = []
-    acc[skill.category].push(skill)
-    return acc
-  }, {})
+  if (isPending) {
+    return (
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="animate-pulse h-32 rounded-[var(--radius-md)] bg-[var(--elevated)]" />
+        ))}
+      </div>
+    )
+  }
 
   const categories = Object.keys(grouped)
 

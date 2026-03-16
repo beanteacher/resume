@@ -1,31 +1,12 @@
-import { unstable_cache } from 'next/cache'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useEducationsQuery } from '@/feature/education/query'
 import { EducationContent } from '@/components/sections/EducationContent'
-import type { EducationDto } from '@/feature/education/type'
 
-const getEducations = unstable_cache(
-  async () => prisma.education.findMany({
-    orderBy: { startDate: 'desc' },
-  }),
-  ['education-initial'],
-  { tags: ['education'] }
-)
+export function EducationSection() {
+  const { data: educations = [], isPending } = useEducationsQuery()
 
-export async function EducationSection() {
-  const educations = await getEducations()
+  if (isPending) return null
 
-  const serialized: EducationDto[] = educations.map((e) => ({
-    id: e.id,
-    name: e.name,
-    course: e.course,
-    type: e.type,
-    startDate: new Date(e.startDate).toISOString(),
-    endDate: e.endDate ? new Date(e.endDate).toISOString() : null,
-    isCurrent: e.isCurrent,
-    description: e.description,
-    createdAt: new Date(e.createdAt).toISOString(),
-    updatedAt: new Date(e.updatedAt).toISOString(),
-  }))
-
-  return <EducationContent educations={serialized} />
+  return <EducationContent educations={educations} />
 }

@@ -8,6 +8,12 @@ export const projectApi = {
     return json.data?.items ?? []
   },
 
+  getStandalone: async (): Promise<ProjectDto[]> => {
+    const res = await fetch('/api/project?standalone=true&limit=100')
+    const json = (await res.json()) as ApiResponse<{ items: ProjectDto[]; nextCursor: number | null }>
+    return json.data?.items ?? []
+  },
+
   getById: async (id: number): Promise<ProjectDto> => {
     const res = await fetch(`/api/project/${id}`)
     const json = (await res.json()) as ApiResponse<ProjectDto>

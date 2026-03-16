@@ -1,7 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import type { ApiResponse } from '@/types'
+import type React from 'react'
 import type { ProjectDto } from '@/feature/project/type'
 import { useInView } from '@/lib/hooks/useInView'
 
@@ -108,75 +107,18 @@ function ProjectCard({ project, index }: { project: ProjectDto; index: number })
   )
 }
 
-export function ProjectsContent({
-  initialItems,
-  initialCursor,
-}: {
-  initialItems: ProjectDto[]
-  initialCursor: number | null
-}) {
-  const [items, setItems] = useState<ProjectDto[]>(initialItems)
-  const [cursor, setCursor] = useState<number | null>(initialCursor)
-  const [loading, setLoading] = useState(false)
-  const loadingRef = useRef(false)
-  const sentinelRef = useRef<HTMLDivElement>(null)
-
-  const fetchMore = useCallback(async () => {
-    if (!cursor || loadingRef.current) return
-    loadingRef.current = true
-    setLoading(true)
-    try {
-      const res = await fetch(`/api/project?cursor=${cursor}&limit=6&standalone=true`)
-      const json = (await res.json()) as ApiResponse<{
-        items: ProjectDto[]
-        nextCursor: number | null
-      }>
-      setItems((prev) => [...prev, ...json.data.items])
-      setCursor(json.data.nextCursor)
-    } catch {
-      // silent fail
-    } finally {
-      loadingRef.current = false
-      setLoading(false)
-    }
-  }, [cursor])
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel || !cursor) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          void fetchMore()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    observer.observe(sentinel)
-    return () => observer.disconnect()
-  }, [fetchMore, cursor])
-
+export function ProjectsContent({ projects }: { projects: ProjectDto[] }) {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="space-y-8">
-        {items.map((project, index) => (
+        {projects.map((project, index) => (
           <ProjectCard key={project.id} project={project} index={index} />
         ))}
       </div>
 
-      {/* 무한 스크롤 sentinel */}
-      <div ref={sentinelRef} className="h-8 mt-4" />
-
-      {loading && (
+      {projects.length > 0 && (
         <p className="text-center text-[var(--text-muted)] text-[var(--font-size-caption)] py-4">
-          불러오는 중...
-        </p>
-      )}
-
-      {!cursor && !loading && items.length > 0 && (
-        <p className="text-center text-[var(--text-muted)] text-[var(--font-size-caption)] py-4">
-          전체 {items.length}개 프로젝트
+          전체 {projects.length}개 프로젝트
         </p>
       )}
     </div>

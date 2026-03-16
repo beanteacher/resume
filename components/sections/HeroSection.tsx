@@ -1,12 +1,14 @@
+'use client'
+
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
+import { useProfileQuery } from '@/feature/profile/query'
 
-interface HeroSectionProps {
-  name: string
-  title: string
-  tagline: string
-}
+export function HeroSection() {
+  const { data: profile } = useProfileQuery()
+  const name = profile?.name ?? '오민성'
+  const title = profile?.title ?? 'Backend Developer'
+  const tagline = profile?.tagline ?? '메시징 백엔드 전문 · Java/Spring Boot · AI 협업으로 혼자서도 팀처럼 일합니다.'
 
-export function HeroSection({ name, title, tagline }: HeroSectionProps) {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16">
       <div className="max-w-4xl mx-auto text-center">
