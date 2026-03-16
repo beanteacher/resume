@@ -64,7 +64,7 @@ function ProjectCard({ project, index }: { project: ProjectDto; index: number })
       </div>
 
       {/* 설명 */}
-      <p className="text-[var(--text-muted)] text-[var(--font-size-body1)] leading-[var(--line-height-relaxed)] mb-6">
+      <p className="text-[var(--text-muted)] text-[var(--font-size-body1)] leading-[var(--line-height-relaxed)] mb-6 whitespace-pre-wrap">
         {project.description}
       </p>
 
