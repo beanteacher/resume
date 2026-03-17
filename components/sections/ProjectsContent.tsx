@@ -208,11 +208,6 @@ export function ProjectsContent({ projects }: { projects: ProjectDto[] }) {
         ))}
       </div>
 
-      {projects.length > 0 && (
-        <p className="text-center text-[var(--text-muted)] text-[var(--font-size-caption)] py-4">
-          전체 {projects.length}개 프로젝트
-        </p>
-      )}
     </div>
   )
 }

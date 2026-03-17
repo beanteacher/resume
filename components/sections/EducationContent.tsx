@@ -104,7 +104,7 @@ export function EducationContent({ educations }: { educations: EducationWithProj
 
   return (
     <div className="max-w-3xl mx-auto mt-12">
-      <h3 className="text-[var(--font-size-h3)] font-semibold text-[var(--text-muted)] mb-6 pl-0 md:pl-12">
+      <h3 className="text-[var(--font-size-h3)] font-semibold text-[var(--text-muted)] mb-6 text-center">
         학력 / 교육
       </h3>
       <div className="relative">

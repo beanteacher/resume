@@ -90,18 +90,7 @@ interface SkillsContentProps {
 export function SkillsContent({ grouped, categories }: SkillsContentProps) {
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {categories.map((category, catIdx) => (
-          <CategoryCard
-            key={category}
-            category={category}
-            skills={grouped[category]}
-            index={catIdx}
-          />
-        ))}
-      </div>
-
-      <div className="mt-10 flex items-center justify-center gap-6 text-[var(--font-size-caption)] text-[var(--text-muted)]">
+      <div className="mb-8 flex items-center justify-center gap-6 text-[var(--font-size-caption)] text-[var(--text-muted)]">
         <span>숙련도</span>
         <div className="flex items-center gap-3">
           {[
@@ -115,6 +104,17 @@ export function SkillsContent({ grouped, categories }: SkillsContentProps) {
             </span>
           ))}
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {categories.map((category, catIdx) => (
+          <CategoryCard
+            key={category}
+            category={category}
+            skills={grouped[category]}
+            index={catIdx}
+          />
+        ))}
       </div>
     </div>
   )
