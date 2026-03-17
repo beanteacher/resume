@@ -3,7 +3,7 @@ import type { ApiResponse } from '@/types'
 
 export const projectApi = {
   getAll: async (): Promise<ProjectDto[]> => {
-    const res = await fetch('/api/project')
+    const res = await fetch('/api/project?limit=100')
     const json = (await res.json()) as ApiResponse<{ items: ProjectDto[]; nextCursor: number | null }>
     return json.data?.items ?? []
   },
