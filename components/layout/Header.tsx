@@ -7,8 +7,8 @@ const NAV_LINKS = [
   { href: '#about', label: 'About', id: 'about' },
   { href: '#philosophy', label: 'Philosophy', id: 'philosophy' },
   { href: '#experience', label: 'Experience', id: 'experience' },
-  { href: '#skills', label: 'Skills', id: 'skills' },
   { href: '#projects', label: 'Projects', id: 'projects' },
+  { href: '#skills', label: 'Skills', id: 'skills' },
 ]
 
 export function Header() {
