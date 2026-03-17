@@ -1,4 +1,5 @@
 import type { CompanyDto } from '@/feature/company/type'
+import type { EducationDto } from '@/feature/education/type'
 
 export type CodeSnippetDto = {
   id: number
@@ -27,9 +28,11 @@ export type ProjectDto = {
   githubUrl: string | null
   demoUrl: string | null
   companyId: number | null
+  educationId: number | null
   createdAt: string
   updatedAt: string
   company: CompanyDto | null
+  education: EducationDto | null
   codeSnippets: CodeSnippetDto[]
 }
 
@@ -41,6 +44,7 @@ export type ProjectFormData = {
   startDate: string
   endDate: string
   companyId: string
+  educationId: string
   githubUrl: string
   demoUrl: string
   thumbnailUrl: string
@@ -54,6 +58,7 @@ export type ProjectInput = {
   startDate: string | null
   endDate: string | null
   companyId: number | null
+  educationId: number | null
   githubUrl: string | null
   demoUrl: string | null
   thumbnailUrl: string | null

@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       startDate?: string
       endDate?: string
       companyId?: number
+      educationId?: number
       githubUrl?: string
       demoUrl?: string
       thumbnailUrl?: string
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
         startDate: body.startDate ? new Date(body.startDate) : null,
         endDate: body.endDate ? new Date(body.endDate) : null,
         companyId: body.companyId ?? null,
+        educationId: body.educationId ?? null,
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
         thumbnailUrl: body.thumbnailUrl ?? null,
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest) {
           ? { create: body.codeSnippets }
           : undefined,
       },
-      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
+      include: { company: true, education: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
 
     try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }
@@ -58,10 +60,10 @@ export async function GET(request: Request) {
     const standalone = searchParams.get('standalone') === 'true'
 
     const projects = await prisma.project.findMany({
-      where: standalone ? { companyId: null } : undefined,
+      where: standalone ? { companyId: null, educationId: null } : undefined,
       take: limit + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
+      include: { company: true, education: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
       orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
     })
     const hasMore = projects.length > limit

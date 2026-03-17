@@ -25,7 +25,7 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
           <thead className="bg-[var(--elevated)]">
             <tr>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)]">프로젝트명</th>
-              <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden md:table-cell">회사</th>
+              <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden md:table-cell">연관</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden md:table-cell">기간</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)] hidden lg:table-cell">기술 스택</th>
               <th className="px-4 py-3 text-sm font-semibold text-[var(--text)]">액션</th>
@@ -55,7 +55,11 @@ export function ProjectList({ projects, loading, onEdit, onDelete }: ProjectList
                     {project.title}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell">
-                    {project.company ? project.company.name : '—'}
+                    {project.company
+                      ? project.company.name
+                      : project.education
+                        ? project.education.name
+                        : '—'}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--text-muted)] hidden md:table-cell whitespace-nowrap">
                     {period}

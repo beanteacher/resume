@@ -2,7 +2,8 @@
 
 import type React from 'react'
 import { useInView } from '@/lib/hooks/useInView'
-import type { EducationDto } from '@/feature/education/type'
+import type { EducationWithProjects } from '@/feature/education/type'
+import { ProjectCard } from '@/components/sections/ProjectsContent'
 
 const TYPE_LABEL: Record<string, string> = {
   university: '학력',
@@ -21,7 +22,7 @@ function formatDate(dateStr: string): string {
   return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
-function EducationCard({ education, index }: { education: EducationDto; index: number }) {
+function EducationCard({ education, index }: { education: EducationWithProjects; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.15 })
 
   const period = education.isCurrent
@@ -82,12 +83,23 @@ function EducationCard({ education, index }: { education: EducationDto; index: n
             {education.description}
           </p>
         )}
+
+        {education.projects.length > 0 && (
+          <div className="mt-5 space-y-4">
+            <p className="text-base font-semibold uppercase tracking-wide" style={{ color: typeColor }}>
+              프로젝트
+            </p>
+            {education.projects.map((p, i) => (
+              <ProjectCard key={p.id} project={p} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-export function EducationContent({ educations }: { educations: EducationDto[] }) {
+export function EducationContent({ educations }: { educations: EducationWithProjects[] }) {
   if (educations.length === 0) return null
 
   return (

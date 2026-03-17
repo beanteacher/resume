@@ -54,6 +54,8 @@ model Project {
   demoUrl      String?
   companyId    Int?
   company      Company?      @relation(fields: [companyId], references: [id])
+  educationId  Int?
+  education    Education?    @relation(fields: [educationId], references: [id])
   codeSnippets CodeSnippet[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -100,6 +102,7 @@ model Education {
   endDate     DateTime?
   isCurrent   Boolean   @default(false)
   description String?
+  projects    Project[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

@@ -3,12 +3,20 @@ import type { NextRequest } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { ApiResponse } from '@/types'
-import type { EducationDto } from '@/feature/education/type'
+import type { EducationDto, EducationWithProjects } from '@/feature/education/type'
 
 export async function GET() {
   try {
-    const educations = await prisma.education.findMany({ orderBy: { startDate: 'desc' } })
-    const serialized: EducationDto[] = educations.map((e) => ({
+    const educations = await prisma.education.findMany({
+      orderBy: { startDate: 'desc' },
+      include: {
+        projects: {
+          include: { codeSnippets: { orderBy: { sortOrder: 'asc' } } },
+          orderBy: [{ startDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
+        },
+      },
+    })
+    const serialized: EducationWithProjects[] = educations.map((e) => ({
       id: e.id,
       name: e.name,
       course: e.course,
@@ -19,10 +27,30 @@ export async function GET() {
       description: e.description,
       createdAt: e.createdAt.toISOString(),
       updatedAt: e.updatedAt.toISOString(),
+      projects: e.projects.map((p) => ({
+        id: p.id,
+        title: p.title,
+        description: p.description,
+        techStack: p.techStack,
+        achievements: p.achievements,
+        startDate: p.startDate ? p.startDate.toISOString() : null,
+        endDate: p.endDate ? p.endDate.toISOString() : null,
+        thumbnailUrl: p.thumbnailUrl,
+        githubUrl: p.githubUrl,
+        demoUrl: p.demoUrl,
+        educationId: p.educationId,
+        codeSnippets: p.codeSnippets.map((s) => ({
+          id: s.id,
+          title: s.title,
+          language: s.language,
+          code: s.code,
+          sortOrder: s.sortOrder,
+        })),
+      })),
     }))
-    return NextResponse.json<ApiResponse<EducationDto[]>>({ data: serialized })
+    return NextResponse.json<ApiResponse<EducationWithProjects[]>>({ data: serialized })
   } catch {
-    return NextResponse.json<ApiResponse<EducationDto[]>>(
+    return NextResponse.json<ApiResponse<EducationWithProjects[]>>(
       { data: [], error: '학력/교육 정보를 불러올 수 없습니다.' },
       { status: 500 }
     )

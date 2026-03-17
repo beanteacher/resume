@@ -30,3 +30,22 @@ export type EducationInput = {
   isCurrent: boolean
   description: string | null
 }
+
+export type ProjectInEducation = {
+  id: number
+  title: string
+  description: string
+  techStack: string
+  achievements: string
+  startDate: string | null
+  endDate: string | null
+  thumbnailUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  educationId: number | null
+  codeSnippets?: { id: number; title: string; language: string; code: string; sortOrder: number }[]
+}
+
+export type EducationWithProjects = EducationDto & {
+  projects: ProjectInEducation[]
+}

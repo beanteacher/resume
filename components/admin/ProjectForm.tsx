@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 import { useProjectQuery, useCreateProjectMutation, useUpdateProjectMutation } from '@/feature/project/query'
 import { useCompaniesQuery } from '@/feature/company/query'
+import { useEducationsQuery } from '@/feature/education/query'
 import type { ProjectFormData } from '@/feature/project/type'
 
 interface ProjectFormProps {
@@ -36,6 +37,7 @@ const defaultForm: ProjectFormData = {
   startDate: '',
   endDate: '',
   companyId: '',
+  educationId: '',
   githubUrl: '',
   demoUrl: '',
   thumbnailUrl: '',
@@ -50,6 +52,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
 
   const { data: project } = useProjectQuery(projectId)
   const { data: companies = [] } = useCompaniesQuery()
+  const { data: educations = [] } = useEducationsQuery()
   const createMutation = useCreateProjectMutation({ onSuccess })
   const updateMutation = useUpdateProjectMutation({ onSuccess })
 
@@ -65,6 +68,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
         startDate: project.startDate ? project.startDate.slice(0, 10) : '',
         endDate: project.endDate ? project.endDate.slice(0, 10) : '',
         companyId: project.companyId ? String(project.companyId) : '',
+        educationId: project.educationId ? String(project.educationId) : '',
         githubUrl: project.githubUrl ?? '',
         demoUrl: project.demoUrl ?? '',
         thumbnailUrl: project.thumbnailUrl ?? '',
@@ -108,6 +112,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       startDate: formData.startDate || null,
       endDate: formData.endDate || null,
       companyId: formData.companyId ? Number(formData.companyId) : null,
+      educationId: formData.educationId ? Number(formData.educationId) : null,
       githubUrl: formData.githubUrl || null,
       demoUrl: formData.demoUrl || null,
       thumbnailUrl: formData.thumbnailUrl || null,
@@ -135,6 +140,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
     setSnippets((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)))
 
   const companyOptions = companies.map((c) => ({ value: c.id, label: c.name }))
+  const educationOptions = educations.map((e) => ({ value: e.id, label: e.name }))
   const loading = createMutation.isPending || updateMutation.isPending
   const mutationError = createMutation.error?.message ?? updateMutation.error?.message
 
@@ -151,6 +157,16 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
           value={formData.companyId}
           onChange={set('companyId')}
           options={companyOptions}
+          disabled={loading}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Select
+          label="연관 교육/학력 (선택)"
+          value={formData.educationId}
+          onChange={set('educationId')}
+          options={educationOptions}
           disabled={loading}
         />
       </div>

@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { educationKeys } from './query-key'
 import { educationApi } from './api'
-import type { EducationDto } from './type'
+import type { EducationDto, EducationWithProjects } from './type'
 
 export function useEducationQuery(id: number | null) {
   return useQuery({
@@ -26,7 +26,7 @@ export function useCreateEducationMutation(options?: { onSuccess?: () => void })
   return useMutation({
     mutationFn: educationApi.create,
     onSuccess: (created) => {
-      queryClient.setQueryData<EducationDto[]>(educationKeys.list(), (old = []) => [...old, created])
+      queryClient.setQueryData<EducationWithProjects[]>(educationKeys.list(), (old = []) => [...old, { ...created, projects: [] }])
       queryClient.invalidateQueries({ queryKey: educationKeys.list() })
       options?.onSuccess?.()
     },
@@ -39,8 +39,8 @@ export function useUpdateEducationMutation(options?: { onSuccess?: () => void })
     mutationFn: educationApi.update,
     onSuccess: (updated, variables) => {
       queryClient.setQueryData(educationKeys.detail(variables.id), updated)
-      queryClient.setQueryData<EducationDto[]>(educationKeys.list(), (old = []) =>
-        old.map(e => e.id === variables.id ? updated : e)
+      queryClient.setQueryData<EducationWithProjects[]>(educationKeys.list(), (old = []) =>
+        old.map(e => e.id === variables.id ? { ...updated, projects: e.projects } : e)
       )
       queryClient.invalidateQueries({ queryKey: educationKeys.list() })
       options?.onSuccess?.()
@@ -53,7 +53,7 @@ export function useDeleteEducationMutation() {
   return useMutation({
     mutationFn: educationApi.delete,
     onSuccess: (_, id) => {
-      queryClient.setQueryData<EducationDto[]>(educationKeys.list(), (old = []) =>
+      queryClient.setQueryData<EducationWithProjects[]>(educationKeys.list(), (old = []) =>
         old.filter(e => e.id !== id)
       )
       queryClient.invalidateQueries({ queryKey: educationKeys.all })

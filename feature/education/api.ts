@@ -1,10 +1,10 @@
-import type { EducationDto, EducationInput } from './type'
+import type { EducationDto, EducationInput, EducationWithProjects } from './type'
 import type { ApiResponse } from '@/types'
 
 export const educationApi = {
-  getAll: async (): Promise<EducationDto[]> => {
+  getAll: async (): Promise<EducationWithProjects[]> => {
     const res = await fetch('/api/education')
-    const json = (await res.json()) as ApiResponse<EducationDto[]>
+    const json = (await res.json()) as ApiResponse<EducationWithProjects[]>
     return json.data ?? []
   },
 

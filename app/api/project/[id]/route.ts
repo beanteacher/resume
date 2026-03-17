@@ -12,7 +12,7 @@ export async function GET(
     const { id } = await params
     const project = await prisma.project.findUnique({
       where: { id: Number(id) },
-      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
+      include: { company: true, education: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
     if (!project) {
       return NextResponse.json<ApiResponse<null>>(
@@ -43,6 +43,7 @@ export async function PUT(
       startDate?: string
       endDate?: string
       companyId?: number
+      educationId?: number
       githubUrl?: string
       demoUrl?: string
       thumbnailUrl?: string
@@ -59,6 +60,7 @@ export async function PUT(
         startDate: body.startDate ? new Date(body.startDate) : null,
         endDate: body.endDate ? new Date(body.endDate) : null,
         companyId: body.companyId ?? null,
+        educationId: body.educationId ?? null,
         githubUrl: body.githubUrl ?? null,
         demoUrl: body.demoUrl ?? null,
         thumbnailUrl: body.thumbnailUrl ?? null,
@@ -67,7 +69,7 @@ export async function PUT(
           create: body.codeSnippets ?? [],
         },
       },
-      include: { company: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
+      include: { company: true, education: true, codeSnippets: { orderBy: { sortOrder: 'asc' } } },
     })
 
     try { revalidateTag('projects', {}) } catch { /* ignore cache errors */ }
