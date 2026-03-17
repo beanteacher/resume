@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma migrate deploy && prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "export:pdf": "node scripts/export-pdf.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -30,6 +31,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "playwright": "^1.58.2",
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",

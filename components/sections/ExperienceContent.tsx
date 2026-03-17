@@ -12,6 +12,23 @@ function formatDate(dateStr: string): string {
   return `${y}.${m}`
 }
 
+function calcTotalCareer(companies: CompanyWithProjects[]): string {
+  let totalMonths = 0
+  const now = new Date()
+  for (const c of companies) {
+    const start = new Date(c.startDate)
+    const end = c.isCurrent ? now : c.endDate ? new Date(c.endDate) : now
+    const months =
+      (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
+    if (months > 0) totalMonths += months
+  }
+  const years = Math.floor(totalMonths / 12)
+  const months = totalMonths % 12
+  if (years === 0) return `${months}개월`
+  if (months === 0) return `${years}년`
+  return `${years}년 ${months}개월`
+}
+
 function ExperienceCard({ company, index }: { company: CompanyWithProjects; index: number }) {
   const { ref, isInView } = useInView({ threshold: 0.15 })
 
@@ -98,8 +115,18 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
 }
 
 export function ExperienceContent({ companies }: { companies: CompanyWithProjects[] }) {
+  const totalCareer = calcTotalCareer(companies)
+
   return (
     <div className="max-w-3xl mx-auto">
+      {/* 총 경력 */}
+      <div className="flex items-center gap-3 mb-8 px-1">
+        <span className="text-[var(--text-muted)] text-sm">총 경력</span>
+        <span className="bg-[var(--color-brand-purple)]/10 text-[var(--color-brand-purple)] font-semibold text-sm px-4 py-1.5 rounded-full border border-[var(--color-brand-purple)]/20">
+          {totalCareer}
+        </span>
+      </div>
+
       <div className="relative">
         {/* 세로줄 - desktop only */}
         <div className="hidden md:block absolute left-4 top-2 bottom-2 w-0.5 bg-gradient-to-b from-[var(--color-brand-purple)] to-[var(--color-brand-cyan)]" />
