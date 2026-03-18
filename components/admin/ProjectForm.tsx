@@ -65,7 +65,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
         title: project.title,
         description: project.description,
         techStack: techArr.join(', '),
-        achievements: achArr.join('\n'),
+        achievements: achArr.join('\n\n'),
         startDate: project.startDate ? project.startDate.slice(0, 10) : '',
         endDate: project.endDate ? project.endDate.slice(0, 10) : '',
         companyId: project.companyId ? String(project.companyId) : '',
@@ -109,7 +109,7 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
       title: formData.title,
       description: formData.description,
       techStack: formData.techStack.split(',').map((s) => s.trim()).filter(Boolean),
-      achievements: formData.achievements.split('\n').map((s) => s.trim()).filter(Boolean),
+      achievements: formData.achievements.split('\n\n').map((s) => s.trim()).filter(Boolean),
       startDate: formData.startDate || null,
       endDate: formData.endDate || null,
       companyId: formData.companyId ? Number(formData.companyId) : null,
@@ -200,13 +200,13 @@ export function ProjectForm({ projectId, onSuccess, onCancel }: ProjectFormProps
 
       <Input
         as="textarea"
-        label="성과 (줄바꿈으로 구분)"
+        label="성과 (빈 줄로 항목 구분 / 줄바꿈은 Enter 1번)"
         value={formData.achievements}
         onChange={set('achievements')}
         error={errors.achievements}
         disabled={loading}
         rows={4}
-        placeholder="성과1&#10;성과2&#10;성과3"
+        placeholder="성과1 첫째 줄&#10;성과1 둘째 줄&#10;&#10;성과2&#10;&#10;성과3"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
