@@ -144,7 +144,7 @@ export function ProjectCard({ project, index }: { project: ProjectCardData; inde
                 <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-gradient-to-r from-[var(--color-brand-purple)] to-[var(--color-brand-blue)] flex items-center justify-center text-white text-xs font-bold">
                   {i + 1}
                 </span>
-                <span className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-[var(--line-height-relaxed)]">
+                <span className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-[var(--line-height-relaxed)] whitespace-pre-line">
                   {ach}
                 </span>
               </li>

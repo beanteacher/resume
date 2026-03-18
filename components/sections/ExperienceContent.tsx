@@ -74,7 +74,7 @@ function ExperienceCard({ company, index }: { company: CompanyWithProjects; inde
         </div>
 
         {/* 설명 */}
-        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-3">
+        <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed mb-3 whitespace-pre-line">
           {company.description}
         </p>
 
