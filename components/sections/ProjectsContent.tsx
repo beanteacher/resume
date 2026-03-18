@@ -32,6 +32,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
   json: 'JSON',
   xml: 'XML',
   yaml: 'YAML',
+  markdown: 'Markdown',
 }
 
 export function ProjectCard({ project, index }: { project: ProjectCardData; index: number }) {

@@ -27,6 +27,7 @@ const LANGUAGES = [
   { value: 'json', label: 'JSON' },
   { value: 'xml', label: 'XML' },
   { value: 'yaml', label: 'YAML' },
+  { value: 'markdown', label: 'Markdown' },
 ]
 
 const defaultForm: ProjectFormData = {
