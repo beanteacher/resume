@@ -4,10 +4,10 @@ import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
 import { useProfileQuery } from '@/feature/profile/query'
 
 export function HeroSection() {
-  const { data: profile } = useProfileQuery()
-  const name = profile?.name ?? '오민성'
-  const title = profile?.title ?? 'Backend Developer'
-  const tagline = profile?.tagline ?? '메시징 백엔드 전문 · Java/Spring Boot · AI 협업으로 혼자서도 팀처럼 일합니다.'
+  const { data: profile, isPending } = useProfileQuery()
+  const name = profile?.name
+  const title = profile?.title
+  const tagline = profile?.tagline
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-16">
@@ -16,18 +16,29 @@ export function HeroSection() {
            style={{animationDelay: '0s'}}>
           안녕하세요 👋
         </p>
-        <p className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto animate-[fade-up_0.6s_ease_both]"
-           style={{animationDelay: '0.24s'}}>
-          {tagline}
-        </p>
-        <h1 className="text-[var(--font-size-display)] font-[var(--font-weight-display)] leading-[var(--line-height-tight)] mb-6 animate-[fade-up_0.6s_ease_both]"
-            style={{animationDelay: '0.08s'}}>
-          {title}{' '}
-          <span className="bg-gradient-to-r from-[var(--color-brand-purple)] via-[var(--color-brand-blue)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent">
-            {name}
-          </span>
-          입니다
-        </h1>
+        {isPending ? (
+          <div className="h-6 w-96 mx-auto bg-[var(--elevated)] rounded animate-pulse mb-10" />
+        ) : (
+          <p className="text-[var(--font-size-body1)] text-[var(--text-muted)] mb-10 max-w-xl mx-auto animate-[fade-up_0.6s_ease_both]"
+             style={{animationDelay: '0.24s'}}>
+            {tagline}
+          </p>
+        )}
+        {isPending ? (
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-12 w-48 bg-[var(--elevated)] rounded animate-pulse" />
+            <div className="h-12 w-32 bg-[var(--elevated)] rounded animate-pulse" />
+          </div>
+        ) : (
+          <h1 className="text-[var(--font-size-display)] font-[var(--font-weight-display)] leading-[var(--line-height-tight)] mb-6 animate-[fade-up_0.6s_ease_both]"
+              style={{animationDelay: '0.08s'}}>
+            {title}{' '}
+            <span className="bg-gradient-to-r from-[var(--color-brand-purple)] via-[var(--color-brand-blue)] to-[var(--color-brand-cyan)] bg-clip-text text-transparent">
+              {name}
+            </span>
+            입니다
+          </h1>
+        )}
         <div className="flex items-center justify-center gap-4 animate-[fade-up_0.6s_ease_both]"
              style={{animationDelay: '0.32s'}}>
           <a href="#projects"
