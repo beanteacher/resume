@@ -79,7 +79,7 @@ function EducationCard({ education, index }: { education: EducationWithProjects;
         </div>
 
         {education.description && (
-          <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed">
+          <p className="text-[var(--text-muted)] text-[var(--font-size-body2)] leading-relaxed whitespace-pre-line">
             {education.description}
           </p>
         )}
